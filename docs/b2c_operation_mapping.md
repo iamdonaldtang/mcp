@@ -413,7 +413,7 @@ C-end tabs are **dynamically shown/hidden** based on B-end module activation:
 | **Home** | (always) | Always visible (core tab) |
 | **Quests** | Any active tasks | At least 1 published task exists |
 | **Leaderboard** | Leaderboard module | Leaderboard enabled AND at least 1 entry |
-| **Sprint** | Leaderboard Sprint | Active or recently-ended sprint exists |
+| **LB Sprint** | Leaderboard Sprint | Active or recently-ended sprint exists |
 | **Milestone** | Milestones module | Milestones enabled AND at least 1 threshold |
 | **Shop** | Benefits Shop module | Shop enabled AND at least 1 active item |
 | **Lucky Wheel** | Lucky Wheel module | Wheel enabled AND at least 1 prize configured |
@@ -452,7 +452,7 @@ The Home tab shows content in this fixed order:
 | Shop enabled but 0 items | Tab hidden |
 | Shop item out of stock | Item shows "Sold Out" badge, redemption button disabled |
 | Lucky Wheel all spins used today | Wheel visible but spin button disabled: "Come back tomorrow" |
-| Sprint ended, rewards pending | Sprint tab shows final standings + "Rewards distributing..." |
+| LB Sprint ended, rewards pending | LB Sprint tab shows final standings + "Rewards distributing..." |
 | DayChain streak broken | Calendar shows missed day in red; catch-up button (if enabled) |
 | DayChain all days completed | Calendar shows 100% complete; congratulation message |
 

@@ -9,7 +9,7 @@
 > - 新增 §六 功能组件规格：Promo Kit Generator、Dev Kit Page (B48)、Auto-detection Systems
 > - 新增 WL Sidebar 子菜单路由（Overview/Widgets/Pages）
 > - 新增 B31a-B31h（8 个 Community 模块管理页面）
-> - 共 76 页面编码（M01-M14 + B01-B48 + B31a-B31h + C01-C06）。仅剩 T01-T05/T25 为 SKIPPED。B48 (Dev Kit Page) 待设计。
+> - 共 79 页面编码（M01-M14 + B01-B48 + B31a-B31h + C01-C09）。仅剩 T01-T05/T25 为 SKIPPED。B48 (Dev Kit Page) 待设计。
 
 ---
 
@@ -77,8 +77,8 @@
 | **B31a** | Points & Level Mgmt | `zCfKQ` | `/community/modules/points` | Level config + stats table |
 | **B31b** | TaskChain Mgmt | `lpdtp` | `/community/modules/taskchain` | Chain config + stats table |
 | **B31c** | DayChain Mgmt | `fLLVb` | `/community/modules/daychain` | Streak config + stats table |
-| **B31d** | Leaderboard Mgmt | `Emmab` | `/community/modules/leaderboard` | Leaderboard config + stats table |
-| **B31e** | Sprint Mgmt | `FO9JR` | `/community/modules/sprint` | Sprint config + stats table |
+| **B31d** | Leaderboard Mgmt | `Emmab` | `/community/modules/leaderboard` | Multi-point-type (EXP/GEM) recurring leaderboards, weekly/monthly/all-time cycles, no extra incentives |
+| **B31e** | LB Sprint Mgmt | `FO9JR` | `/community/modules/lb-sprint` | Time-bounded leaderboard competitions, point-type-based, non-points incentives (NFT/Token/WL), start/end dates |
 | **B31f** | Milestone Mgmt | `WFdZQ` | `/community/modules/milestone` | Milestone config + stats table |
 | **B31g** | Benefits Shop Mgmt | `7yPWx` | `/community/modules/shop` | Item config + stats table |
 | **B31h** | Lucky Wheel Mgmt | `sme5a` | `/community/modules/wheel` | Wheel config + stats table |
@@ -99,18 +99,25 @@
 | **B46** | Settings | `ESrVt` | `/settings` | Account settings |
 | **B47** | Settings / Profile | `Nh7xq` | `/settings/profile` | Profile management |
 
-### C-End Pages（White Label 社区前台，C01-C06）
+### C-End Pages（White Label 社区前台，C01-C09）
 
 > C-End 页面为 White Label Community 的用户端。域名由项目自定义（如 `community.bitcoin.com`）。Theme: Dark header (#0F172A) + Light content (#F8FAFC)。Accent: Amber (#F59E0B)。
+>
+> **Leaderboard vs LB Sprint 概念区分**:
+> - **Leaderboard (C03)**: 基于自定义积分类型（EXP/GEM/等）的周期性排行榜展示（周/月/全部），**无额外激励**，纯展示排名。B-End 管理在 B31d。
+> - **LB Sprint (C04)**: 基于自定义积分的**限时排行榜竞赛**，有明确的开始/结束日期，附带**非积分类激励**（NFT/Token/WL Spot 等）。B-End 管理在 B31e。
 
 | Code | Page | Design ID | URL Path | Notes |
 |------|------|-----------|----------|-------|
-| **C01** | Community Home | `vJVhd` | `/` | Announcements + featured + DayChain + task sectors |
+| **C01** | Community Home | `vJVhd` | `/` | Action engine: personal card + urgent actions + DayChain + tasks + invite banner + community pulse |
 | **C02** | Quest Tab | `dUXTl` | `/quests` | Quest card grid 2×2 + filters |
-| **C03** | Leaderboard | `KmdSd` | `/leaderboard` | Podium top 3 + rankings table |
-| **C04** | Sprint Tab | `y5fUZ` | `/sprint` | Current sprint + tasks + reward tiers + past sprints |
+| **C03** | Leaderboard | `KmdSd` | `/leaderboard` | Multi-point-type (EXP/GEM) recurring leaderboard, period filters (Weekly/Monthly/All Time), no extra incentives |
+| **C04** | LB Sprint Tab | `y5fUZ` | `/lb-sprint` | Time-bounded leaderboard competition with start/end dates, point-type-based (EXP/GEM), non-points incentives (NFT/tokens/WL), reward tiers, past sprints |
 | **C05** | Milestone Tab | `53iKE` | `/milestones` | Level progress + milestone cards (claimed/claimable/locked) |
 | **C06** | Shop Tab | `coM7o` | `/shop` | Rewards shop + 6 items (redeem/not enough/sold out) |
+| **C07** | User Center | `nvQuK` | `/profile` | Profile card + stats + achievement badges + activity history + referral stats |
+| **C08** | Invite Center | `wSSD5` | `/invite` | Referral link + share buttons + reward tiers (3) + top inviters leaderboard |
+| **C09** | Activity Feed | `5Nhkz` | `/activity` | Live community feed + filter chips + trending cards |
 
 ---
 
@@ -190,7 +197,7 @@
 
 ### 2.6 C-End Header (全局)
 
-用于 C01-C06。Dark theme (#0F172A)。
+用于 C01-C09。Dark theme (#0F172A)。
 
 | 元素 | 链接目标 |
 |------|----------|
@@ -199,9 +206,14 @@
 | Nav: Home | → C01 `/` |
 | Nav: Quests | → C02 `/quests` |
 | Nav: Leaderboard | → C03 `/leaderboard` |
-| Nav: Sprint | → C04 `/sprint` |
+| Nav: LB Sprint | → C04 `/lb-sprint` |
 | Nav: Milestone | → C05 `/milestones` |
 | Nav: Shop | → C06 `/shop` |
+| Nav: Profile | → C07 `/profile` |
+| Nav: Invite | → C08 `/invite` |
+| Nav: Activity | → C09 `/activity` |
+| Notification bell (header) | → (modal) 通知面板 |
+| User avatar (header) | → C07 `/profile` |
 
 ### 2.7 C-End Footer (全局)
 
@@ -997,20 +1009,23 @@
 | 按钮/CTA | 位置 | 目标 |
 |----------|------|------|
 | Header / Nav tabs | 全局 | 见 §2.6 |
-| Time filter pills (This Week/Month/All Time) | Filter bar | (action) 切换时段 |
+| Point Type selector (EXP/GEM/etc) | Title row | (action) 切换积分类型 |
+| Time filter pills (Weekly/Monthly/All Time) | Filter bar | (action) 切换时段 |
 | Podium user click | Podium | → `/profile/:address` (user profile, future) |
 | Table row user click | Rankings table | → `/profile/:address` (user profile, future) |
 | Footer | Footer | 见 §2.7 |
 
-### C04: Sprint Tab (`/sprint`)
+### C04: LB Sprint Tab (`/lb-sprint`)
+
+> Leaderboard Sprint = 有开始/结束日期的限时排行榜竞赛，基于自定义积分类型（EXP/GEM），带非积分类激励（NFT/Token/WL Spot）。区别于 Leaderboard（C03），后者为周期性积分展示，无额外激励。
 
 | 按钮/CTA | 位置 | 目标 |
 |----------|------|------|
 | Header / Nav tabs | 全局 | 见 §2.6 |
-| Sprint task "Continue" | In-progress task | (action/API) 继续任务 |
-| Sprint task "Start" | Not-started task | (action/API) 开始任务 |
-| Reward tier card | Reward Tiers | 无链接 (展示) |
-| Past sprint card | Past Sprints | → `/sprint/:id` (sprint detail, future) |
+| Sprint task "Continue" | In-progress task | (action/API) 继续任务，赚取对应积分 |
+| Sprint task "Start" | Not-started task | (action/API) 开始任务，赚取对应积分 |
+| Reward tier cards (EXP/incentive) | Reward Tiers | 无链接 (展示: +100 EXP / +300 EXP / OG NFT for top 10) |
+| Past LB Sprint card | Past LB Sprints | → `/lb-sprint/:id` (sprint detail, future) |
 | Footer | Footer | 见 §2.7 |
 
 ### C05: Milestone Tab (`/milestones`)
@@ -1032,6 +1047,42 @@
 | "Redeem" button | Affordable items | (API) 兑换 → 确认弹窗 |
 | "Not Enough" button | Unaffordable items | 无链接 (disabled) |
 | "Sold Out" button | Sold out items | 无链接 (disabled) |
+| Footer | Footer | 见 §2.7 |
+
+### C07: User Center (`/profile`)
+
+| 按钮/CTA | 位置 | 目标 |
+|----------|------|------|
+| Header / Nav tabs | 全局 | 见 §2.6 |
+| Profile card stats | Profile card | 展示 (Total Points / Tasks Done / Quests / Best Streak) |
+| Achievement badges | Achievements grid | 展示 (earned = colored, locked = gray + lock icon) |
+| Activity history items | Recent Activity list | 展示 (color-coded dots + point changes) |
+| "Invite More Friends" button | Referral Stats | → C08 `/invite` |
+| Footer | Footer | 见 §2.7 |
+
+### C08: Invite Center (`/invite`)
+
+| 按钮/CTA | 位置 | 目标 |
+|----------|------|------|
+| Header / Nav tabs | 全局 | 见 §2.6 |
+| "Copy Link" button | Referral link row | (action) 复制邀请链接到剪贴板 |
+| "Twitter" share button | Share row | (action) 打开 Twitter 分享窗口 |
+| "Telegram" share button | Share row | (action) 打开 Telegram 分享窗口 |
+| "Discord" share button | Share row | (action) 打开 Discord 分享窗口 |
+| Reward tier cards | Reward Tiers | 展示 (Starter 3人/Ambassador 10人/Legend 50人) |
+| Top Inviters list | Leaderboard | 展示 (rank + avatar + address + count) |
+| "You" highlight row | Leaderboard | 展示 (amber bg, user's rank) |
+| Footer | Footer | 见 §2.7 |
+
+### C09: Activity Feed (`/activity`)
+
+| 按钮/CTA | 位置 | 目标 |
+|----------|------|------|
+| Header / Nav tabs | 全局 | 见 §2.6 |
+| Filter chips (All/Tasks/Rewards/Level Up/Invites) | Filter bar | (action) 筛选活动类型 |
+| Activity feed items | Feed list | 展示 (color-coded icons: green=task, amber=level, purple=invite, red=wheel, blue=milestone, pink=shop) |
+| "Live" indicator | Feed header | 展示 (green dot + auto-refresh 15s) |
+| Trending cards | Trending Now | 展示 (Hot Streak / LB Sprint Rush / New Reward) |
 | Footer | Footer | 见 §2.7 |
 
 ---
@@ -1128,13 +1179,22 @@
 | `/api/c/community/tasks` | GET | C01 | 30s | P0 |
 | `/api/c/quests` | GET | C02 | 30s | P0 |
 | `/api/c/leaderboard` | GET | C03 | 300s | P1 |
-| `/api/c/sprint/current` | GET | C04 | 60s | P0 |
-| `/api/c/sprint/history` | GET | C04 | 300s | P1 |
+| `/api/c/lb-sprint/current` | GET | C04 | 60s | P0 |
+| `/api/c/lb-sprint/history` | GET | C04 | 300s | P1 |
 | `/api/c/milestones` | GET | C05 | 60s | P0 |
 | `/api/c/milestones/:id/claim` | POST | C05 | N/A | P0 |
 | `/api/c/shop/items` | GET | C06 | 60s | P0 |
 | `/api/c/shop/redeem` | POST | C06 | N/A | P0 |
-| `/api/c/user/status` | GET | C01-C06 User Status Bar | session | P0 |
+| `/api/c/user/status` | GET | C01-C09 User Status Bar | session | P0 |
+| `/api/c/user/profile` | GET | C07 | session | P0 |
+| `/api/c/user/achievements` | GET | C07 | 300s | P1 |
+| `/api/c/user/activity` | GET | C07, C09 | 30s | P0 |
+| `/api/c/user/referral-stats` | GET | C07, C08 | 60s | P1 |
+| `/api/c/invite/link` | GET | C08 | session | P0 |
+| `/api/c/invite/leaderboard` | GET | C08 | 300s | P1 |
+| `/api/c/invite/tiers` | GET | C08 | 3600s | P2 |
+| `/api/c/activity/feed` | GET | C09 | 15s | P0 |
+| `/api/c/activity/trending` | GET | C09 | 300s | P1 |
 | `/api/c/wallet/connect` | POST | Header | N/A | P0 |
 
 ---
@@ -1215,6 +1275,7 @@
 | **P12** | B-End: Analytics + Settings | B45-B47 | 全部 API |
 | **P13** | B-End: Preview Mode | B33 | Community + WL API |
 | **P14** | C-End: White Label 社区前台 (6 tabs) | C01-C06 | C-End API + Wallet |
+| **P15** | C-End: User engagement pages (Profile/Invite/Activity) | C07-C09 | C-End User + Invite + Activity APIs |
 
 ---
 

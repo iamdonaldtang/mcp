@@ -41,5 +41,7 @@ Page `HO2Ny` is functional but may need:
 - ✅ **P0b**: Getting Started Checklist redesign (Community 5-step + WL 6-step)
 - ✅ **P0c**: WL expandable sidebar sub-menu (8 pages)
 - ✅ **P0d**: Frontend handoff audit — page codes corrected, button routing complete, Dev Kit/Promo Kit/Auto-detection specs added, layout.md corrected, 76 total page codes
+- ✅ **P0e**: C-End engagement redesign — C01 action engine + C07 User Center + C08 Invite Center + C09 Activity Feed, 79 total page codes
+- ✅ **P0f**: Leaderboard vs LB Sprint distinction — multi-point-type leaderboards + time-bounded sprints with incentives across B-end (B31d/B31e) and C-end (C03/C04/all nav tabs)
 - ✅ **Canvas reorganization**: All 75+ pages in structured grid (`design/layout.md`)
 - ✅ **Orphaned label fix**: 130+ annotation labels repositioned

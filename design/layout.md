@@ -213,3 +213,11 @@
 | 3 | `y5fUZ` | C-End Sprint | C04 |
 | 4 | `53iKE` | C-End Milestone | C05 |
 | 5 | `coM7o` | C-End Shop | C06 |
+
+### Row 22 — C-End User Pages (y: 41825)
+
+| Col | Node ID | Page | Code |
+|-----|---------|------|------|
+| 0 | `nvQuK` | C-End User Center | C07 |
+| 1 | `wSSD5` | C-End Invite Center | C08 |
+| 2 | `5Nhkz` | C-End Activity Feed | C09 |

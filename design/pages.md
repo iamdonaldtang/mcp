@@ -25,7 +25,9 @@
 | Community Wizard (Step1: Customize/Step2: Modules/Step3: Review) | `Gzpeu`, `8NeyG`, `qknQZ` |
 | Community Module Detail | `usBsM` |
 | Community Modules: Sectors/Points/TaskChain/DayChain/Leaderboard | `Wug7d`, `zCfKQ`, `lpdtp`, `fLLVb`, `Emmab` |
-| Community Modules: Sprint/Milestone/BenefitsShop/LuckyWheel | `FO9JR`, `WFdZQ`, `7yPWx`, `sme5a` |
+| Community Modules: LB Sprint/Milestone/BenefitsShop/LuckyWheel | `FO9JR`, `WFdZQ`, `7yPWx`, `sme5a` |
+| Community Modules: Badges | `BJLsz` |
+| Community Settings: Access Rules / Homepage Editor | `g1CNC`, `5Wm6B` |
 | Community Operations: Content/Preview | `lhR14`, `2UiNC` |
 | WL Hub (Empty/Active/Mgmt) | `Ir6Tq`, `BnkYW`, `UPAfV` |
 | WL Wizard | `CXzmy` |
@@ -36,11 +38,12 @@
 | Boost Hub (Empty/Active/Mgmt) | `stYvi`, `5C3WP`, `8gT3V` |
 | Boost Wizard (Step1-4) | `SDfui`, `l9tmF`, `KMtqR`, `fZpcQ` |
 
-## C-End (White Label Community) — 6 pages
+## C-End (White Label Community) — 9 pages
 | Page | Node ID |
 |------|---------|
 | Community Home / Quest / Leaderboard | `vJVhd`, `dUXTl`, `KmdSd` |
-| Sprint / Milestone / Shop | `y5fUZ`, `53iKE`, `coM7o` |
+| LB Sprint / Milestone / Shop | `y5fUZ`, `53iKE`, `coM7o` |
+| User Center / Invite Center / Activity Feed | `PykHF`, `TaAo9`, `xhPIr` |
 
 ## Component Library
 - Node ID: `327GX`
