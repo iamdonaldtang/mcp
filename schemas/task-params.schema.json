@@ -1,0 +1,492 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://taskon.xyz/schemas/task-params.schema.json",
+  "title": "TaskParams",
+  "description": "TaskOn任务模板参数Schema",
+  "definitions": {
+    "FollowTwitterParams": {
+      "type": "object",
+      "description": "关注Twitter任务参数",
+      "properties": {
+        "twitter_handle": {
+          "type": "string",
+          "description": "Twitter账号，需要带@符号",
+          "pattern": "^@[a-zA-Z0-9_]{1,15}$",
+          "examples": ["@TaskOnXyz", "@SwapX"]
+        }
+      },
+      "required": ["twitter_handle"]
+    },
+    "RetweetTwitterParams": {
+      "type": "object",
+      "description": "转发推文任务参数",
+      "properties": {
+        "twitter_link": {
+          "type": "string",
+          "format": "uri",
+          "description": "推文链接",
+          "pattern": "^https://(twitter\\.com|x\\.com)/[a-zA-Z0-9_]+/status/[0-9]+",
+          "examples": ["https://twitter.com/TaskOnXyz/status/1234567890"]
+        },
+        "extra": {
+          "type": "string",
+          "description": "额外说明"
+        }
+      },
+      "required": ["twitter_link"]
+    },
+    "LikeATweetParams": {
+      "type": "object",
+      "description": "点赞推文任务参数",
+      "properties": {
+        "twitter_link": {
+          "type": "string",
+          "format": "uri",
+          "description": "推文链接",
+          "pattern": "^https://(twitter\\.com|x\\.com)/[a-zA-Z0-9_]+/status/[0-9]+"
+        },
+        "extra": {
+          "type": "string",
+          "description": "额外说明"
+        }
+      },
+      "required": ["twitter_link"]
+    },
+    "PostTweetParams": {
+      "type": "object",
+      "description": "发布推文任务参数",
+      "properties": {
+        "hash_tag": {
+          "type": "string",
+          "description": "话题标签，多个用逗号分隔",
+          "examples": ["#TaskOn,#Web3"]
+        },
+        "content_keywords": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "推文需包含的关键词"
+        },
+        "desc": {
+          "type": "string",
+          "description": "任务描述"
+        }
+      },
+      "required": ["hash_tag"]
+    },
+    "QuoteTweetAndHashTagParams": {
+      "type": "object",
+      "description": "引用推文并带话题标签任务参数",
+      "properties": {
+        "twitter_link": {
+          "type": "string",
+          "format": "uri",
+          "description": "要引用的推文链接"
+        },
+        "hash_tag": {
+          "type": "string",
+          "description": "话题标签，多个用逗号分隔"
+        },
+        "desc": {
+          "type": "string",
+          "description": "任务描述"
+        },
+        "extra": {
+          "type": "string"
+        }
+      },
+      "required": ["twitter_link", "hash_tag"]
+    },
+    "ReplyTweetParams": {
+      "type": "object",
+      "description": "回复推文任务参数",
+      "properties": {
+        "twitter_link": {
+          "type": "string",
+          "format": "uri",
+          "description": "要回复的推文链接"
+        },
+        "content_keywords": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "回复需包含的关键词"
+        }
+      },
+      "required": ["twitter_link"]
+    },
+    "JoinDiscordParams": {
+      "type": "object",
+      "description": "加入Discord服务器任务参数",
+      "properties": {
+        "discord_server_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Discord服务器邀请链接",
+          "pattern": "^https://discord\\.(gg|com/invite)/[a-zA-Z0-9]+",
+          "examples": ["https://discord.gg/taskon"]
+        },
+        "discord_channel_id": {
+          "type": "string",
+          "description": "Discord频道ID（可选）"
+        },
+        "required_role_id": {
+          "type": "string",
+          "description": "要求获得的角色ID（可选）"
+        }
+      },
+      "required": ["discord_server_url"]
+    },
+    "JoinTelegramParams": {
+      "type": "object",
+      "description": "加入Telegram群组任务参数",
+      "properties": {
+        "tg_group_link": {
+          "type": "string",
+          "format": "uri",
+          "description": "Telegram群组链接",
+          "pattern": "^https://t\\.me/[a-zA-Z0-9_]+",
+          "examples": ["https://t.me/TaskOnGroup"]
+        }
+      },
+      "required": ["tg_group_link"]
+    },
+    "YoutubeParams": {
+      "type": "object",
+      "description": "YouTube观看任务参数",
+      "properties": {
+        "link": {
+          "type": "string",
+          "format": "uri",
+          "description": "YouTube视频链接"
+        },
+        "desc": {
+          "type": "string",
+          "description": "任务描述"
+        }
+      },
+      "required": ["link"]
+    },
+    "TokenBalanceParams": {
+      "type": "object",
+      "description": "持有Token任务参数",
+      "properties": {
+        "network": {
+          "type": "string",
+          "description": "链名称",
+          "enum": [
+            "ethereum", "bsc", "polygon", "arbitrum", "optimism",
+            "base", "avalanche", "fantom", "linea", "scroll",
+            "zksync", "mantle", "manta", "blast"
+          ]
+        },
+        "token_contract_addr": {
+          "type": "string",
+          "description": "代币合约地址",
+          "pattern": "^0x[a-fA-F0-9]{40}$"
+        },
+        "token_name": {
+          "type": "string",
+          "description": "代币名称（显示用）"
+        },
+        "min_balance": {
+          "type": "string",
+          "description": "最低余额",
+          "pattern": "^[0-9]+(\\.[0-9]+)?$"
+        },
+        "pick_from_list": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否从预设列表选择"
+        }
+      },
+      "required": ["network", "token_contract_addr", "token_name", "min_balance"]
+    },
+    "NftHolderParams": {
+      "type": "object",
+      "description": "持有NFT任务参数",
+      "properties": {
+        "network": {
+          "type": "string",
+          "description": "链名称"
+        },
+        "contract_address": {
+          "type": "string",
+          "description": "NFT合约地址",
+          "pattern": "^0x[a-fA-F0-9]{40}$"
+        },
+        "nft_name": {
+          "type": "string",
+          "description": "NFT名称"
+        },
+        "nft_type": {
+          "type": "string",
+          "enum": ["ERC721", "ERC1155"],
+          "default": "ERC721"
+        },
+        "quantity": {
+          "type": "integer",
+          "default": 1,
+          "description": "最少持有数量"
+        }
+      },
+      "required": ["network", "contract_address"]
+    },
+    "SwapVolumeParams": {
+      "type": "object",
+      "description": "Swap交易量任务参数",
+      "properties": {
+        "chain": {
+          "type": "string",
+          "description": "链名称"
+        },
+        "dex_name": {
+          "type": "string",
+          "description": "DEX名称",
+          "examples": ["Uniswap", "PancakeSwap", "SushiSwap"]
+        },
+        "min_volume": {
+          "type": "string",
+          "description": "最低交易量(USD)"
+        },
+        "token_pair": {
+          "type": "string",
+          "description": "交易对，如 ETH/USDC（可选）"
+        },
+        "cumulative": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否累计计算"
+        }
+      },
+      "required": ["chain", "min_volume"]
+    },
+    "ContractInteractiveParams": {
+      "type": "object",
+      "description": "合约交互任务参数",
+      "properties": {
+        "chain": {
+          "type": "string",
+          "description": "链名称"
+        },
+        "contract_address": {
+          "type": "string",
+          "description": "合约地址",
+          "pattern": "^0x[a-fA-F0-9]{40}$"
+        },
+        "function_name": {
+          "type": "string",
+          "description": "函数名称（可选，不填则任意交互都算）"
+        },
+        "min_tx_count": {
+          "type": "integer",
+          "default": 1,
+          "description": "最少交互次数"
+        },
+        "min_value": {
+          "type": "string",
+          "description": "最小交易金额(USD)"
+        }
+      },
+      "required": ["chain", "contract_address"]
+    },
+    "DailyConnectParams": {
+      "type": "object",
+      "description": "每日签到任务参数",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "InviteParams": {
+      "type": "object",
+      "description": "邀请好友任务参数",
+      "properties": {
+        "invite_num": {
+          "type": "integer",
+          "description": "邀请人数",
+          "minimum": 1,
+          "default": 1
+        }
+      },
+      "required": ["invite_num"]
+    },
+    "QuizChooseParams": {
+      "type": "object",
+      "description": "问答测验任务参数",
+      "properties": {
+        "question": {
+          "type": "string",
+          "description": "问题"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "选项标签，如A、B、C、D"
+              },
+              "text": {
+                "type": "string",
+                "description": "选项内容"
+              },
+              "image": {
+                "type": "string",
+                "format": "uri",
+                "description": "选项图片（可选）"
+              },
+              "is_answer": {
+                "type": "boolean",
+                "description": "是否正确答案"
+              }
+            },
+            "required": ["label", "text", "is_answer"]
+          },
+          "minItems": 2,
+          "maxItems": 6
+        }
+      },
+      "required": ["question", "options"]
+    },
+    "MultiQuizzesParams": {
+      "type": "object",
+      "description": "多题问答任务参数",
+      "properties": {
+        "questions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QuizChooseParams"
+          },
+          "minItems": 1
+        },
+        "pass_score": {
+          "type": "integer",
+          "description": "通过分数"
+        }
+      },
+      "required": ["questions"]
+    },
+    "LearnAndQuizParams": {
+      "type": "object",
+      "description": "学习问答任务参数",
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "学习内容（支持Markdown）"
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QuizChooseParams"
+          }
+        }
+      },
+      "required": ["content", "questions"]
+    },
+    "PowTaskParams": {
+      "type": "object",
+      "description": "提交证明任务参数",
+      "properties": {
+        "pow_type": {
+          "type": "string",
+          "enum": ["Image", "URL", "Text"],
+          "description": "证明类型"
+        },
+        "desc": {
+          "type": "string",
+          "description": "任务描述，说明用户需要提交什么"
+        }
+      },
+      "required": ["pow_type", "desc"]
+    },
+    "BindEmailParams": {
+      "type": "object",
+      "description": "绑定邮箱任务参数",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "LinkTaskParams": {
+      "type": "object",
+      "description": "访问链接任务参数",
+      "properties": {
+        "link": {
+          "type": "string",
+          "format": "uri",
+          "description": "目标链接"
+        },
+        "desc": {
+          "type": "string",
+          "description": "任务描述"
+        }
+      },
+      "required": ["link"]
+    },
+    "OuterAPIParams": {
+      "type": "object",
+      "description": "外部API验证任务参数",
+      "properties": {
+        "api_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "API地址"
+        },
+        "api_key": {
+          "type": "string",
+          "description": "API密钥"
+        },
+        "desc": {
+          "type": "string",
+          "description": "任务描述"
+        }
+      },
+      "required": ["api_url"]
+    },
+    "PohParams": {
+      "type": "object",
+      "description": "人类身份证明任务参数",
+      "properties": {
+        "min_score": {
+          "type": "integer",
+          "description": "最低分数",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "JoinCommunityParams": {
+      "type": "object",
+      "description": "加入社区任务参数",
+      "properties": {
+        "community_id": {
+          "type": "integer",
+          "description": "社区ID"
+        }
+      },
+      "required": ["community_id"]
+    }
+  },
+  "oneOf": [
+    { "$ref": "#/definitions/FollowTwitterParams" },
+    { "$ref": "#/definitions/RetweetTwitterParams" },
+    { "$ref": "#/definitions/LikeATweetParams" },
+    { "$ref": "#/definitions/PostTweetParams" },
+    { "$ref": "#/definitions/QuoteTweetAndHashTagParams" },
+    { "$ref": "#/definitions/ReplyTweetParams" },
+    { "$ref": "#/definitions/JoinDiscordParams" },
+    { "$ref": "#/definitions/JoinTelegramParams" },
+    { "$ref": "#/definitions/YoutubeParams" },
+    { "$ref": "#/definitions/TokenBalanceParams" },
+    { "$ref": "#/definitions/NftHolderParams" },
+    { "$ref": "#/definitions/SwapVolumeParams" },
+    { "$ref": "#/definitions/ContractInteractiveParams" },
+    { "$ref": "#/definitions/DailyConnectParams" },
+    { "$ref": "#/definitions/InviteParams" },
+    { "$ref": "#/definitions/QuizChooseParams" },
+    { "$ref": "#/definitions/MultiQuizzesParams" },
+    { "$ref": "#/definitions/LearnAndQuizParams" },
+    { "$ref": "#/definitions/PowTaskParams" },
+    { "$ref": "#/definitions/BindEmailParams" },
+    { "$ref": "#/definitions/LinkTaskParams" },
+    { "$ref": "#/definitions/OuterAPIParams" },
+    { "$ref": "#/definitions/PohParams" },
+    { "$ref": "#/definitions/JoinCommunityParams" }
+  ]
+}

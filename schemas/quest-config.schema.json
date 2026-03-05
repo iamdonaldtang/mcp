@@ -1,0 +1,364 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://taskon.xyz/schemas/quest-config.schema.json",
+  "title": "QuestConfig",
+  "description": "TaskOn Quest配置Schema - LLM生成格式",
+  "type": "object",
+  "properties": {
+    "basic_info": {
+      "$ref": "#/definitions/BasicInfo"
+    },
+    "tasks": {
+      "type": "array",
+      "description": "任务列表",
+      "items": {
+        "$ref": "#/definitions/TaskConfig"
+      },
+      "minItems": 1,
+      "maxItems": 20
+    },
+    "rewards": {
+      "$ref": "#/definitions/RewardConfig"
+    },
+    "eligibility": {
+      "$ref": "#/definitions/EligibilityConfig"
+    },
+    "settings": {
+      "$ref": "#/definitions/QuestSettings"
+    }
+  },
+  "required": ["basic_info", "tasks"],
+  "definitions": {
+    "BasicInfo": {
+      "type": "object",
+      "description": "活动基础信息",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "活动名称",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "description": "活动描述",
+          "maxLength": 2000
+        },
+        "cover_image": {
+          "type": "string",
+          "format": "uri",
+          "description": "封面图URL"
+        },
+        "start_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "开始时间 (ISO 8601格式)"
+        },
+        "end_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "结束时间 (ISO 8601格式)"
+        },
+        "is_private": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否私有活动"
+        },
+        "start_immediately": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否立即开始"
+        }
+      },
+      "required": ["name", "start_time", "end_time"]
+    },
+    "TaskConfig": {
+      "type": "object",
+      "description": "单个任务配置",
+      "properties": {
+        "template_id": {
+          "$ref": "#/definitions/TaskTemplateId"
+        },
+        "custom_name": {
+          "type": "string",
+          "description": "自定义任务名称",
+          "maxLength": 100
+        },
+        "params": {
+          "type": "object",
+          "description": "任务参数，根据template_id不同而不同"
+        },
+        "points": {
+          "type": "integer",
+          "description": "完成任务获得的积分",
+          "minimum": 0,
+          "maximum": 100000,
+          "default": 100
+        },
+        "is_optional": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否为可选任务"
+        },
+        "recurrence": {
+          "$ref": "#/definitions/RecurrenceType"
+        }
+      },
+      "required": ["template_id", "params"]
+    },
+    "TaskTemplateId": {
+      "type": "string",
+      "description": "任务模板ID",
+      "enum": [
+        "FollowTwitter",
+        "RetweetTwitter",
+        "LikeATweet",
+        "PostTweet",
+        "QuoteTweetAndTag",
+        "QuoteTweetAndHashTag",
+        "ReplyTweet",
+        "ReplyTweetAndHashTag",
+        "PostTweetAndHashTag",
+        "PostTweetAndTag",
+        "PostTweetAndContent",
+        "LikeMultipleTwitter",
+        "QuoteMultipleTwitter",
+        "JoinDiscord",
+        "JoinTelegram",
+        "JoinTelegramFolderLink",
+        "Youtube",
+        "TokenBalance",
+        "NftHolder",
+        "SwapVolume",
+        "ContractInteractive",
+        "SwapDexContractInteractive",
+        "ChaingeSwap",
+        "ChaingeBridge",
+        "DailyConnect",
+        "Invite",
+        "QuizChoose",
+        "MultiQuizzes",
+        "LearnAndQuiz",
+        "PowTask",
+        "PowQa",
+        "PowQaWithAnswer",
+        "BindEmail",
+        "LinkTask",
+        "OuterAPI",
+        "OuterPointAPI",
+        "Poh",
+        "TaskonPohScore",
+        "SubmitCampaign",
+        "JoinCommunity",
+        "BenefitRanking",
+        "AMA"
+      ]
+    },
+    "RecurrenceType": {
+      "type": "string",
+      "description": "任务重复周期",
+      "enum": ["once", "daily", "weekly", "monthly"],
+      "default": "once"
+    },
+    "RewardConfig": {
+      "type": "object",
+      "description": "奖励配置",
+      "properties": {
+        "distribution_method": {
+          "$ref": "#/definitions/DistributionMethod"
+        },
+        "layers": {
+          "type": "array",
+          "description": "奖励层级",
+          "items": {
+            "$ref": "#/definitions/RewardLayer"
+          },
+          "minItems": 1
+        },
+        "qualifier_rewards": {
+          "type": "array",
+          "description": "完成任务即可获得的奖励（通常是积分）",
+          "items": {
+            "$ref": "#/definitions/RewardItem"
+          }
+        }
+      },
+      "required": ["distribution_method"]
+    },
+    "DistributionMethod": {
+      "type": "string",
+      "description": "奖励分发方式",
+      "enum": ["fcfs", "lucky_draw", "ranking", "open_to_all"]
+    },
+    "RewardLayer": {
+      "type": "object",
+      "description": "奖励层级",
+      "properties": {
+        "max_winners": {
+          "type": "integer",
+          "description": "最大获奖人数，0或999999表示无限",
+          "minimum": 0
+        },
+        "rank_range": {
+          "type": "object",
+          "description": "排名范围（ranking模式使用）",
+          "properties": {
+            "from": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "to": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "is_max": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "rewards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RewardItem"
+          },
+          "minItems": 1
+        }
+      },
+      "required": ["max_winners", "rewards"]
+    },
+    "RewardItem": {
+      "type": "object",
+      "description": "单个奖励",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/RewardType"
+        },
+        "amount": {
+          "type": "string",
+          "description": "奖励数量"
+        },
+        "token_symbol": {
+          "type": "string",
+          "description": "代币符号（token类型时使用）"
+        },
+        "token_address": {
+          "type": "string",
+          "description": "代币合约地址（token类型时使用）"
+        },
+        "chain": {
+          "type": "string",
+          "description": "链名称"
+        },
+        "points_id": {
+          "type": "integer",
+          "description": "积分ID（points类型时使用）"
+        },
+        "points_name": {
+          "type": "string",
+          "description": "积分名称（points类型时使用）"
+        },
+        "nft_collection_id": {
+          "type": "integer",
+          "description": "NFT集合ID（nft类型时使用）"
+        },
+        "nft_address": {
+          "type": "string",
+          "description": "NFT合约地址"
+        },
+        "discord_role_id": {
+          "type": "string",
+          "description": "Discord角色ID"
+        },
+        "discord_role_name": {
+          "type": "string",
+          "description": "Discord角色名称"
+        }
+      },
+      "required": ["type"]
+    },
+    "RewardType": {
+      "type": "string",
+      "description": "奖励类型",
+      "enum": ["token", "nft", "points", "whitelist", "discord_role", "content"]
+    },
+    "EligibilityConfig": {
+      "type": "object",
+      "description": "参与资格配置",
+      "properties": {
+        "express": {
+          "type": "string",
+          "enum": ["and", "or"],
+          "default": "and",
+          "description": "条件组合方式"
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EligibilityCondition"
+          }
+        }
+      }
+    },
+    "EligibilityCondition": {
+      "type": "object",
+      "description": "单个资格条件",
+      "properties": {
+        "template_id": {
+          "$ref": "#/definitions/EligibilityTemplateId"
+        },
+        "params": {
+          "type": "object",
+          "description": "条件参数"
+        }
+      },
+      "required": ["template_id", "params"]
+    },
+    "EligibilityTemplateId": {
+      "type": "string",
+      "description": "资格条件模板ID",
+      "enum": [
+        "TokenBalance",
+        "NftHolder",
+        "UserLevel",
+        "SupportedCountry",
+        "NewUser",
+        "CommunityUserLevel",
+        "CommunityPreTask",
+        "DiscordRole",
+        "OnChainVerification",
+        "XAccountVerification",
+        "CommunityUserPoints",
+        "GoogleRecaptcha",
+        "JoinDiscord",
+        "Whitelist",
+        "SubmittedAction",
+        "Poh",
+        "BABTHolder",
+        "ZKMeCitizenshipNftHolder",
+        "TaskonPohScore"
+      ]
+    },
+    "QuestSettings": {
+      "type": "object",
+      "description": "活动设置",
+      "properties": {
+        "google_recaptcha": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否启用Google reCAPTCHA"
+        },
+        "min_finished_optional_task_num": {
+          "type": "integer",
+          "default": 0,
+          "description": "要求最少完成可选任务数量"
+        },
+        "min_finished_optional_task_points": {
+          "type": "integer",
+          "default": 0,
+          "description": "要求最少完成可选任务积分"
+        }
+      }
+    }
+  }
+}

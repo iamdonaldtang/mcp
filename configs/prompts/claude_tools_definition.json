@@ -1,0 +1,576 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "TaskOn Quest Creator - Claude API Tools Definition",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "create_quest",
+      "description": "创建完整的Quest活动配置。当基础信息、任务和奖励都已确认后使用此工具。",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "basic_info": {
+            "type": "object",
+            "description": "活动基础信息",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "活动名称，建议包含项目名"
+              },
+              "description": {
+                "type": "string",
+                "description": "活动描述，简要说明活动目的和玩法"
+              },
+              "start_time": {
+                "type": "string",
+                "format": "date-time",
+                "description": "开始时间，ISO 8601格式"
+              },
+              "end_time": {
+                "type": "string",
+                "format": "date-time",
+                "description": "结束时间，ISO 8601格式"
+              },
+              "cover_image": {
+                "type": "string",
+                "description": "封面图URL（可选）"
+              },
+              "is_private": {
+                "type": "boolean",
+                "default": false,
+                "description": "是否私有活动"
+              }
+            },
+            "required": ["name", "start_time", "end_time"]
+          },
+          "tasks": {
+            "type": "array",
+            "description": "任务列表",
+            "items": {
+              "type": "object",
+              "properties": {
+                "template_id": {
+                  "type": "string",
+                  "description": "任务模板ID",
+                  "enum": [
+                    "FollowTwitter",
+                    "RetweetTwitter",
+                    "LikeATweet",
+                    "PostTweet",
+                    "QuoteTweetAndHashTag",
+                    "ReplyTweet",
+                    "JoinDiscord",
+                    "JoinTelegram",
+                    "TokenBalance",
+                    "NftHolder",
+                    "SwapVolume",
+                    "ContractInteractive",
+                    "DailyConnect",
+                    "Invite",
+                    "QuizChoose",
+                    "PowTask",
+                    "BindEmail",
+                    "LearnAndQuiz"
+                  ]
+                },
+                "custom_name": {
+                  "type": "string",
+                  "description": "自定义任务名称（可选）"
+                },
+                "params": {
+                  "type": "object",
+                  "description": "任务参数，根据template_id不同而不同"
+                },
+                "points": {
+                  "type": "integer",
+                  "description": "完成任务获得的积分",
+                  "default": 100
+                },
+                "is_optional": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "是否为可选任务"
+                },
+                "recurrence": {
+                  "type": "string",
+                  "enum": ["once", "daily", "weekly"],
+                  "default": "once",
+                  "description": "任务重复周期"
+                }
+              },
+              "required": ["template_id", "params"]
+            },
+            "minItems": 1
+          },
+          "rewards": {
+            "type": "object",
+            "description": "奖励配置",
+            "properties": {
+              "distribution_method": {
+                "type": "string",
+                "enum": ["fcfs", "lucky_draw", "ranking", "open_to_all"],
+                "description": "分发方式：先到先得/抽奖/排名/全员"
+              },
+              "layers": {
+                "type": "array",
+                "description": "奖励层级",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "max_winners": {
+                      "type": "integer",
+                      "description": "最大获奖人数"
+                    },
+                    "rank_range": {
+                      "type": "object",
+                      "description": "排名范围（ranking模式使用）",
+                      "properties": {
+                        "from": { "type": "integer" },
+                        "to": { "type": "integer" }
+                      }
+                    },
+                    "rewards": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": ["token", "nft", "points", "whitelist", "discord_role"]
+                          },
+                          "amount": {
+                            "type": "string",
+                            "description": "奖励数量"
+                          },
+                          "token_symbol": {
+                            "type": "string",
+                            "description": "代币符号（token类型时必填）"
+                          },
+                          "token_address": {
+                            "type": "string",
+                            "description": "代币合约地址（token类型时必填）"
+                          },
+                          "chain": {
+                            "type": "string",
+                            "description": "链名称"
+                          },
+                          "points_name": {
+                            "type": "string",
+                            "description": "积分名称（points类型时使用）"
+                          }
+                        },
+                        "required": ["type"]
+                      }
+                    }
+                  },
+                  "required": ["max_winners", "rewards"]
+                }
+              }
+            },
+            "required": ["distribution_method"]
+          },
+          "eligibility": {
+            "type": "object",
+            "description": "参与资格条件（可选）",
+            "properties": {
+              "express": {
+                "type": "string",
+                "enum": ["and", "or"],
+                "default": "and",
+                "description": "条件组合方式"
+              },
+              "conditions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "template_id": {
+                      "type": "string",
+                      "enum": [
+                        "TokenBalance",
+                        "NftHolder",
+                        "DiscordRole",
+                        "Whitelist",
+                        "Poh",
+                        "BABTHolder",
+                        "XAccountVerification"
+                      ]
+                    },
+                    "params": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "required": ["basic_info", "tasks"]
+      }
+    },
+    {
+      "name": "add_task",
+      "description": "向当前Quest配置添加一个新任务",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "template_id": {
+            "type": "string",
+            "description": "任务模板ID",
+            "enum": [
+              "FollowTwitter",
+              "RetweetTwitter",
+              "LikeATweet",
+              "PostTweet",
+              "JoinDiscord",
+              "JoinTelegram",
+              "TokenBalance",
+              "NftHolder",
+              "SwapVolume",
+              "ContractInteractive",
+              "DailyConnect",
+              "Invite",
+              "QuizChoose",
+              "PowTask"
+            ]
+          },
+          "params": {
+            "type": "object",
+            "description": "任务参数"
+          },
+          "points": {
+            "type": "integer",
+            "default": 100
+          },
+          "is_optional": {
+            "type": "boolean",
+            "default": false
+          },
+          "custom_name": {
+            "type": "string",
+            "description": "自定义任务名称"
+          }
+        },
+        "required": ["template_id", "params"]
+      }
+    },
+    {
+      "name": "remove_task",
+      "description": "从当前Quest配置中移除指定任务",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "task_index": {
+            "type": "integer",
+            "description": "任务索引（从0开始）"
+          }
+        },
+        "required": ["task_index"]
+      }
+    },
+    {
+      "name": "update_field",
+      "description": "更新Quest配置的特定字段",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "字段路径，如 'basic_info.name' 或 'tasks[0].points'"
+          },
+          "value": {
+            "description": "新值"
+          }
+        },
+        "required": ["path", "value"]
+      }
+    },
+    {
+      "name": "suggest_tasks",
+      "description": "根据项目类型和目标推荐任务组合",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "project_type": {
+            "type": "string",
+            "enum": ["dex", "perps", "lending", "l2", "gamefi", "nft", "wallet", "other"],
+            "description": "项目类型"
+          },
+          "goal": {
+            "type": "string",
+            "enum": ["acquisition", "activation", "retention", "trading_volume"],
+            "description": "主要目标"
+          },
+          "budget_level": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "description": "预算级别"
+          },
+          "duration_days": {
+            "type": "integer",
+            "description": "活动持续天数"
+          }
+        },
+        "required": ["project_type", "goal"]
+      }
+    },
+    {
+      "name": "validate_config",
+      "description": "验证当前Quest配置是否完整有效",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "config": {
+            "type": "object",
+            "description": "要验证的配置对象"
+          }
+        },
+        "required": ["config"]
+      }
+    },
+    {
+      "name": "preview_config",
+      "description": "生成配置的预览摘要",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "config": {
+            "type": "object",
+            "description": "要预览的配置对象"
+          }
+        },
+        "required": ["config"]
+      }
+    },
+    {
+      "name": "publish_quest",
+      "description": "发布Quest到TaskOn平台。发布前会自动验证配置。",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "config": {
+            "type": "object",
+            "description": "完整的Quest配置"
+          },
+          "notify_community": {
+            "type": "boolean",
+            "default": false,
+            "description": "是否通知社区成员"
+          }
+        },
+        "required": ["config"]
+      }
+    }
+  ],
+  "task_params_schemas": {
+    "FollowTwitter": {
+      "type": "object",
+      "properties": {
+        "twitter_handle": {
+          "type": "string",
+          "description": "Twitter账号，需要带@符号"
+        }
+      },
+      "required": ["twitter_handle"]
+    },
+    "RetweetTwitter": {
+      "type": "object",
+      "properties": {
+        "twitter_link": {
+          "type": "string",
+          "description": "推文链接"
+        }
+      },
+      "required": ["twitter_link"]
+    },
+    "LikeATweet": {
+      "type": "object",
+      "properties": {
+        "twitter_link": {
+          "type": "string",
+          "description": "推文链接"
+        }
+      },
+      "required": ["twitter_link"]
+    },
+    "PostTweet": {
+      "type": "object",
+      "properties": {
+        "hash_tag": {
+          "type": "string",
+          "description": "话题标签，多个用逗号分隔"
+        },
+        "content_keywords": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "推文需包含的关键词"
+        }
+      },
+      "required": ["hash_tag"]
+    },
+    "JoinDiscord": {
+      "type": "object",
+      "properties": {
+        "discord_server_url": {
+          "type": "string",
+          "description": "Discord服务器邀请链接"
+        }
+      },
+      "required": ["discord_server_url"]
+    },
+    "JoinTelegram": {
+      "type": "object",
+      "properties": {
+        "tg_group_link": {
+          "type": "string",
+          "description": "Telegram群组链接"
+        }
+      },
+      "required": ["tg_group_link"]
+    },
+    "TokenBalance": {
+      "type": "object",
+      "properties": {
+        "network": {
+          "type": "string",
+          "description": "链名称：ethereum, bsc, polygon, arbitrum, base, optimism等"
+        },
+        "token_contract_addr": {
+          "type": "string",
+          "description": "代币合约地址"
+        },
+        "token_name": {
+          "type": "string",
+          "description": "代币名称（显示用）"
+        },
+        "min_balance": {
+          "type": "string",
+          "description": "最低余额"
+        }
+      },
+      "required": ["network", "token_contract_addr", "token_name", "min_balance"]
+    },
+    "NftHolder": {
+      "type": "object",
+      "properties": {
+        "network": {
+          "type": "string",
+          "description": "链名称"
+        },
+        "contract_address": {
+          "type": "string",
+          "description": "NFT合约地址"
+        },
+        "nft_name": {
+          "type": "string",
+          "description": "NFT名称"
+        },
+        "quantity": {
+          "type": "integer",
+          "default": 1,
+          "description": "最少持有数量"
+        }
+      },
+      "required": ["network", "contract_address"]
+    },
+    "SwapVolume": {
+      "type": "object",
+      "properties": {
+        "chain": {
+          "type": "string",
+          "description": "链名称"
+        },
+        "dex_name": {
+          "type": "string",
+          "description": "DEX名称"
+        },
+        "min_volume": {
+          "type": "string",
+          "description": "最低交易量(USD)"
+        },
+        "token_pair": {
+          "type": "string",
+          "description": "交易对，如 ETH/USDC"
+        }
+      },
+      "required": ["chain", "min_volume"]
+    },
+    "ContractInteractive": {
+      "type": "object",
+      "properties": {
+        "chain": {
+          "type": "string",
+          "description": "链名称"
+        },
+        "contract_address": {
+          "type": "string",
+          "description": "合约地址"
+        },
+        "function_name": {
+          "type": "string",
+          "description": "函数名称（可选）"
+        },
+        "min_tx_count": {
+          "type": "integer",
+          "default": 1,
+          "description": "最少交互次数"
+        }
+      },
+      "required": ["chain", "contract_address"]
+    },
+    "DailyConnect": {
+      "type": "object",
+      "properties": {},
+      "description": "每日签到，无需参数"
+    },
+    "Invite": {
+      "type": "object",
+      "properties": {
+        "invite_num": {
+          "type": "integer",
+          "default": 1,
+          "description": "邀请人数"
+        }
+      },
+      "required": ["invite_num"]
+    },
+    "QuizChoose": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string",
+          "description": "问题"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string", "description": "选项标签如A,B,C" },
+              "text": { "type": "string", "description": "选项内容" },
+              "is_answer": { "type": "boolean", "description": "是否正确答案" }
+            },
+            "required": ["label", "text", "is_answer"]
+          },
+          "description": "选项列表"
+        }
+      },
+      "required": ["question", "options"]
+    },
+    "PowTask": {
+      "type": "object",
+      "properties": {
+        "pow_type": {
+          "type": "string",
+          "enum": ["Image", "URL", "Text"],
+          "description": "证明类型"
+        },
+        "desc": {
+          "type": "string",
+          "description": "任务描述"
+        }
+      },
+      "required": ["pow_type", "desc"]
+    }
+  }
+}

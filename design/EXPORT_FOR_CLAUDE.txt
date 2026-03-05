@@ -1,0 +1,185 @@
+========================================
+TaskOn Onboarding重设计 - Claude AI上下文导出
+========================================
+
+【基本信息】
+项目：TaskOn Onboarding v2重设计
+产品：TaskOn - Web3增长引擎
+核心承诺：Stop Renting Traffic. Start Building Your Own Growth Engine.
+当前阶段：设计 (Pencil + VSCode)
+设计师助手：Claude AI
+
+【目标】
+创建清晰的Onboarding流程，让项目方理解TaskOn的两个核心商业模式，
+并根据自己的需求选择合适的路径，而不是被功能堆砌淹没。
+
+【TaskOn的决策树结构】
+
+## 第一层选择（3选1）：
+
+1️⃣ 🏗️ **Build on My Domain（白标）**
+   - 用户体验：Embed widgets on YOUR website
+   - 数据归属：You own all data and attribution
+   - 工具包：API/SDK/Widget toolkit
+   - 适合：想要完全控制用户体验和数据的团队
+   - 对应服务：Subscription (SaaS) - White Label
+
+2️⃣ 🌐 **Grow on TaskOn（平台）**
+   - 用户体验：Launch campaigns on TaskOn.xyz
+   - 用户池：Access to 22M users
+   - 速度：Fast deployment, no technical integration
+   - 适合：想要快速获客和活动效果的团队
+   - 需要二级选择 ↓
+
+3️⃣ 🔄 **Use Both（混合）**
+   - 策略：Acquire on TaskOn platform, retain on your domain
+   - 优势：Best of both worlds, maximum flexibility
+   - 统一：Unified user identity graph
+   - 适合：需要完整增长闭环的成熟团队
+
+## 第二层选择（仅针对"Grow on TaskOn"）：
+
+2a. **Quest Only**（STARTER）
+   - 定位：Fast user acquisition with campaign basics
+   - 功能：Launch campaigns, Anti-bot, Analytics
+   - 目标：获客阶段
+
+2b. **Quest + Community**（COMPLETE）
+   - 定位：Full retention system with loyalty mechanics
+   - 功能：Quest基础 + Points/Levels + Leaderboards + Benefits Shop + TaskChain/DayChain
+   - 目标：获客 + 留存 + 忠诚度
+
+💡 关键理解：
+   - 这3个模式不是互斥的，可以组合使用
+   - 白标：用户在你的网站完成任务
+   - 平台：用户在TaskOn.xyz完成任务
+   - 混合：两个都用，统一用户身份
+   - Custom/Managed服务在首页弱化，但保留在产品深层
+
+【4个核心团队角色】（按业务模式映射）
+
+1️⃣ Growth Team
+   需求：快速用户获客和活动启动
+   推荐路径：⭐ 平台模式（Quest）
+   快赢：30分钟在TaskOn平台启动Quest活动
+   价值：访问TaskOn用户池，快速获客，无需技术集成
+   设计屏幕：
+   - Quest演示设置（5步快速流程）
+   - 成功案例展示（DEX交易赛：2周获得2000 UAW）
+   - CPA/CPS定价说明
+
+2️⃣ Community Team
+   需求：建立长期用户忠诚度和留存系统
+   推荐路径：⭐ 平台模式（Community）
+   快赢：部署Points + Leaderboard + Benefits Shop完整体系
+   价值：系统化激励机制，Milestone追踪，用户成长路径
+   设计屏幕：
+   - Community功能演示
+   - Points系统设计器
+   - Leaderboard + Milestone展示
+
+3️⃣ Dev Team
+   需求：在自己产品中集成增长工具
+   推荐路径：⭐ 白标SaaS（API/SDK/Widget）
+   快赢：复制代码嵌入组件，完全控制用户体验
+   价值：On-domain、数据所有权、完整归因、品牌一致性
+   设计屏幕：
+   - API文档
+   - 代码沙箱（实时示例）
+   - Widget/SDK集成指南
+
+4️⃣ Executive Team
+   需求：理解ROI和选择合适的商业模式
+   推荐路径：⭐ 对比两种模式（Platform vs White-label）
+   快赢：查看定价对比和ROI计算
+   价值：清晰的成本结构，可预测的ROI，灵活的商业模式
+   设计屏幕：
+   - 两种模式对比表
+   - ROI计算器
+   - 定价表 + 成功案例
+
+【设计原则】（请在审查时遵循）
+✨ 简洁 > 复杂              → 不堆砌功能
+✨ 故事 > 功能列表         → 从痛点开始
+✨ 快赢 > 全功能展示       → 让用户快速成功
+✨ 证明 > 承诺             → 用数据和案例说话
+
+【视觉系统】
+颜色：
+  - Primary Blue: #5D7EF1 (CMO)
+  - Success Green: #48BB78 (Community)
+  - Purple: #9B7EE0 (CTO)
+  - Orange: #ED8936 (CEO)
+  - 中性：#2D3748 (深灰), #E2E8F0 (浅灰), #FFF (白)
+
+排版：
+  - 字体家族：Inter
+  - Hero标题：48px Bold
+  - Section标题：32px Bold
+  - Body：16px Regular
+  - 标签：14px Regular
+
+间距：基础单位8px, Button 48px高, Card 12px圆角
+
+【竞品分析】（为了找出TaskOn的差异）
+Galxe：
+  ✅ 大用户库
+  ❌ 跳转域外，留存差，数据有限
+
+Zealy：
+  ✅ 社区友好，配置简单
+  ❌ 功能简陋，无归因
+
+TaskOn差异化：
+  🎯 白标嵌入（on-domain，数据归你）
+  🎯 完整归因（channel → wallet → action → retention）
+  🎯 零代码配置（快速上线，快速迭代）
+  🎯 多模式支持（Quest/Community/White-label一套系统）
+
+【屏幕清单】（优先级）
+P0（必须）:
+  - Landing Page (Hero + 3个Value Props)
+  - Role Selector (4个彩色卡片)
+  - CMO Path (3个屏幕)
+
+P1:
+  - Community Manager Path (2-3个屏幕)
+  - CTO Path (2个屏幕)
+  - CEO Path (2个屏幕)
+
+总计：约17-19个屏幕
+
+【AI助手的职责】
+当我上传设计截图时，请：
+1. 检查是否符合"设计原则"
+2. 审查视觉层级和可读性
+3. 验证是否符合品牌系统
+4. 给出具体的改进建议（不笼统）
+5. 优化文案和标签
+6. 检查目标用户是否能理解
+
+【我需要避免的常见设计错误】
+❌ 堆砌功能（本应简洁）
+❌ 功能列表式的文案（本应讲故事）
+❌ 没有明确的CTA（用户不知道下一步）
+❌ 过度装饰（应该简洁）
+❌ 没有为不同角色区分（所有人看同一个页面）
+
+【提示词位置】
+快速审查、角色适配、文案优化等详细提示词已保存在：
+design/AI_PROMPTS.md
+
+使用方式：
+1. 完成设计
+2. 截图
+3. 打开 design/AI_PROMPTS.md
+4. 选择合适的提示词
+5. 复制 + 粘贴 + 添加截图到Claude Chat
+6. 获得具体反馈
+
+【当前状态】
+[设计中... 会定期截图给你审查]
+
+---
+
+准备好了吗？让我们一起打造TaskOn最好的Onboarding！🚀
