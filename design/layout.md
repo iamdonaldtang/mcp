@@ -2,6 +2,7 @@
 
 > Auto-generated layout map for `design/pencil-new.pen`
 > Last updated: 2026-03-05
+> **Canonical page codes**: `docs/website_frontend_requirements.md` v4.1
 
 ## Grid Rules
 
@@ -44,9 +45,9 @@
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
 | 0 | `HO2Ny` | Unified Pricing (New) | M07-U |
-| 1 | `CXtOH` | Platform Pricing (Legacy) | M07 |
-| 2 | `EDoSn` | White Label Pricing (Legacy) | M08 |
-| 3 | `PWQV6` | Pricing Variant | — |
+| 1 | `CXtOH` | Platform Pricing | M07 |
+| 2 | `EDoSn` | White Label Pricing | M08 |
+| 3 | `PWQV6` | Pricing Variant (unused) | — |
 
 ### Row 3 — Support Pages (y: 14625)
 
@@ -60,9 +61,9 @@
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
-| 0 | `wsqIT` | Solution: GameFi | M12 |
-| 1 | `A7FaV` | Solution: DeFi | M13 |
-| 2 | `huslr` | Solution: NFT | M14 |
+| 0 | `wsqIT` | Solution: CPA/CPS | M12 |
+| 1 | `A7FaV` | Solution: Custom | M13 |
+| 2 | `huslr` | Solution: Joint | M14 |
 
 ### Row 5 — Dashboard (y: 18325)
 
@@ -96,111 +97,111 @@
 | 2 | `vFRHi` | Community Hub — Active | B11 |
 | 3 | `TQR51` | Community Hub — Deep | B12 |
 
-### Row 9 — Community Wizard & Variants (y: 23175)
+### Row 9 — Community Wizard (y: 23175)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
-| 0 | `qknQZ` | Community Hub Deep Alt | B12b |
-| 1 | `Gzpeu` | Community Wizard | B13 |
-| 2 | `8NeyG` | Community Wizard Variant | B13b |
-| 3 | `usBsM` | Community Wizard Variant | B13c |
+| 0 | `qknQZ` | Community Wizard — Step 3: Review & Launch | B35 |
+| 1 | `Gzpeu` | Community Wizard — Step 1: Customize | B13 |
+| 2 | `8NeyG` | Community Wizard — Step 2: Configure Modules | B34 |
+| 3 | `usBsM` | Community Module Detail — Points System | B36 |
 
 ### Row 10 — Community Modules A (y: 24375)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
-| 0 | `Wug7d` | Sectors & Tasks | B14 |
-| 1 | `zCfKQ` | Points & Level | B14b |
-| 2 | `lpdtp` | TaskChain | B14c |
-| 3 | `fLLVb` | DayChain | B14d |
-| 4 | `Emmab` | Leaderboard | B14e |
+| 0 | `Wug7d` | Sectors & Tasks | B31 |
+| 1 | `zCfKQ` | Points & Level Mgmt | B31a |
+| 2 | `lpdtp` | TaskChain Mgmt | B31b |
+| 3 | `fLLVb` | DayChain Mgmt | B31c |
+| 4 | `Emmab` | Leaderboard Mgmt | B31d |
 
 ### Row 11 — Community Modules B + Operations (y: 25875)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
-| 0 | `FO9JR` | Sprint | B14f |
-| 1 | `WFdZQ` | Milestone | B14g |
-| 2 | `7yPWx` | Benefits Shop | B14h |
-| 3 | `sme5a` | Lucky Wheel | B14i |
-| 4 | `lhR14` | Content Management | B15 |
-| 5 | `2UiNC` | Preview Mode | B16 |
+| 0 | `FO9JR` | Sprint Mgmt | B31e |
+| 1 | `WFdZQ` | Milestone Mgmt | B31f |
+| 2 | `7yPWx` | Benefits Shop Mgmt | B31g |
+| 3 | `sme5a` | Lucky Wheel Mgmt | B31h |
+| 4 | `lhR14` | Content Management | B32 |
+| 5 | `2UiNC` | Preview Mode | B33 |
 
 ### Row 12 — White Label Hub (y: 27575)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
-| 0 | `Ir6Tq` | WL Hub — Empty | B17 |
-| 1 | `BnkYW` | WL Hub — Active | B18 |
-| 2 | `UPAfV` | WL Hub — Management | B19 |
+| 0 | `Ir6Tq` | WL Hub — Empty | B14 |
+| 1 | `BnkYW` | WL Hub — Active | B15 |
+| 2 | `UPAfV` | WL Hub — Management | B16 |
 
 ### Row 13 — White Label Wizard (y: 28975)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
-| 0 | `NNwid` | WL Wizard Variant | B20b |
-| 1 | `CXzmy` | WL Wizard | B20 |
-| 2 | `5nCtO` | WL Wizard Variant | B20c |
+| 0 | `NNwid` | WL Wizard — Step 1 | B37 |
+| 1 | `CXzmy` | WL Wizard — Step 2 | B17 |
+| 2 | `5nCtO` | WL Wizard — Step 3 | B38 |
 
 ### Row 14 — WL Deploy: Domain & Embed (y: 30075)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
-| 0 | `5bmH9` | WL Domain Setup | B21 |
-| 1 | `RgCVQ` | WL Embed Options | B22 |
-| 2 | `ByGS0` | WL Embed Variant | B22b |
-| 3 | `Cx3LH` | WL Embed Variant | B22c |
+| 0 | `5bmH9` | WL Domain Setup | B18 |
+| 1 | `RgCVQ` | WL Embed Options | B19 |
+| 2 | `ByGS0` | WL Iframe Embed | B42 |
+| 3 | `Cx3LH` | WL Brand Settings | B40 |
 
 ### Row 15 — WL Widget Library (y: 31475)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
-| 0 | `2sSsA` | Widget Library — Empty | B23 |
-| 1 | `n4pJK` | Widget Config | B24 |
-| 2 | `S432k` | Widget Library — Active | B25 |
+| 0 | `2sSsA` | Widget Library — Empty | B20 |
+| 1 | `n4pJK` | Widget Config | B21 |
+| 2 | `S432k` | Widget Library — Active | B22 |
 
 ### Row 16 — WL Page Builder (y: 32875)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
-| 0 | `DRYwN` | Page Builder — Empty | B26 |
-| 1 | `sGDcq` | Page Builder — Editor | B27 |
-| 2 | `J08v5` | Page Builder — Active | B28 |
+| 0 | `DRYwN` | Page Builder — Empty | B23 |
+| 1 | `sGDcq` | Page Builder — Editor | B24 |
+| 2 | `J08v5` | Page Builder — Active | B25 |
 
 ### Row 17 — WL Integration & Extras (y: 34375)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
-| 0 | `Abs1E` | Integration Center | B29 |
-| 1 | `gS64G` | WL Brand Settings | B30 |
-| 2 | `lQxT5` | WL SDK Docs | B31 |
-| 3 | `69HPh` | WL Analytics | B32 |
+| 0 | `Abs1E` | Integration Center | B26 |
+| 1 | `gS64G` | WL Integration Config | B44 |
+| 2 | `lQxT5` | WL SDK & API | B41 |
+| 3 | `69HPh` | WL Page Analytics | B43 |
 
 ### Row 18 — Boost Hub (y: 36025)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
-| 0 | `stYvi` | Boost Hub — Empty | B33 |
-| 1 | `5C3WP` | Boost Hub — Active | B34 |
-| 2 | `8gT3V` | Boost Hub — Management | B35 |
-| 3 | `Sq4jV` | Boost Hub Variant | B35b |
+| 0 | `stYvi` | Boost Hub — Empty | B27 |
+| 1 | `5C3WP` | Boost Hub — Active | B28 |
+| 2 | `8gT3V` | Boost Hub — Management | B29 |
+| 3 | `Sq4jV` | Boost Campaign Detail | B39 |
 
 ### Row 19 — Boost Wizard (y: 37225)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
-| 0 | `SDfui` | Boost Wizard — Step 1 | B36 |
-| 1 | `l9tmF` | Boost Wizard — Step 2 | B37 |
-| 2 | `KMtqR` | Boost Wizard — Step 3 | B38 |
-| 3 | `fZpcQ` | Boost Wizard — Step 4 | B39 |
+| 0 | `SDfui` | Boost Wizard — Step 1 | B30a |
+| 1 | `l9tmF` | Boost Wizard — Step 2 | B30b |
+| 2 | `KMtqR` | Boost Wizard — Step 3 | B30c |
+| 3 | `fZpcQ` | Boost Wizard — Step 4 | B30d |
 
-### Row 20 — Boost Extras (y: 38325)
+### Row 20 — Cross-Product (y: 38325)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
-| 0 | `fLxTr` | Boost Extra A | B40 |
-| 1 | `ESrVt` | Boost Extra B | B41 |
-| 2 | `Nh7xq` | Boost Extra C | B42 |
+| 0 | `fLxTr` | Analytics Dashboard | B45 |
+| 1 | `ESrVt` | Settings | B46 |
+| 2 | `Nh7xq` | Settings / Profile | B47 |
 
 ### Row 21 — C-End Community (y: 39525)
 

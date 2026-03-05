@@ -3,7 +3,13 @@
 > 本文档定义了 TaskOn 官网（marketing pages）、B-end 产品界面（after-login dashboard & product hubs）、及 C-end 用户界面（White Label 社区前台）的完整页面编码、按钮→页面路由映射、动态数据规格、及静态内容边界。
 > 供前端/后端工程师对照实施。
 >
-> v4.0 更新：新增 B31-B47（17 个 B-end 页面）、M09-M14（6 个 Marketing 页面）、C01-C06（6 个 C-end 页面），共 67 页面编码。完成全量按钮→页面路由映射，清除已设计页面的 TODO 标记。仅剩 T01-T04（Quest Campaign Detail/Edit/Step3/Step4）为 SKIPPED。
+> v4.1 更新：
+> - 修正 Community Wizard 页面编码：B13=Step1(`Gzpeu`), B34=Step2(`8NeyG`), B35=Step3(`qknQZ`)。旧节点 `cNwNP`/`Sq7A2` 已删除。
+> - 新增 B10/B15 Getting Started Checklist 按钮路由（Promo Kit、Dev Kit、Auto-detection、Social Share）
+> - 新增 §六 功能组件规格：Promo Kit Generator、Dev Kit Page (B48)、Auto-detection Systems
+> - 新增 WL Sidebar 子菜单路由（Overview/Widgets/Pages）
+> - 新增 B31a-B31h（8 个 Community 模块管理页面）
+> - 共 76 页面编码（M01-M14 + B01-B48 + B31a-B31h + C01-C06）。仅剩 T01-T05/T25 为 SKIPPED。B48 (Dev Kit Page) 待设计。
 
 ---
 
@@ -46,7 +52,7 @@
 | **B10** | Community Hub (Guided) | `S1EIA` | `/community` | Onboarding checklist + modules |
 | **B11** | Community Hub (Active) | `vFRHi` | `/community` | Quick stats + checklist + modules |
 | **B12** | Community Hub (Deep) | `TQR51` | `/community` | 6 modules + engagement chart |
-| **B13** | Community Wizard Step 2 | `Gzpeu` | `/community/create` (step 2) | Customize: name, color, preview |
+| **B13** | Community Wizard Step 1 | `Gzpeu` | `/community/create` (step 1) | Customize: name, description, brand color |
 | **B14** | White Label Hub (Empty) | `Ir6Tq` | `/white-label` | 3 goals + 6 toolkit cards |
 | **B15** | White Label Hub (Active) | `BnkYW` | `/white-label` | Stats + 6 toolkit (4 configured) |
 | **B16** | White Label Hub (Mgmt) | `UPAfV` | `/white-label` | All tools + deployments + analytics |
@@ -68,10 +74,18 @@
 | **B30c** | Boost Wizard Step 3 | `KMtqR` | `/boost/create` (step 3) | Budget + CPA calculator |
 | **B30d** | Boost Wizard Step 4 | `fZpcQ` | `/boost/create` (step 4) | Review & submit |
 | **B31** | Sectors & Tasks | `Wug7d` | `/community/sectors` | Drag-handle task management |
+| **B31a** | Points & Level Mgmt | `zCfKQ` | `/community/modules/points` | Level config + stats table |
+| **B31b** | TaskChain Mgmt | `lpdtp` | `/community/modules/taskchain` | Chain config + stats table |
+| **B31c** | DayChain Mgmt | `fLLVb` | `/community/modules/daychain` | Streak config + stats table |
+| **B31d** | Leaderboard Mgmt | `Emmab` | `/community/modules/leaderboard` | Leaderboard config + stats table |
+| **B31e** | Sprint Mgmt | `FO9JR` | `/community/modules/sprint` | Sprint config + stats table |
+| **B31f** | Milestone Mgmt | `WFdZQ` | `/community/modules/milestone` | Milestone config + stats table |
+| **B31g** | Benefits Shop Mgmt | `7yPWx` | `/community/modules/shop` | Item config + stats table |
+| **B31h** | Lucky Wheel Mgmt | `sme5a` | `/community/modules/wheel` | Wheel config + stats table |
 | **B32** | Content Management | `lhR14` | `/community/content` | Announcements + featured + modules |
 | **B33** | Preview Mode | `2UiNC` | `/community/preview` | Embedded C-end preview |
-| **B34** | Community Wizard Step 1 | `cNwNP` | `/community/create` (step 1) | Choose community type |
-| **B35** | Community Wizard Step 3 | `Sq7A2` | `/community/create` (step 3) | Set modules |
+| **B34** | Community Wizard Step 2 | `8NeyG` | `/community/create` (step 2) | Configure modules (toggles + inline config) |
+| **B35** | Community Wizard Step 3 | `qknQZ` | `/community/create` (step 3) | Review & Launch (preview + checklist) |
 | **B36** | Community Module Detail | `usBsM` | `/community/modules/:type` | Module config (Points example) |
 | **B37** | WL Wizard Step 1 | `NNwid` | `/white-label/setup` (step 1) | Choose integration mode |
 | **B38** | WL Wizard Step 3 | `5nCtO` | `/white-label/setup` (step 3) | Customize branding |
@@ -157,7 +171,10 @@
 | Home | → B01 `/` |
 | Quest | → B04/B05/B06 `/quest` |
 | Community | → B09/B10/B11/B12 `/community` |
-| White Label | → B14/B15/B16 `/white-label` |
+| White Label ▾ | → B14/B15/B16 `/white-label` (expandable sub-menu) |
+| ├─ Overview | → B14/B15/B16 `/white-label` |
+| ├─ Widgets | → B20/B22 `/white-label/widgets` |
+| └─ Pages | → B23/B25 `/white-label/pages` |
 | Boost | → B27/B28/B29 `/boost` |
 | Analytics | → B45 `/analytics` |
 | Settings | → B46 `/settings` |
@@ -457,8 +474,8 @@
 |----------|------|------|
 | Sidebar / Top bar | 全局 | 见 §2.4, §2.5 |
 | Template CTAs (×3) | Template cards | → B13 `/community/create?template=points\|leaderboard\|benefits` |
-| "Create Your First Community" | 主CTA | → B34 (Step 1) |
-| "or start from a blank canvas" | Sub-CTA | → B34 `/community/create?template=blank` |
+| "Create Your First Community" | 主CTA | → B13 (Step 1) |
+| "or start from a blank canvas" | Sub-CTA | → B13 `/community/create?template=blank` |
 | Video Tutorial | Resources | → (ext) 视频 |
 | Retention Playbook | Resources | → (ext) 帮助中心 |
 | "Learn More" | Resources | → M04 (ext, new tab) |
@@ -468,10 +485,19 @@
 | 按钮/CTA | 位置 | 目标 |
 |----------|------|------|
 | Sidebar / Top bar | 全局 | 见 §2.4, §2.5 |
-| Checklist items (5 steps) | Checklist card | (action) 展开/完成步骤 |
+| Checklist Step 1: "Create your community" | Checklist (完成) | (action) 已完成标记 |
+| Checklist Step 2: "Configure modules" | Checklist (完成) | → B36 `/community/modules/:type` |
+| Checklist Step 3: "Preview & polish" | Checklist (完成) | → B33 (Preview Mode) |
+| Checklist Step 4: "Share with your community" | Checklist (展开态) | 见下方详细路由 |
+| ├─ Share Link "Copy" | Link bar | (action) 复制链接到剪贴板 |
+| ├─ Twitter button | Social row | (ext) 预填 share 链接到 Twitter |
+| ├─ Discord button | Social row | (ext) 预填 share 链接到 Discord |
+| ├─ Telegram button | Social row | (ext) 预填 share 链接到 Telegram |
+| └─ "Generate Promo Kit" | Promo Kit row | (action/API) → Promo Kit Generator modal |
+| Checklist Step 5: "First 10 participants" | Checklist (待完成) | (auto) WebSocket 自动检测 |
 | Module cards (Points, Leaderboard, Tasks) | Active Modules | → B36 `/community/modules/:type` |
 | "Add" module (Milestones, Benefits Shop) | Add More Modules | (action) 启用模块 |
-| Template row link | Resources | → B34 |
+| Template row link | Resources | → B13 |
 | Video Tutorial | Resources | → (ext) 视频 |
 | Retention Playbook | Resources | → (ext) 帮助中心 |
 
@@ -484,7 +510,7 @@
 | Checklist (4/5 complete) | Checklist card | (action) |
 | Module cards with metrics | Active Modules | → B36 `/community/modules/:type` |
 | "Add" module | Add More Modules | (action) |
-| Template row link | Resources | → B34 |
+| Template row link | Resources | → B13 |
 | Resources | Resources | → (ext) |
 
 ### B12: Community Hub — Deep (`/community`)
@@ -496,7 +522,7 @@
 | Engagement Overview chart | Analytics | 无链接 (展示) |
 | Retention metrics | Analytics | → B45 `/analytics` |
 
-### B13: Community Wizard Step 2 (`/community/create`, step 2)
+### B13: Community Wizard Step 1 (`/community/create`, step 1)
 
 | 按钮/CTA | 位置 | 目标 |
 |----------|------|------|
@@ -504,9 +530,8 @@
 | Community Name input | Form | (action) |
 | Description textarea | Form | (action) |
 | Brand Color picker | Form | (action) |
-| Live Preview | Right panel | (action) 实时预览 |
-| "Back" | Bottom | → B34 (Community Step 1) |
-| "Next: Points & Rewards" | Bottom | → B35 (Community Step 3) |
+| "Cancel" | Bottom | → B09/B10/B11/B12 (返回 Community Hub) |
+| "Next: Configure Modules" | Bottom | → B34 (Community Step 2) |
 
 ### B14: White Label Hub — Empty/Toolbox (`/white-label`)
 
@@ -530,7 +555,16 @@
 
 | 按钮/CTA | 位置 | 目标 |
 |----------|------|------|
-| Sidebar / Top bar | 全局 | 见 §2.4, §2.5 |
+| Sidebar / Top bar | 全局 | 见 §2.4, §2.5 (WL sidebar 含 Overview/Widgets/Pages 子菜单) |
+| Checklist Step 1: "Create your project" | Checklist (完成) | (action) 已完成标记 |
+| Checklist Step 2: "Choose deployment path" | Checklist (完成) | → B19 (Embed Options) |
+| Checklist Step 3: "Send Dev Kit to developer" | Checklist (展开态) | 见下方详细路由 |
+| ├─ Dev Kit Link "Copy" | Link bar | (action) 复制 `taskon.xyz/devkit/{id}` |
+| ├─ "Email to Developer" | Action row | (action/API) 发送 Dev Kit 链接邮件 |
+| └─ Integration status | Status indicator | (auto) WebSocket 自动检测首次 API ping |
+| Checklist Step 4: "Integration verified" | Checklist (待完成) | (auto) 自动检测 API 调用 |
+| Checklist Step 5: "Announce to your users" | Checklist (待完成) | 类似 B10 Step 4 (Share + Promo Kit) |
+| Checklist Step 6: "First user interaction" | Checklist (待完成) | (auto) WebSocket 自动检测 |
 | Custom Domain card | Toolkit Row 1 | → B18 |
 | Widget Library card | Toolkit Row 1 | → B22 |
 | Page Builder card | Toolkit Row 1 | → B25 |
@@ -760,6 +794,19 @@
 | Task type badge | Task row | 无链接 (展示) |
 | Sector visibility toggle | Sector header | (API) 隐藏/显示 sector |
 
+### B31a-B31h: Community Module Management Pages
+
+> 8 个模块管理页面，共享相同的页面模式：Header + Stats (4 cards) + Filter Tabs + Data Table + Pagination。
+> URL 模式: `/community/modules/:type`
+
+| 按钮/CTA | 位置 | 目标 |
+|----------|------|------|
+| Sidebar / Top bar | 全局 | 见 §2.4, §2.5 |
+| "Create / Add" button | Header | (action/modal) 创建模块实例 |
+| Filter tabs (All/Active/Draft/Archived) | Filter bar | (action) 前端筛选 |
+| Table row click | Table | (action/modal) 编辑配置 |
+| Pagination | Bottom | (action) |
+
 ### B32: Content Management (`/community/content`)
 
 | 按钮/CTA | 位置 | 目标 |
@@ -781,23 +828,25 @@
 | Desktop/Mobile toggle | Preview banner | (action) 切换预览模式 |
 | Embedded C-end preview | Preview frame | 无链接 (展示，仅预览) |
 
-### B34: Community Wizard Step 1 (`/community/create`, step 1)
+### B34: Community Wizard Step 2 (`/community/create`, step 2)
 
 | 按钮/CTA | 位置 | 目标 |
 |----------|------|------|
 | "Save Draft" | Top bar | (API) `POST /api/community/drafts` |
-| Community type cards | Content | (action) 选择类型 |
-| "Cancel" | Bottom | → B09/B10/B11/B12 (返回 Community Hub) |
-| "Next: Customize" | Bottom | → B13 (Community Step 2) |
+| Module toggles (9 modules) | Left panel | (action) 启用/禁用模块 |
+| Module inline config expand | Left panel | (action) 展开模块设置 |
+| Summary preview | Right panel | (action) 实时汇总 |
+| "Back" | Bottom | → B13 (Community Step 1) |
+| "Next: Review & Launch" | Bottom | → B35 (Community Step 3) |
 
 ### B35: Community Wizard Step 3 (`/community/create`, step 3)
 
 | 按钮/CTA | 位置 | 目标 |
 |----------|------|------|
 | "Save Draft" | Top bar | (API) |
-| Module toggles | Content | (action) 启用/禁用模块 |
-| Module config expand | Content | (action) 展开模块配置 |
-| "Back" | Bottom | → B13 (Community Step 2) |
+| Review checklist items | Content | 无链接 (展示) |
+| C-end preview | Right panel | (action) 预览效果 |
+| "Back" | Bottom | → B34 (Community Step 2) |
 | "Launch Community" | Bottom | (API) → B10 (success redirect to Guided Workspace) |
 
 ### B36: Community Module Detail (`/community/modules/:type`)
@@ -1039,8 +1088,13 @@
 | `/api/community/sectors` | GET | B31 | 30s | P1 |
 | `/api/community/sectors` | PUT | B31 | N/A | P1 |
 | `/api/community/content` | GET | B32 | 30s | P1 |
-| `/api/community/modules/:type` | GET | B36 | 60s | P1 |
-| `/api/community/modules/:type` | PUT | B36 | N/A | P1 |
+| `/api/community/modules/:type` | GET | B36, B31a-B31h | 60s | P1 |
+| `/api/community/modules/:type` | PUT | B36, B31a-B31h | N/A | P1 |
+| `/api/community/modules/:type/instances` | GET | B31a-B31h | 30s | P1 |
+| `/api/community/modules/:type/instances` | POST | B31a-B31h | N/A | P1 |
+| `/api/promo-kit/generate` | POST | B10, B15 | N/A | P2 |
+| `/api/devkit/:project_id` | GET | B48 | 60s | P2 |
+| `/api/devkit/:project_id/verify` | POST | B48 | N/A | P2 |
 | `/api/white-label/status` | GET | B15, B16 | 60s | P1 |
 | `/api/white-label/widgets` | GET | B20-B22 | 60s | P1 |
 | `/api/white-label/pages` | GET | B23-B25 | 60s | P1 |
@@ -1085,7 +1139,48 @@
 
 ---
 
-## 六、SKIPPED 页面说明
+## 六、新增功能组件规格
+
+### 6.1 Promo Kit Generator（推广素材生成器）
+
+> 用于 B10 Community Checklist Step 4、B15 WL Checklist Step 5
+
+| 属性 | 规格 |
+|------|------|
+| 触发 | 点击 "Generate Promo Kit" 按钮 |
+| UI | Modal / 侧拉面板 |
+| 输入 | 项目名称、描述、已启用模块、品牌色（从 Community/WL 配置自动读取） |
+| AI 输出 | 3 条平台特定社交文案 (Twitter/Discord/Telegram) + 品牌推广 Banner |
+| Banner 尺寸 | 1200×675 (Twitter/OG) + 1080×1080 (IG/TG) |
+| 操作 | 每条文案: "Copy" + "Share" (直接分享到对应平台) |
+| API | `POST /api/promo-kit/generate` → 返回文案数组 + 图片 URL |
+
+### 6.2 Dev Kit Page（开发者集成页）
+
+> 用于 B15 WL Checklist Step 3。独立页面，无需 TaskOn 账号即可访问。
+
+| 属性 | 规格 |
+|------|------|
+| URL | `taskon.xyz/devkit/{project_id}` |
+| 用户 | 项目方的开发人员（由市场人员发送链接） |
+| 页面编码 | **B48** |
+| 内容 | 集成代码 (copy-paste, project ID 预填) + SSO 设置 (wallet/OAuth) + 分步指南 (预计 30 min) + "Verify My Integration" 按钮 |
+| 设计状态 | 概念设计完成（BnkYW checklist 引用），页面待设计 |
+| API | `GET /api/devkit/{project_id}` (获取项目配置) + `POST /api/devkit/{project_id}/verify` (验证集成) |
+
+### 6.3 Auto-detection Systems（自动检测系统）
+
+> 用于 B10 Step 5、B15 Steps 4 & 6
+
+| 检测类型 | 触发条件 | 协议 | 用途 |
+|----------|----------|------|------|
+| Integration Ping | 首次从项目域名发起的 API 调用 | WebSocket | B15 Step 4 (Integration verified) |
+| DNS Verification | 自定义域名 DNS 配置生效 | HTTP 轮询 | B18 Domain Setup |
+| Participant Counter | 用户加入社区 | WebSocket 实时计数 | B10 Step 5 (First 10 participants)、B15 Step 6 (First user interaction) |
+
+---
+
+## 七、SKIPPED 页面说明
 
 以下页面在设计审查中被**有意跳过**，因为它们使用与已设计页面相同的系统模式：
 
@@ -1098,11 +1193,11 @@
 | T05 | Boost Campaign Edit (`/boost/:id/edit`) | 复用 Boost Wizard 步骤编辑模式（同 Quest Edit T02 模式），从 B28 Campaign card "Edit" 按钮进入 |
 | T25 | Blog (`/blog`) | 外部链接，不需要设计 |
 
-> **注意**: 所有其他 TODO 页面已在 P12-P14 阶段完成设计。67 个页面编码全部覆盖。
+> **注意**: 所有其他 TODO 页面已在 P12-P14 + P0/P0b/P0c 阶段完成设计。76 个页面编码（含 B48 Dev Kit Page 待设计）。
 
 ---
 
-## 七、开发优先级（更新版）
+## 八、开发优先级（更新版）
 
 | Phase | 内容 | 页面编码 | 依赖 |
 |-------|------|----------|------|
@@ -1114,7 +1209,7 @@
 | **P6** | 辅助 Marketing 页 (About, Case Studies, Solutions) | M10-M14 | 内容就绪 |
 | **P7** | B-End: 登录/认证 + Sidebar/TopBar + Dashboard 3 states | B01-B03 | 认证系统 |
 | **P8** | B-End: Quest 全线 (Hub 3 states + Wizard 2 steps) | B04-B08 | Quest API |
-| **P9** | B-End: Community 全线 (Hub 4 states + Wizard 3 steps + Module Detail + Sectors + Content) | B09-B13, B31-B36 | Community API |
+| **P9** | B-End: Community 全线 (Hub 4 states + Wizard 3 steps + Module Mgmt ×9 + Content) | B09-B13, B31-B36, B31a-B31h | Community API (Wizard: B13→B34→B35) |
 | **P10** | B-End: WL 全线 (Hub 3 states + Wizard 3 steps + 10 sub-pages) | B14-B26, B37-B44 | WL API + DNS |
 | **P11** | B-End: Boost 全线 (Hub 3 states + Wizard 4 steps + Campaign Detail) | B27-B30d, B39 | Boost API |
 | **P12** | B-End: Analytics + Settings | B45-B47 | 全部 API |
@@ -1123,7 +1218,7 @@
 
 ---
 
-## 八、页面状态路由策略
+## 九、页面状态路由策略
 
 部分 URL 对应多个设计状态（根据用户数据动态选择）:
 

@@ -1,18 +1,18 @@
 # TaskOn Website & B-End Product Design — Progress Tracker
 
-> Last updated: 2026-03-05 (P1-P14 done, 66+9 pages designed. Design review COMPLETE. Community module management pages added.)
+> Last updated: 2026-03-05
 > Design file: `design/pencil-new.pen` (Pencil MCP tools only, never Read/Grep)
-> **Design Review**: `design/review-issues.md` — 90 issues total. **Fixed: 68** | **Deferred/Won't Fix: 19** | **Remaining: 5 (structural P1s)**
+> **Active TODO**: `design/todo.md` — remaining design tasks
 >
-> ### Review Fix Summary
-> - **Fix-A (P0 Critical)**: 4/4 done — Free tier + comparison tables added to Pricing pages, Community Active clipping fixed
-> - **Fix-B (Text Clipping)**: 7/7 verified — All pages confirmed no layout problems
-> - **Fix-C (P1 Functional)**: 26/36 done — Dashboard metrics/alerts/upsell, Community health warnings, Boost batch ops/conversions/comparison table/CPA pricing, WL toolkit ordering/deployment health/analytics/page analytics, Analytics ROI/export, Settings security/danger zone, C-End progress bars/podium/cross-tab/shop images, Homepage B-end CTAs, Contact footer fix, Preview Mode enhanced
-> - **Fix-C Remaining (P1)**: 5 structural items (#26 Community Wizard preview, #28 Boost conversion chart, #37 Page Builder canvas size, #38 Brand Settings preview, #40 Embed Options vs Wizard overlap)
-> - **Fix-C Deferred**: 10 items (product UI screenshots, Solutions page content, Case Studies content, About page content, structural nav/layout changes)
-> - **Fix-D (P2)**: 31/33 done — Cross-sell chain, social proof, CTA copy, FOMO elements, ROI calculator, tutorial tips, sidebar badges, template card styling, highlight strips, quality tier descriptions, review info box, widget tips, API usage card, SSO help, checkboxes, scheduled announcements, C-end preview links, profile field styling, Sprint progress track, Milestone unlock hints, cross-tab CTAs, DayChain streak recovery, Contact form dropdown, CPA Solutions differentiation, Case Study logos, How It Works typography, social proof/naming consistency verified
-> - **Fix-D Deferred**: 2 items (#85 Hero screenshots = same as #6/#7, #87 Dashboard fold = won't fix)
-> - **Navigation #80**: Fixed — Boost Edit added to SKIPPED table in frontend requirements
+> ### Completion Summary
+> - **P1-P14**: 66+9 pages designed (M01-M14 + B01-B48 + B31a-B31h + C01-C06 = 76 page codes)
+> - **Design Review**: 90 issues → Fixed 68 / Deferred 19 / Remaining 5 (see `todo.md`)
+> - **P0 Community Redesign**: Empty State (3 retention strategies) + Wizard (3-step) + Checklist (activation funnel)
+> - **P0b Getting Started Checklists**: Community (5-step) + WL (6-step) — activation-driven, not feature-driven
+> - **P0c WL Sidebar Sub-menu**: 8 WL pages with expandable Overview/Widgets/Pages sub-items
+> - **P0d Frontend Handoff Audit**: Page codes corrected, button routing complete, Dev Kit/Promo Kit/Auto-detection specs added
+> - **Canvas Layout**: Organized grid, documented in `design/layout.md`
+> - **Frontend Requirements**: `docs/website_frontend_requirements.md` v4.1 — 76 page codes, complete button routing
 
 ---
 
@@ -194,6 +194,10 @@ Control: Low        Medium                High                    Full
 | **P12** | TODO pages T05-T24 (skip T01-T04) | 19 | DONE ✅ |
 | **P13** | B-End Sectors & Tasks, Content Management, C-End Community Home, Quest Tab, Leaderboard, B-End Preview Mode | 6 | DONE ✅ |
 | **P14** | C-End Sprint, Milestone, Shop tabs + frontend requirements v4.0 update | 3 | DONE ✅ |
+| **P0** | Community Empty State redesign (3 retention strategies) + Wizard (4→3 steps) | 4 | DONE ✅ |
+| **P0b** | Getting Started Checklist redesign (Community 5-step + WL 6-step activation funnels) | 2 | DONE ✅ |
+| **P0c** | WL expandable sidebar sub-menu (Overview/Widgets/Pages) on 8 pages | 8 | DONE ✅ |
+| **P0d** | Frontend handoff audit: page codes + button routing + specs | 0 (doc) | DONE ✅ |
 
 ---
 
@@ -524,6 +528,44 @@ Each product has three page layers with distinct purposes. Content should NOT be
 3. No product cross-linking or progression
 4. AARRR funnel completely broken
 5. Dark theme reducing B-end trust
+
+---
+
+## P0: Community Redesign + Onboarding Overhaul — DONE ✅
+
+### P0 — Community Empty State + Wizard Redesign
+- **`zzZ8D` (B09)**: Replaced 3 module-level templates with 3 lifecycle-stage retention strategies:
+  1. Activate New Users (green): TaskChain + Points + Levels
+  2. Drive Daily Engagement (orange): DayChain + Leaderboard + Sprint
+  3. Maximize Retention (purple): Benefits Shop + Milestones + Lucky Wheel
+- Added "HOW IT WORKS" lifecycle flow: Quest → Activate → Engage → Retain
+- **`Gzpeu` (B13)**: Wizard Step 1 Customize (3 steps, was 4)
+- **`8NeyG` (B13b)**: Wizard Step 2 Configure Modules (9 toggles, strategy pre-fill)
+- **`qknQZ` (B13c)**: Wizard Step 3 Review & Launch (summary + launch button)
+
+### P0b — Getting Started Checklist Redesign
+Philosophy: **Configure → Verify → Distribute → Celebrate** (activation funnels, not feature config lists)
+- **`S1EIA` Community** (5 steps): Create → Configure → Preview → **Share** (link+social+Promo Kit) → First 10 participants
+- **`BnkYW` WL** (6 steps): Create → Deploy → **Send Dev Kit** (link+email+auto-detect) → Verified → Announce → First interaction
+- Key concepts: Promo Kit Generator (AI social posts + banner), Dev Kit Page (standalone, no account needed)
+
+### P0c — WL Expandable Sidebar Sub-menu
+Added to all 8 WL pages: `keyboard_arrow_up` chevron + 3 sub-items (Overview/Widgets/Pages)
+- Overview active: `BnkYW`, `UPAfV`
+- Widgets active: `2sSsA`, `n4pJK`, `S432k`
+- Pages active: `DRYwN`, `sGDcq`, `J08v5`
+
+### P0d — Frontend Handoff Audit
+
+Comprehensive audit and correction of all page codes, button routing, and frontend requirements:
+
+1. **Community Wizard page codes fixed**: B13=Step1(`Gzpeu`), B34=Step2(`8NeyG`), B35=Step3(`qknQZ`). Old nodes `cNwNP`/`Sq7A2` removed.
+2. **Frontend requirements v4.1**: Added §六 (Promo Kit Generator, Dev Kit Page B48, Auto-detection Systems), updated B10/B15 checklist routing, WL sidebar sub-menu in §2.4.
+3. **Canvas annotations updated**: `hrASq` (S1EIA) and `BHGp8` (BnkYW) reflect new checklist buttons.
+4. **layout.md fully corrected**: All B-codes now match `website_frontend_requirements.md` (was using wrong sequential codes since Row 10).
+5. **8 Community module management pages coded**: B31a-B31h (Points/TaskChain/DayChain/Leaderboard/Sprint/Milestone/Shop/Wheel).
+6. **B48 Dev Kit Page assigned**: Conceptualized, routing added, page design pending.
+7. **Total page codes**: 76 (M01-M14 + B01-B48 + B31a-B31h + C01-C06).
 
 ---
 
