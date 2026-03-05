@@ -1,6 +1,6 @@
 # TaskOn Website & B-End Product Design — Progress Tracker
 
-> Last updated: 2026-03-05 (P1-P14 done, 66 pages designed. Design review COMPLETE.)
+> Last updated: 2026-03-05 (P1-P14 done, 66+9 pages designed. Design review COMPLETE. Community module management pages added.)
 > Design file: `design/pencil-new.pen` (Pencil MCP tools only, never Read/Grep)
 > **Design Review**: `design/review-issues.md` — 90 issues total. **Fixed: 68** | **Deferred/Won't Fix: 19** | **Remaining: 5 (structural P1s)**
 >
@@ -87,6 +87,14 @@ Control: Low        Medium                High                    Full
 | 17 | Community Hub (Guided Workspace) | `S1EIA` | DONE ✅ | Onboarding checklist + active modules + add-more modules + resources |
 | 18 | Community Hub (Active) | `vFRHi` | DONE ✅ | Quick stats + 4/5 checklist + module cards with real metrics |
 | 19 | Community Hub (Deep) | `TQR51` | DONE ✅ | Power stats + 6 module cards (2 rows) + Engagement Overview (chart + retention) |
+| 19b | Community: Points & Level | `zCfKQ` | DONE ✅ | Module management: stats + filter + 3-row table (Bronze/Silver/Gold) + expandable sidebar sub-menu |
+| 19c | Community: TaskChain | `lpdtp` | DONE ✅ | Module management: chain list with completions/rate + sidebar sub-menu |
+| 19d | Community: DayChain | `fLLVb` | DONE ✅ | Module management: streak chains with active users + sidebar sub-menu |
+| 19e | Community: Leaderboard | `Emmab` | DONE ✅ | Module management: leaderboard configs with metrics/period + sidebar sub-menu |
+| 19f | Community: Sprint | `FO9JR` | DONE ✅ | Module management: sprint campaigns with duration/participants + sidebar sub-menu |
+| 19g | Community: Milestone | `WFdZQ` | DONE ✅ | Module management: milestone sets with completions/claim rate + sidebar sub-menu |
+| 19h | Community: Benefits Shop | `7yPWx` | DONE ✅ | Module management: items with cost/stock/redemptions + sidebar sub-menu |
+| 19i | Community: Lucky Wheel | `sme5a` | DONE ✅ | Module management: wheel configs with spins/prizes/winners + sidebar sub-menu |
 | 20 | Community Wizard | `Gzpeu` | DONE ✅ | Step 2: Customize (name, color, live preview) |
 | 21 | White Label Hub (Empty/Toolbox) | `Ir6Tq` | DONE ✅ | Goal-oriented: 3 goal cards + 6 toolkit cards + resources |
 | 22 | White Label Hub (Active) | `BnkYW` | DONE ✅ | Stats + 6 toolkit cards with configured status + resources |
