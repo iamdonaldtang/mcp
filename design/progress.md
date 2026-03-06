@@ -6,8 +6,9 @@
 
 ## Status
 
-**72 pages designed, 82 page codes** (M01-M14 + B01-B50 + B31a-B31i + C01-C09)
-- Design Review: 90 issues → Fixed 68 / Deferred 19 / Remaining 5 (see `todo.md`)
+**73 pages designed, 83 page codes** (M01-M14 + B01-B51 + B31a-B31i + C01-C09)
+- Design Review: 40 items → Completed 24 / Partially addressed 4 / Remaining 12 (see `todo.md`)
+- New page: WL Contract Registry (`OKEqS`) — B51
 - Skipped: T01-T04 (Quest campaign detail/edit/wizard 3-4, follow existing patterns), T25 (Blog, external)
 
 ---
@@ -52,6 +53,7 @@
 | **P0e** | C-End engagement: C01 action engine + C07-C09 new pages | 3+1 | DONE ✅ |
 | **P0f** | Leaderboard vs LB Sprint distinction across all pages | 0 (updates) | DONE ✅ |
 | **P0g** | 4-System Module Architecture + Badges/AccessRules/HomepageEditor | 3+updates | DONE ✅ |
+| **P0h** | Design review batch execution: 24 fixes + 1 new page (Contract Registry) | 1+updates | DONE ✅ |
 
 ---
 

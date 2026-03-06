@@ -15,7 +15,7 @@
 | White Label Pricing (old) | `EDoSn` | Light (deprecated) |
 | **Unified Pricing** | `HO2Ny` | Light, 3 product tabs |
 
-## After Login (B-End) — 41+ pages
+## After Login (B-End) — 50+ pages
 | Page | Node ID |
 |------|---------|
 | Dashboard (New/Active/Power) | `4SMOO`, `IDezm`, `W93vp` |
@@ -30,13 +30,21 @@
 | Community Settings: Access Rules / Homepage Editor | `g1CNC`, `5Wm6B` |
 | Community Operations: Content/Preview | `lhR14`, `2UiNC` |
 | WL Hub (Empty/Active/Mgmt) | `Ir6Tq`, `BnkYW`, `UPAfV` |
-| WL Wizard | `CXzmy` |
-| WL Domain/Embed | `5bmH9`, `RgCVQ` |
+| WL Wizard (Step1/Step2/Step3) | `NNwid`, `CXzmy`, `5nCtO` |
+| WL Domain/Embed/Iframe | `5bmH9`, `RgCVQ`, `ByGS0` |
 | WL Widget Library (Empty/Config/Active) | `2sSsA`, `n4pJK`, `S432k` |
 | WL Page Builder (Empty/Editor/Active) | `DRYwN`, `sGDcq`, `J08v5` |
-| WL Integration/Brand/SDK/Analytics | `Abs1E`, `gS64G`, `lQxT5`, `69HPh` |
+| WL Brand Settings | `Cx3LH` |
+| WL Integration Center | `Abs1E` |
+| WL Integration Center (tab view, deprecated) | `gS64G` |
+| WL SDK & API | `lQxT5` |
+| WL Page Analytics | `69HPh` |
+| WL Contract Registry (NEW) | `OKEqS` |
 | Boost Hub (Empty/Active/Mgmt) | `stYvi`, `5C3WP`, `8gT3V` |
+| Boost Campaign Detail | `Sq4jV` |
 | Boost Wizard (Step1-4) | `SDfui`, `l9tmF`, `KMtqR`, `fZpcQ` |
+| Analytics Dashboard | `fLxTr` |
+| Settings / Profile | `ESrVt`, `Nh7xq` |
 
 ## C-End (White Label Community) — 9 pages
 | Page | Node ID |
