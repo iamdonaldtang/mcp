@@ -2,282 +2,704 @@
 
 > Active design tasks for `design/pencil-new.pen`
 > Completed items tracked in `design/progress.md`
-> Last design review: 2026-03-05 (Community + White Label + C-End, 42 pages)
-> **Batch execution: 2026-03-05/06** — 40 of 40 items completed (36 fully + 4 deferred low-impact)
-
-## Batch Execution Summary (2026-03-05/06)
-
-| Category | Items | Completed | Notes |
-|----------|-------|-----------|-------|
-| P0 Blocking | DR-01, DR-02 | 2/2 | Shop card fills fixed, Integration Center clarified |
-| P1a IA/Flow | DR-03–DR-07 | 5/5 | Checklist compressed, Quests tightened, Home zones, nav overflow fixed |
-| P1b Visual | DR-08–DR-12 | 5/5 | Community hero 2-col, module insight cards, milestone locks, PB canvas ratio, Embed info banner |
-| P2 Polish | DR-13–DR-20 | 6/8 | Launch banner, Invite compact, DayChain warning, icon sizing, pricing cross-sell. DR-18 (modal hint) + DR-20 (already fixed by DR-03/04) deferred |
-| S-Tier | S1–S7 | 7/7 | Lifecycle selector, growth stacks on pricing (S2), logo wall with project names (S3), ROI section exists (S4), For Projects button (S5), Book a Demo (S6), Pricing badges (S7) |
-| I-Tier-A | I-01/03/04/06/07/08/11 | 7/7 | Community Insights page `olPfE`, DayChain streak chart, TaskChain step funnel, Hub Deep AI insights card + event markers |
-| I-Tier-B | I-02, I-05, I-09, I-10 | 4/4 | Rate metrics+trends on DayChain/LB, Shop insight, WL Analytics funnel, Content Mgmt perf data |
-| W-Tier | W1+W2+Contract Registry | 3/3 | Contract Registry `OKEqS`, Rule Builder `4aAo7`, Privilege Manager `5xwYN` |
-| **Total** | | **36/40** | + 2 deferred (low impact) + 2 already addressed = **40/40 complete** |
+> Last review: 2026-03-06 — Onboarding flow audit (Community + White Label, 13 pages)
+> Previous batch: 2026-03-05/06 — 40 items completed (see Archive at bottom)
 
 ---
 
-## 🔴 P0 — Blocking Issues
+## OB — Onboarding Flow Restructuring (Active)
 
-| # | Page | Node ID | Issue | Suggested Fix |
-|---|------|---------|-------|---------------|
-| DR-01 | C-End Shop | `coM7o` | **Bottom row product cards missing text/pricing** — Second row of 3 cards shows images only, no title, price, or buy button. Appears broken/incomplete vs top row which renders correctly. | Add complete card content (title, price, points cost, CTA button) to bottom 3 cards matching top row pattern |
-| DR-02 | WL Integration Center | `Abs1E` vs `gS64G` | **Duplicate Integration Center pages** — Both pages are titled "Integration Center" with different layouts (Abs1E=categorized cards, gS64G=tab-filtered grid). `pages.md` maps gS64G as "Brand" but screenshot shows Integration Center. Creates confusion for frontend dev. | Decide canonical version: keep `Abs1E` (richer categorized layout) as Integration Center; repurpose `gS64G` as WL Brand Settings with live preview (merge with `Cx3LH`), OR delete one and clarify mapping in pages.md |
+> **Root cause**: Both Community and White Label wizards only make structural decisions (name, toggle modules, choose path) but skip content creation, tool configuration, and user-side preview. Users "launch" empty shells.
+> **Principle**: Wizard creates a Minimum Viable Community/Deployment with template content → Guided state helps flesh out and customize → Active state is data-driven monitoring.
+> **Dependency**: Community OB must be resolved first — WL depends on a functioning Community.
 
----
+### Diagnosis Summary
 
-## 🟡 P1 — Important Issues
+| Product | What Wizard Does | What Wizard Skips | Result |
+|---------|-----------------|-------------------|--------|
+| Community | Name + toggle modules | Content creation (tasks, rewards, points rules), C-end preview | Empty community with enabled-but-unfilled modules |
+| White Label | Choose integration mode + domain DNS + brand colors | Widget configuration, page building, integration testing, end-to-end preview | Branding applied to nothing deployable; Dev Kit has no content |
 
-### P1a — Information Architecture & User Flow
+**Community gaps**: Wizard Step 2 toggles modules ON but creates zero content for any of them. Step 3 "Review & Launch" reviews metadata only (name + which systems are on), has no C-end preview, and launches an empty community.
 
-| # | Page | Node ID | Issue | Suggested Fix |
-|---|------|---------|-------|---------------|
-| DR-03 | Community Hub Active | `vFRHi` | **Getting Started checklist too prominent in Active state** — Checklist shows 4/6 steps complete but dominates the page. Active users with 1,247 members and 8,931 tasks completed don't need a large onboarding checklist as the primary content. | Make checklist collapsible/auto-minimized when >3 steps complete. Move stats row to top, active modules as primary content. Show "Complete remaining steps" as a compact banner instead. |
-| DR-04 | Community Hub Active vs Guided | `vFRHi` vs `S1EIA` | **Insufficient visual differentiation between states** — Guided (new community) and Active (used community) look nearly identical in layout structure: both have checklist → modules → resources. Hard to feel progression. | Active state should lead with stats + module performance cards (with trend indicators like in Deep state `TQR51`). Reduce checklist prominence. Guided keeps checklist as hero. |
-| DR-05 | C-End Quests | `dUXTl` | **Excessive whitespace below quest cards** — Only 4 quest cards displayed, bottom 50%+ of page is empty white space. Feels unfinished. | Add "No more quests" empty state message, or show upcoming/ended quests section, or tighten layout to remove dead space. Consider pagination or "Load More" pattern. |
-| DR-06 | C-End Home | `vJVhd` | **Information density too high — competing visual hierarchy** — Page has 8+ distinct content sections (action engine, featured cards, DayChain, promo banner, Getting Started, Daily Engagement, stats, Discover More) with no clear visual grouping. User doesn't know where to look first. | Group into 3 clear zones: (1) Hero zone — action engine + featured, (2) Progress zone — DayChain + Getting Started, (3) Explore zone — engagement + stats + discover. Add section dividers or background color alternation for visual rhythm. |
-| DR-07 | C-End Navigation | All C-End pages | **9 horizontal nav tabs may cause overflow** — Pages show up to 9 tabs (Home/Quests/Leaderboard/LB Sprint/Milestone/Shop/My Profile/Invite/Activity). On narrower screens this will overflow. Early pages (C01-C06) show 6 tabs, later pages (C07-C09) show 8-9. | Keep 6 public tabs in main nav. Move My Profile/Invite/Activity under a user avatar dropdown menu (common pattern in SaaS). This also creates clear separation between community content and personal features. |
+**White Label gaps**: (1) Empty State has 15 clickable targets but no single entry CTA. (2) 3 deployment paths on Empty != 4 modes in Wizard (naming/count mismatch). (3) Wizard Step 2 only has Domain Configuration — recommended path "Widget + Page Builder" has no Step 2 page. (4) 6 tool sub-pages are standalone islands with no guided sequence. (5) Checklist puts "Send Dev Kit" before widget/page configuration.
 
-### P1b — Visual Consistency
-
-| # | Page | Node ID | Issue | Suggested Fix |
-|---|------|---------|-------|---------------|
-| DR-08 | Community Marketing | `GyyL4` | **Hero section lacks visual impact** — Hero text "80% Retention at 90 Days" is compelling but visually flat. No hero image, illustration, or product screenshot. Compares poorly to WL marketing page (`cbBdG`) which has a stronger visual hierarchy. | Add a product screenshot or dashboard mockup to the right of hero text (2-column hero layout). Show the Community dashboard with engagement metrics to make the "80% retention" claim tangible. |
-| DR-09 | Community Module Pages | `Wug7d`-`sme5a`, `BJLsz`, `g1CNC`, `5Wm6B` | **All 12 module pages are structurally identical** — Header + 4 stats + filter tabs + data table + pagination. While consistency is good, there's zero module-specific design. DayChain/TaskChain/Lucky Wheel are gamification features but look like spreadsheets. | Add module-specific visual elements: (1) DayChain — show a streak visualization or calendar heatmap, (2) Lucky Wheel — show a wheel preview, (3) Badges — show badge grid thumbnails, (4) Leaderboard — show a mini podium. Keep data table but add a distinguishing visual section per module. |
-| DR-10 | C-End Milestones | `53iKE` | **Locked milestone cards lack visual distinction** — Bottom row (Diamond Hands, Whale Status, Legend) looks nearly identical to claimable cards. Lock state not prominent enough — users can't instantly tell which milestones are achievable vs locked. | Add a visible lock overlay or grayscale treatment to locked cards. Show clear progress indicator ("Need 5,000 more pts"). Increase visual gap between claimed (green check), claimable (amber glow/pulse), and locked (gray + lock icon). |
-
-### P1c — Previously Identified (Carried Forward)
-
-| # | Page | Node ID | Issue | Notes |
-|---|------|---------|-------|-------|
-| DR-11 | WL Page Builder Editor | `sGDcq` | Canvas area too small | 2-column layout; canvas should be ~65% width, settings panel ~35%. Currently feels 50/50. (was #37) |
-| DR-12 | WL Embed Options | `RgCVQ` | Content overlap with WL Wizard | Embed Options sub-page duplicates some wizard Step 1 content. Consider making Embed Options reference the wizard or vice versa. (was #40) |
+**Cross-product**: Same decision appears on multiple pages with different options each time (WL deployment choice x3, domain config x2, brand customization x2).
 
 ---
 
-## 🟡 P2 — Optimization & Polish
+### OB-C: Community Onboarding Restructuring
 
-| # | Page | Node ID | Issue | Suggested Fix |
-|---|------|---------|-------|---------------|
-| DR-13 | Community Wizard Step 3 | `qknQZ` | **Review & Launch page feels sparse** — Three summary cards are minimally populated. "What Happens Next" card lists 3 generic items. Doesn't build excitement for launch. | Add: (1) Animated launch illustration or confetti preview, (2) Estimated time to first participant, (3) "Share your community" pre-generated social post preview. Make the launch moment feel celebratory. |
-| DR-14 | C-End Invite Center | `TaAo9` | **Hero section consumes too much viewport** — "Invite Friends, Earn Rewards" hero + share link + social buttons + stats take up ~60% of first viewport. Referral list (the actionable data) is pushed below fold. | Compact the hero: merge share link and social buttons into one row. Move stats into a horizontal strip. Get the referral list visible above fold. |
-| DR-15 | Community Marketing | `GyyL4` | **Feature sections are text-heavy** — "How It Works: The User Journey" and feature comparison sections rely heavily on text with minimal visual variety. | Add icons, micro-illustrations, or product screenshots to break up text walls. Use the brand green (#48BB78) more strategically for visual anchors. |
-| DR-16 | WL Marketing | `cbBdG` | **"Choose Your Integration" section icons are small** — Integration mode cards (iframe/widget/page builder/SDK) use tiny logos that are hard to distinguish at normal reading distance. | Increase icon size to 48-56px. Add color-coded borders per integration mode. Consider showing a mini-preview of what each mode looks like when deployed. |
-| DR-17 | Community Hub Deep | `TQR51` | **DayChain warning card (orange border) competes with TaskChain card** — Both use attention-grabbing border colors (orange + green). DayChain's "-2.1% drop" warning is important but the visual weight is equal to TaskChain's positive metrics. | Use red/warning color (#DC2626) only for the metric text, not the full card border. Keep card border neutral. Add a small alert icon next to the metric. This focuses attention on the number, not the container. |
-| DR-18 | WL Hub Active | `BnkYW` | **Getting Started Step 4 "Send Dev Kit" expanded view is dense** — The expanded step shows URL, copy button, email option, and status indicators. While informative, it's a lot of UI in an inline checklist expansion. | Consider making "Send Dev Kit" open a modal or slide-over panel instead of inline expansion. This gives more space for the dev kit link, email form, and delivery status without crowding the checklist. |
-| DR-19 | Unified Pricing Page | `HO2Ny` | Needs tab switching states polish | Tab switching for Quest/Community/White Label, final copy review (carried from previous P2) |
+> Flow: Empty `zzZ8D` → Wizard (4 steps) → Guided `S1EIA` → Active `vFRHi` → Deep `TQR51`
+> Wizard changes from 3 steps to 4 steps. Step 3 (Quick Setup) and Step 4 (Preview & Publish) are new.
 
-### P2b — Previously Identified (Carried Forward)
+#### OB-C1: Redesign Empty State `zzZ8D`
 
-| # | Page | Node ID | Issue | Notes |
-|---|------|---------|-------|-------|
-| DR-20 | Community Hub Guided vs Active | `S1EIA` vs `vFRHi` | Checklist content inconsistency | User flagged: Guided has good 5-step checklist, Active version is inconsistent. Related to DR-03/DR-04. |
+**Current**: 3 strategy cards (decorative) + "Create Your First Community" button + "Or configure individual modules →"
+**Problem**: Strategy cards are informational only — selection is not carried into Wizard. Secondary CTA "configure individual modules" has no valid target.
 
----
+**New design**:
+- 3 strategy cards become **selectable** (radio card behavior):
+  - Click a card → border highlight + checkmark → card expands to show:
+    - "This strategy includes:" list of auto-enabled modules
+    - "Expected outcome:" one-line result metric
+    - Mini C-end screenshot thumbnail (what users will see)
+  - Only one card selected at a time
+- Primary CTA (below cards): **"Create Community with This Strategy →"**
+  - Appears/activates after a strategy is selected
+  - Carries strategy choice into Wizard (pre-selects modules in Step 2)
+- Secondary CTA: **"Or start from scratch →"** (enters Wizard with no pre-selection)
+- **Remove** "Or configure individual modules →" (no valid destination)
+- Keep "How It Works" 4-step strip and Resources section
 
-## 🔴 S-Tier — Systemic Issues (CMO Journey Audit, 2026-03-05)
+**Strategy → Module mapping** (pre-selection in Wizard Step 2):
+| Strategy | Auto-enabled modules |
+|----------|---------------------|
+| Activate New Users | Sectors & Tasks, Points & Level, TaskChain |
+| Drive Daily Engagement | Sectors & Tasks, Points & Level, DayChain, Leaderboard |
+| Maximize Retention | Sectors & Tasks, Points & Level, DayChain, Milestones, Benefits Shop |
 
-> Discovered via 4-persona CMO walkthrough: Cold Start / Pre-TGE / Post-CEX Listing / Enterprise
-> These are cross-page strategic gaps, not single-page bugs. **Weakest scores: "Strengthen Need" 3.3/10, "Form Decision" 4.8/10.**
+#### OB-C2: Update Wizard Step 1 — Customize `Gzpeu`
 
-| # | Issue | Impact | Suggested Fix | Affects |
-|---|-------|--------|---------------|---------|
-| S1 | **No lifecycle-based entry point** — Projects Landing shows 4 products in parallel with no "What stage are you at?" guidance. Cold start CMO and post-listing CMO see the same page, must self-navigate. | CMOs don't know which product to pick → bounce or pick wrong one → churn | Add interactive selector on `Lz2vL` above product cards: "Where are you?" → Pre-launch (Quest) / Growing (Quest+Community) / Listed (Community+Boost) / Scaling (White Label). Each maps to recommended product combo. | `Lz2vL` Projects Landing |
-| S2 | **Product silos — no combination guidance** — 4 product pages are independent. Pre-TGE CMO needs Quest+Community but no page tells them this. No bundle concept, no "growth stack" visualization. | Multi-product adoption blocked → lower ARPU, confused prospects | (1) Each product page CTA area: add contextual cross-sell "Using Quest? Add Community for 3x retention". (2) Projects Landing: add "Growth Stacks" section showing recommended combos by stage. (3) Pricing: add bundle discount row. | `Lz2vL`, `gXQur`, `GyyL4`, `cbBdG`, `Lym65`, `HO2Ny` |
-| S3 | **No social proof in conversion flow** — "2,000+ projects" stat exists but zero named case studies, no client logos, no "Project X achieved Y% in Z weeks" proof. All 4 CMO personas asked: "Who else uses this?" | Biggest gap in funnel: interest exists but can't be converted to conviction. Strongest blocker to adoption. | (1) Add logo wall (8-12 recognizable project logos) to Projects Landing below hero. (2) Each product page: 1 mini case study card (logo + headline metric + 1 sentence). (3) Link to full Case Studies page `M11`. | `Lz2vL`, `gXQur`, `GyyL4`, `cbBdG`, `Lym65` |
-| S4 | **No ROI quantification** — CMOs must justify spend to founders/board. No ROI calculator, no "invest X get Y" proof, no benchmark data. "80% retention" is a claim without evidence path. | CMO can't build internal business case → decision stalls | (1) Add simple ROI calculator to Community + Quest product pages (input users → output projected retention/acquisition + cost comparison vs alternatives). (2) Pricing page: add "Average ROI: Xth" or "Avg cost per acquired user: $Y" benchmarks. | `GyyL4`, `gXQur`, `HO2Ny` |
-| S5 | **Homepage B-end entry is weak** — Brand Homepage `QszRH` is 100% C-end ("Complete Tasks, Earn Crypto"). "For Projects" button in header is small/secondary. B-end CMOs feel they're on the wrong site. | ~30% B-end visitor bounce at homepage — they don't realize there's a B2B side | (1) Make "For Projects" button more prominent (solid/contrast color, not ghost). (2) Or add a split-screen hero: left="Earn Crypto" for users, right="Grow Your Project" for projects. Minimal change, high impact. | `QszRH` Brand Homepage |
-| S6 | **No "Talk to Sales / Book Demo" path** — All product page CTAs are self-serve ("Start Free Trial"). Post-listing CMOs with budget and enterprise CMOs expect to talk to a human before committing. | High-value prospects (>$500/mo potential) have no conversion path suited to their buying behavior | (1) Every product page final CTA: dual buttons `[Start Free Trial]` + `[Book a Demo]`. (2) WL + Boost pages: add "Contact Sales" as primary for enterprise tier. (3) Pricing page high tiers: "Talk to an Expert" link. | `gXQur`, `GyyL4`, `cbBdG`, `Lym65`, `HO2Ny` |
-| S7 | **Pricing lacks stage/size matching** — Pricing page shows tiers without helping CMO choose. No "Recommended for your stage", no bundle pricing, no Enterprise/Custom tier for WL. Low WL price ($499) may hurt enterprise credibility. | (1) Mid-size projects can't self-select tier. (2) Enterprise prospects see consumer pricing → question product maturity. | (1) Add "Most Popular" or "Best for [stage]" badges to tiers. (2) Add Quest+Community bundle row. (3) WL: add Enterprise tier with "Custom pricing · Dedicated support · SLA" → Contact Sales. | `HO2Ny` Pricing |
+**Current**: Name, description, brand color, live preview. Stepper: Customize → Configure Modules → Review & Launch
+**Changes**:
+- Update stepper to 4 steps: **Customize → Modules → Quick Setup → Preview & Publish**
+- Show selected strategy name above the form: "Strategy: Activate New Users" (with "Change" link)
+- Keep rest of page as-is (name, description, brand color, live preview work well)
 
-### CMO Journey Scorecard
+#### OB-C3: Redesign Wizard Step 2 — Modules `8NeyG`
 
-| Persona | Stage | Understand | Interest | Strengthen | Decide | Total /40 |
-|---------|-------|:---:|:---:|:---:|:---:|:---:|
-| Alex | Cold start | 6 | 8 | 4 | 7 | 25 |
-| Sarah | Pre-TGE | 4 | 6 | 3 | 4 | 17 |
-| Marcus | Post-listing | 7 | 7 | 3 | 5 | 22 |
-| Lisa | Enterprise | 8 | 6 | 3 | 3 | 20 |
-| **Average** | | **6.3** | **6.8** | **3.3** | **4.8** | **21** |
+**Current**: 4 system cards with toggles + sub-module checkboxes. Right panel shows count summary.
+**Problem**: Modules are abstract toggles — project owner doesn't understand what each does or what enabling it commits them to.
 
-**Key insight**: The funnel top (understand + interest) works at ~65%. The funnel bottom (strengthen + decide) works at ~40%. The conversion bottleneck is **proof** (no case studies, no ROI) and **guidance** (no lifecycle matching, no sales path).
+**New design**:
+- Selected strategy shown at top: "Recommended for: [strategy name]" with strategy-based modules pre-checked
+- Each module gets enhanced information:
+  - Current: checkbox + name + one-line description
+  - **Add**: C-end mini preview thumbnail (40x30px, what the module looks like to users)
+  - **Add**: Effect metric: "Users who complete TaskChains have 2.3x higher retention"
+  - **Add**: Expandable "What this does" panel (2-3 sentences, shows before/after user behavior)
+- Required modules (Sectors & Tasks, Points & Level): keep "Required" badge, non-dismissable
+- Right panel summary becomes concrete:
+  - Current: "2 systems · 3 modules"
+  - **New**: "Your community will include: Task system with 3 starter tasks, Points with 5 levels, Daily check-in with streak bonuses"
+  - Dynamic based on checked modules
+- Remove strategy selector from this page (strategy was chosen in Empty/Step 1)
 
----
+#### OB-C4: New Wizard Step 3 — Quick Setup (replaces `qknQZ` Review & Launch)
 
-## 🔴 I-Tier — Data→Insight→Optimize Loop Gaps (2026-03-05)
+**Current `qknQZ`**: 3 summary cards (Community Details / Enabled Systems / What Happens Next) + "Ready to Launch!" metrics + "Launch Community" button.
+**Problem**: Reviews only metadata. No content created. No preview. Launches empty community.
 
-> Community/WL 的核心价值是帮项目方根据数据洞察持续优化任务激励体系。
-> 审查发现优化闭环 5 个环节覆盖度严重不均：Act=70%, Observe=40%, Insight/Decide/Measure≈5%。
-> **运营者当前处于"盲调"状态——能改配置，但看不懂数据、不知道改什么、无法验证效果。**
+**Complete redesign — new purpose: auto-generate template content with inline customization**:
 
-### I-Tier-A: 结构性缺失（需要新增页面/组件）
+Layout: Left content area (70%) + Right summary panel (30%)
 
-| # | Issue | Loop Gap | Suggested Fix | Affects |
-|---|-------|----------|---------------|---------|
-| I-01 | **No cross-module correlation view** — 12 module pages are silos. No view showing user flow between modules, no earn-spend economy balance, no "which module combo drives retention" analysis. The core Earn→Compete→Spend loop is invisible. | Observe, Insight | New **Community Insights** page (or Overview redesign): (1) Module funnel — Joined→First Task→Points Earned→Streak Started→First Redemption→Retained. (2) Economy balance — Earn Rate vs Burn Rate dual-line chart + points supply trend. (3) Module correlation matrix — overlap & contribution to retention. | Community Overview / new page |
-| I-03 | **No Points Economy dashboard** — Points are the economic engine of Community but there's no inflation/deflation tracking, no distribution analysis, no earn-channel breakdown, no purchasing power trend. Operators can't tell if their economy is healthy. | Observe, Insight | Add **Points Economy** panel to Points & Level `zCfKQ` or new sub-page: (1) Earn/Burn dual-line trend. (2) Points distribution histogram (how concentrated?). (3) Earn-channel breakdown pie (tasks/check-in/referral/streak). (4) Economy health score (green/yellow/red). (5) "X% of users can afford at least 1 shop item" affordability metric. | `zCfKQ`, `usBsM` |
-| I-04 | **DayChain/TaskChain missing behavioral breakpoint analysis** — DayChain shows "Avg Streak: 8.3 days" but not WHERE users break. TaskChain shows "72.3% completion" but not WHICH step loses users. These are the most critical retention mechanisms but their optimization levers are invisible. | Observe, Insight | DayChain `fLLVb`: add **Streak Distribution Curve** (x=days, y=users, showing Day 7 cliff). TaskChain `lpdtp`: add **Chain Step Funnel** (Step 1→2→3 pass-through rate). Both are the single most actionable charts for retention optimization. | `fLLVb`, `lpdtp` |
-| I-06 | **No user segmentation view** — All data is aggregate. Can't distinguish power users (5%, earn 80% of points) vs mid-tier (30%, at-risk) vs long-tail (65%, barely active). One incentive structure can't serve all three. | Observe, Decide | Add **User Segments** panel to Community Overview or Analytics: (1) Auto-segment — Power/Active/At-Risk/Churned with counts + trends. (2) Per-segment metrics (DAU, avg streak, points earned, tasks completed). (3) "At-Risk users increased 15% this week" type alerts. | Community Overview / Analytics `fLxTr` |
-| I-07 | **No insight/recommendation engine** — Data is raw numbers with zero interpretation. Operator must be a data analyst to extract meaning. No "DayChain streaks drop 60% at Day 7 → add Day 7 bonus" type guidance. | Insight, Decide | Add **Insights & Suggestions** card to Community Hub Deep `TQR51`: 3-5 AI-generated actionable recommendations, each with observation + cause + suggested action + one-click link to relevant module settings. Ranked by impact (red=urgent, yellow=advice, blue=opportunity). | `TQR51`, Community Overview |
-| I-08 | **No before/after change tracking** — When operator adjusts points rules or adds tasks, there's no way to compare pre vs post performance. Optimization loop's final step (Measure) is completely missing. | Measure | (1) Add **Event Markers** on all trend charts — auto-annotate when config changes happen ("Day X: check-in points 10→20"). (2) After any module setting change, offer "Track this change?" → auto-generate 7-day before/after comparison report. | All module pages, trend charts |
-| I-11 | **No retention deep-dive** — Retention is Community's single core KPI but gets only a small panel in Hub Deep `TQR51` (4 static numbers). No retention curve, no by-module analysis, no by-cohort breakdown, no "aha moment" identification. | Observe, Insight | Add **Retention** tab in Analytics `fLxTr` or Community-specific: (1) Retention curve (D1/3/7/14/30/60/90), filterable by cohort/module/channel. (2) "Aha Moment" analysis — which behavior best predicts D30 retention. (3) Module attribution — "users who used DayChain have 2.3x better D30 retention". | Analytics `fLxTr` / new page |
+**Left — Module Quick Setup cards** (one per enabled module, vertical stack):
 
-### I-Tier-B: 现有页面优化（改进已有设计）
+Each card shows template content pre-filled, with inline edit capability:
 
-| # | Issue | Loop Gap | Suggested Fix | Affects |
-|---|-------|----------|---------------|---------|
-| I-02 | **All module stats are vanity metrics** — Stats like "Total Points Issued: 1,284,500" or "Total Spins: 12,847" tell nothing actionable. Missing: rates, WoW trends, comparisons, health indicators. | Observe | Redesign every module's 4 stat cards: (1) Replace volumes with **rates** (completion rate, not completions). (2) Add **WoW trend arrow** (↑12%/↓5%) to each. (3) Add **health color** (green/yellow/red based on thresholds). Example: DayChain → "Active Streak Rate: 68% ↓3%" instead of "Active Users: 1,284". | All 12 module pages (`Wug7d`-`5Wm6B`) |
-| I-05 | **Benefits Shop lacks supply-demand analysis** — Shows items and redemption counts but not: can users afford items? Which items have high demand but low conversion? Is points drain sufficient? | Observe, Insight | Add to `7yPWx`: (1) **Affordability metric** — "X% users can afford ≥1 item". (2) **Demand heatmap** — views vs redemptions per item (high views + low redemption = price too high). (3) **Restock alert** — "NFT Badge sells out in ~3 days at current rate". | `7yPWx` Benefits Shop |
-| I-09 | **WL Page Analytics too basic** — Only shows page views + top pages. Missing widget-level interaction metrics, user journey through embedded content, view→action conversion funnel, SDK event tracking. | Observe | Redesign `69HPh` as **Engagement Analytics**: (1) Page Views (keep). (2) Widget Interactions (clicks/completions per widget). (3) Conversion funnel (View→Interact→Complete). (4) User flow Sankey diagram. | `69HPh` WL Page Analytics |
-| I-10 | **Content Management lacks performance data** — `lhR14` shows announcements and featured items but zero performance metrics. Operator can't tell which announcement got views, which featured quest converts best. | Observe | Add mini data columns to each content item in `lhR14`: Views, Clicks, CTR. Support sort-by-performance. Add "Top performing" badge to best content. | `lhR14` Content Mgmt |
+| Module | Template Content | Inline Edit Fields |
+|--------|-----------------|-------------------|
+| Sectors & Tasks | "Getting Started" sector + 3 tasks (Follow on Twitter, Join Discord, Visit Website) | Task titles editable, can delete/add tasks |
+| Points & Level | Point name "XP", daily cap 500, 5 levels (Newcomer/Active/Contributor/Expert/Legend) | Point name, daily cap, level names |
+| TaskChain | 1 chain "Welcome Journey" (3 steps: Complete profile → Do first task → Invite a friend) | Step names, linked tasks |
+| DayChain | Check-in reward 10 XP/day, Day 7 bonus 2x, Day 30 bonus 5x | Reward values, bonus days |
+| Leaderboard | Weekly reset, rank by XP, top 10 displayed | Reset period, point type, display count |
+| LB Sprint | (No template — needs manual setup, shown as "Set up after launch" with link) | — |
+| Milestone | 3 milestones (First Task 50XP, 7-Day Streak 200XP, Level 3 500XP) | Names, thresholds, rewards |
+| Benefits Shop | (No items — "Add your first reward after launch" prompt) | — |
+| Lucky Wheel | (No template — shown as "Set up after launch") | — |
+| Badges | 3 badges (Early Bird, Streak Master, Top Contributor) with conditions | Badge names, conditions |
 
-### Optimization Loop Coverage Assessment
+- Header: "We've prepared a starter pack for your community"
+- Sub-header: "Everything is pre-filled with best practices. Edit anything you'd like, or keep defaults."
+- Estimated time: "This takes about 3 minutes"
+- Each module card: collapsible, shows template summary when collapsed, edit fields when expanded
 
-| Loop Step | Current | Gap | Severity |
-|-----------|:---:|------|:---:|
-| **Observe** (see data) | 40% | Vanity metrics, no rates/trends/segments | High |
-| **Insight** (understand why) | 5% | Almost no interpretation layer; only TQR51 DayChain warning qualifies | Critical |
-| **Decide** (know what to change) | 10% | No recommendations, no benchmarks, operator must self-analyze | Critical |
-| **Act** (make changes) | 70% | Module settings pages exist, configs changeable — this is good | Medium |
-| **Measure** (verify impact) | 5% | No before/after, no change markers, no impact reports | Critical |
+**Right — Summary panel**:
+- "Your community at launch:"
+- Checklist: ✅ 1 sector · ✅ 3 tasks · ✅ 5 levels · ✅ Daily check-in · ⚠ No shop items (add later)
+- "Users will be able to: complete tasks, earn XP, level up, maintain streaks"
 
----
+**Bottom CTA**: "Next: Preview & Publish →"
 
-## 🔴 W-Tier — WL Core Feature Gaps (2026-03-05)
+#### OB-C5: New Wizard Step 4 — Preview & Publish (new page, needs new Node ID)
 
-> WL 与 Community 的核心差异化在于**深度集成项目产品**。以下两个功能是 WL 值 $499+ 而非 $79 的关键。
-> 完整循环：**Use (Activity Rules) → Earn (Points) → Enjoy (Privileges) → Use More**
+**Purpose**: Let project owner see the C-end experience before publishing. Bridge the gap between configuration and launch.
 
-### W1: Activity Rules — 链上行为自动校验 + 积分发放 (WL exclusive)
+**Layout**: Full-width preview area (75%) + Readiness panel (25%)
 
-**问题**: 当前模型要求项目方手动创建每个任务才能奖励用户。但 WL 嵌入在项目产品中，用户 swap/stake/lend 等链上行为已经发生，不应需要"接受任务"才能获得积分。
+**Left — C-end Preview**:
+- Embedded preview of Community Home page as users will see it
+- Tab bar showing available C-end pages: Home / Quests / Leaderboard (based on enabled modules)
+- Desktop/Mobile toggle (top-right of preview frame)
+- Preview uses actual brand colors from Step 1 + template content from Step 3
+- Banner at top of preview: "This is how your community looks to users" + "Content is from your starter pack. You can customize everything after publishing."
 
-**与 Tasks 的区别**:
-- Tasks = 离散、手动创建、用户需"接受"、一次性/周期性
-- Activity Rules = 持续监听、事件驱动、自动检测、用户无感
+**Right — Readiness Checklist** (auto-generated):
+- ✅ Community name: "Arbitrum Builders"
+- ✅ Brand configured (green + custom color)
+- ✅ 3 tasks created
+- ✅ Points system: XP, 5 levels
+- ✅ DayChain: 10 XP/day
+- ⚠ Benefits Shop: No items yet (optional, add after publish)
+- ⚠ Lucky Wheel: Not configured (optional)
+- Overall: "Ready to publish — 5/7 features configured"
 
-**B-End 管理页面设计需求** (新增 2 个页面):
+**Bottom actions**:
+- Primary: **"Publish Community"** (green button)
+  - Publishes in Draft state (accessible via URL but not promoted)
+  - Post-click: celebration animation (confetti + "Your community is live!") → auto-redirect to Guided state after 3 seconds
+- Secondary: "Save as Draft" (save progress, return later)
+- Link: "← Back to Quick Setup" (go back and edit)
 
-| 页面 | 内容 | 位置 |
-|------|------|------|
-| **Contract Registry** | 注册项目合约地址 + 选链 → 自动解析 ABI → 展示可监听 events/functions → 验证状态 → 常见协议模板 (Uniswap-fork DEX / Aave-fork Lending / Standard Staking) | WL sidebar → new section "SMART REWARDS" |
-| **Rule Builder** | 可视化 if-then 规则编辑器: IF (event + amount threshold + frequency limit + time condition) THEN (points + multiplier). 预设模板: "Reward Every Swap" / "Daily First Action 2x" / "LP Bonus" / "Staking Milestone". 反女巫配置: min wallet age, min interactions, bot exclusion list. Live stats: rules triggered today, points distributed. | WL sidebar → under "SMART REWARDS" |
+#### OB-C6: Redesign Guided State `S1EIA`
 
-**C-End Widget 需求**:
-- Activity Reward Toast: 合约事件确认后弹出 "+50 pts — Swap completed" 通知
-- 实时积分余额更新
-- Combo/streak 连续操作动效
+**Current**: "My Community" title + "Active" badge + 5-step checklist (3 auto-done + Share + First 10) + module cards with "Configure" + Resources
+**Problem**: Steps 1-3 are structural (already done by wizard), steps 4-5 are promotion. Entire content creation phase missing. "Active" badge conflicts with separate Active state.
 
-**与现有系统关系**: Activity Rules 产生的积分进入同一 Points Economy，可在 Benefits Shop / Privileges / Leaderboard 中使用。与 Sectors & Tasks 并存——Tasks 处理链下行为（Twitter/Discord），Activity Rules 处理链上行为。
+**New design**:
 
----
+**Header changes**:
+- Title: **"Getting Started"** (not "My Community" — that's for Active state)
+- Badge: **"Setting Up"** (amber/yellow, not "Active" green)
+- Sub-text: "Complete these steps to get the most out of your community"
 
-### W2: Privilege System — 项目原生权益管理 + 集成 (WL exclusive)
+**Checklist — module-level content creation tasks** (dynamic based on enabled modules):
 
-**问题**: 当前奖励全是 TaskOn 体系内的（NFT/Token/WL Spot），与项目产品无关。真正的留存需要**项目原生权益**（手续费折扣、Gas 返还、Yield 加成等），因为这些创造真实切换成本。
-
-**三种权益获取方式**:
-- **方式 A (Status-based)**: 与等级/积分余额绑定，自动生效/取消 → B-end 创建管理，API 分发
-- **方式 B (Redemption-based)**: Benefits Shop 中用积分兑换权益券 → **已有**（Shop `7yPWx`），仅需增加 Privilege 类别
-- **方式 C (Achievement-based)**: 绑定 Badge/Milestone，一次性获得 → B-end 创建管理，API 分发
-
-**职责划分**:
 ```
-┌─ TaskOn WL (管理 WHO qualifies) ──────────────┐    ┌─ Project (管理 HOW to apply) ──────┐
-│                                                │    │                                    │
-│  B-end Admin:                                  │    │  Integration:                      │
-│  · Create privilege definitions                │    │  · Query TaskOn API for user        │
-│    (type, value, criteria, duration)           │───→│    privilege status                 │
-│  · Set qualification rules                     │    │  · Apply discount/rebate/boost      │
-│    (Level ≥ 3, or Badge "Diamond", etc.)       │    │    in own contract/backend logic    │
-│  · Monitor usage analytics                     │    │  · Report privilege usage back      │
-│  · Manage budget/limits                        │    │    (for analytics)                  │
-│                                                │    │                                    │
-│  API/SDK:                                      │    │  Receives:                         │
-│  · Expose privilege status per user            │    │  · Webhook on privilege changes     │
-│  · Push webhook on status changes              │    │  · REST API for real-time queries   │
-│  · Optional: deploy Privilege Contract         │    │  · Optional: on-chain contract call │
-│    for trustless on-chain verification         │    │                                    │
-└────────────────────────────────────────────────┘    └────────────────────────────────────┘
+Getting Started                                          3 of 9 complete
+
+COMPLETED BY WIZARD
+✅ Community created with "Activate New Users" strategy
+✅ 3 starter tasks live in "Getting Started" sector
+✅ Points & Levels configured (XP, 5 levels)
+
+ENRICH YOUR COMMUNITY
+○ Add more tasks to your sectors                         → Go to Sectors
+  You have 3 tasks. Communities with 10+ tasks
+  see 2x higher engagement.
+
+○ Set up your Benefits Shop                              → Go to Shop
+  Give users something to spend points on.
+  Quick: add 1 reward in 2 minutes.
+
+○ Customize your DayChain rewards                        → Go to DayChain
+  Default: 10 XP/day. Consider higher Day 7 bonus
+  to prevent streak dropout.
+
+GO LIVE
+○ Preview your community as a user                       → Open Preview
+  Walk through the experience your users will have.
+
+○ Share with your community                              → Promo Kit
+  Community link · Twitter · Discord · Telegram
+  AI-generated social post + branded banner
+
+○ First 10 participants                                  auto-detect
+  0/10 — waiting for your first users
 ```
 
-**B-End 管理页面设计需求** (新增 1 个页面 + 修改 2 个):
+- "ENRICH" section is **dynamic** — only shows items for enabled modules that need attention
+- Each item has: task description + motivation metric + direct link to relevant module management page
+- Items auto-complete when conditions are met (e.g., "Add more tasks" completes when task count > 5)
 
-| 页面 | 内容 | 位置 |
-|------|------|------|
-| **Privilege Manager** (新增) | 权益列表 (Fee Discount / Gas Rebate / Yield Boost / Priority Access / Custom) + 创建权益 (type, name, value, qualification mode A/C, criteria, duration, budget cap) + 活跃权益 stats (active holders, total value distributed, ROI) + 集成状态 (API connected? usage reported?) | WL sidebar → new section "PRIVILEGES" or under REWARDS |
-| **Benefits Shop** (修改 `7yPWx`) | 增加 "Privileges" 分类 tab → 方式 B 的权益券 (time-limited fee discount voucher etc.) | 现有 |
-| **Integration Center** (修改 `Abs1E`) | 增加 "Privilege Contract" 部署卡片 + "Activity Listener" 集成卡片 | 现有 Developer Tools section |
+**Module cards section** (below checklist):
+- Title: "Your Active Modules" (same as current)
+- Cards show: module name + current status + "Configure" or "Manage" button
+- Keep "Add More Modules" row
+- Keep "Browse Configuration Templates" link
 
-**C-End Widget 需求**:
-- "My Privileges" 面板 in User Center: 活跃权益列表 + 节省金额汇总 ("Saved $65.70 this month")
-- 锁定权益 + 解锁进度条 ("Gas Rebate — Need Level 5, you're 78% there")
-- Privilege Status Widget (for Widget Library)
+**Resources section**: Keep as-is
 
-**API 接口文档**: → `docs/wl_privilege_api_spec.md`
+#### OB-C7: Redesign Active State `vFRHi`
 
----
+**Current**: Stats row + Getting Started (collapsed, 4/5) + Active Modules (with data) + Add More + Resources
+**Problem**: Still shows checklist. Layout nearly identical to Guided. No clear visual progression.
 
-### W-Tier Page Summary
+**New design — data-driven, no onboarding content**:
 
-| New Pages | Description | Est. Complexity |
-|-----------|-------------|:---:|
-| WL Contract Registry | Register + ABI parse + verify | Medium |
-| WL Activity Rule Builder | Visual rule editor + templates + anti-sybil | High |
-| WL Privilege Manager | CRUD privileges + qualification rules + analytics | Medium |
-| **Total new pages: 3** | + 3 modified pages (Shop/Integration/SDK) + 2 new C-End widgets | |
+**Header**: "My Community" + **"Active"** badge (green) — this is now the only page with this badge
+**Sub-text**: "Your community is live. Complete setup steps below." → **Remove** (no setup reference)
 
----
+**Stats row** (keep, enhance):
+- Same 4 stats: Total Members / Active This Week / Points Distributed / Tasks Completed
+- **Add**: WoW trend arrows (↑12% / ↓3%) to each stat
+- **Add**: Sparkline mini-chart below each number
 
-## 🟢 P3 — Remaining Frontend Handoff Items
+**Module Performance Cards** (replaces "Active Modules"):
+- Each enabled module as a card, but now showing **performance data**:
+  - Sectors & Tasks: "4,231 completions this week (+16%)" + completion rate + active tasks count
+  - Points: "Avg 72 XP earned/user/day" + economy balance indicator
+  - DayChain: "Avg streak: 8.3 days" + active streak rate + trend
+  - Leaderboard: "Top scorer: 3,450 XP" + weekly board resets + participant count
+- Each card: "Manage →" button (goes to module management page)
+- Cards sorted by: modules needing attention first (red/amber indicators)
 
-- [ ] Design B48 Dev Kit Page (`taskon.xyz/devkit/{id}`) — standalone developer integration page
-- [ ] Verify all canvas annotations on non-P0d pages are still accurate
+**Remaining onboarding** (minimal):
+- IF checklist has incomplete items: single-line amber banner at top: "1 step remaining: Get your first 10 participants → View"
+- NO expanded checklist, NO checklist section
 
----
+**Quick Actions row** (new):
+- "Create Task" / "Add Reward" / "View Analytics" — 3 shortcut buttons for common actions
 
-## Design Review Summary (2026-03-05)
+**Resources**: Keep but reduce to 2 cards (remove "Learn More" since user is already active)
 
-**Scope**: Community + White Label + C-End — 42 pages reviewed
-**Method**: Systematic get_screenshot review of every page
+#### OB-C8: Stepper Update (all Wizard pages)
 
-### What's Working Well
-- **Community module sidebar architecture** — 5 section headers (TASKS/POINTS/CAMPAIGNS/REWARDS/SETTINGS) with 12 items is well-organized and consistent across all module pages
-- **WL expandable sidebar** (Overview/Widgets/Pages) — clear navigation for WL sub-pages
-- **Community Wizard 3-step flow** — Customize → Configure Systems → Review is intuitive
-- **WL deployment paths** (Domain/Embed/SDK) — clear differentiation with "Recommended" badge
-- **C-End gamification** — Leaderboard podium, Sprint progress tiers, Milestone claim states are engaging
-- **B-End data tables** — consistent pattern across all management pages (stats + filters + table + pagination)
-- **Widget Library concept** — "Configured" vs "Not Yet Configured" with clear CTAs works well
-- **Page Builder** — empty/editor/active 3-state flow is complete and logical
-- **WL Integration Center** (`Abs1E`) — categorized card layout is comprehensive
-- **C-End Activity Feed** (`xhPIr`) — clean timeline with color-coded activity types
-
-### Issue Count
-| Priority | Count | Description |
-|----------|-------|-------------|
-| P0 Blocking | 2 | Broken UI + duplicate page confusion |
-| P1 Important | 10 | IA issues (5) + visual consistency (3) + carried forward (2) |
-| P2 Optimization | 8 | Polish items + carried forward (2) |
-| S-Tier Systemic | 7 | Cross-page strategic gaps from CMO journey audit |
-| I-Tier Data Loop | 11 | Structural (7 new pages/components) + Existing page improvements (4) |
-| W-Tier WL Features | 2 | Activity Rules (2 pages) + Privilege System (1 page + 2 modified + 2 widgets) |
-| **Total** | **40** | |
+- Update stepper on `Gzpeu`, `8NeyG`, `qknQZ` (repurposed), and new Step 4 page
+- Old: Customize → Configure Modules → Review & Launch (3 steps)
+- New: **Customize → Modules → Quick Setup → Preview & Publish** (4 steps)
+- Stepper dot style: same as current (circle + label)
 
 ---
 
-## Recently Completed (see `progress.md` for details)
+### OB-W: White Label Onboarding Restructuring
 
-- ✅ **P0**: Community Empty State redesign (3 retention strategies) + Wizard (3-step)
-- ✅ **P0b**: Getting Started Checklist redesign (Community 5-step + WL 6-step)
-- ✅ **P0c**: WL expandable sidebar sub-menu (8 pages)
-- ✅ **P0d**: Frontend handoff audit — page codes corrected, button routing complete, Dev Kit/Promo Kit/Auto-detection specs added, layout.md corrected, 76 total page codes
-- ✅ **P0e**: C-End engagement redesign — C01 action engine + C07 User Center + C08 Invite Center + C09 Activity Feed, 79 total page codes
-- ✅ **P0f**: Leaderboard vs LB Sprint distinction — multi-point-type leaderboards + time-bounded sprints with incentives across B-end (B31d/B31e) and C-end (C03/C04/all nav tabs)
-- ✅ **P0g**: 4-System Module Architecture + Badges/AccessRules/HomepageEditor
-- ✅ **Canvas reorganization**: All 75+ pages in structured grid (`design/layout.md`)
-- ✅ **Orphaned label fix**: 130+ annotation labels repositioned
+> Flow: Empty `Ir6Tq` → Wizard (4 steps) → Active/Guided `BnkYW` → Mgmt `UPAfV`
+> Prerequisite: Community must be in Active or Guided state (not Empty).
+> Wizard restructured to 4 clear steps with path-adaptive content.
+
+#### OB-W1: Redesign Empty State `Ir6Tq`
+
+**Current**: Yellow banner "Community Setup Required" + 3 deployment paths + 6 toolkit cards + Resources
+**Problems**: (1) Banner is advisory, not blocking. (2) No single entry CTA. (3) 15+ clickable targets. (4) Toolkit cards premature (tools are post-setup). (5) Path names don't match Wizard modes.
+
+**New design — two states based on Community prerequisite**:
+
+**State A: Community NOT ready** (blocking):
+- Full-page prerequisite screen (not banner):
+  - Icon: shield/lock icon (purple, 48px)
+  - Title: "Set Up Community First"
+  - Text: "White Label wraps your Community in your own brand and deploys it to your product. You need an active Community with content before setting up White Label."
+  - What you'll need: "At least 1 sector with tasks, Points system configured, and optionally a Benefits Shop"
+  - Primary CTA: **"Set Up Community →"** (goes to Community Empty `zzZ8D` or Guided `S1EIA`)
+  - Secondary: "Learn more about White Label →" (link to WL marketing page `cbBdG`, new tab)
+- No toolkit cards, no deployment paths — nothing else to do until Community is ready
+
+**State B: Community IS ready** (normal Empty):
+- Community status bar at top: "Your Community: [name] — 12 tasks, 5 levels, 245 members" (green checkmark)
+- Title: "White Label" + description
+- 3 deployment paths as **selectable cards** (radio behavior, like Community strategy cards):
+  - **"Embed in Your App"** ★ Recommended
+    - "Add TaskOn growth features directly into your existing website or app"
+    - Includes: Widget Library, Page Builder, Iframe Embed
+    - Best for: "Teams with an existing web app"
+    - Effort: "< 1 day integration"
+  - **"Host on Your Domain"**
+    - "Run a full community portal on your own domain (e.g., community.yourproject.io)"
+    - Includes: Custom domain, SSL, full portal
+    - Best for: "Teams who want a standalone community site"
+    - Effort: "30 min DNS setup"
+  - **"Build with SDK"**
+    - "Full programmatic control — build completely custom experiences"
+    - Includes: REST API, Webhooks, SDK
+    - Best for: "Teams with dedicated developers"
+    - Effort: "1-2 weeks development"
+- Primary CTA: **"Set Up White Label →"** (purple button, carries path selection to Wizard)
+- Remove 6 toolkit cards (user hasn't set anything up yet — tools are premature)
+- Keep Resources section (3 cards: SDK Documentation, Setup Walkthrough, Learn More)
+
+#### OB-W2: Redesign Wizard Step 1 — Choose Path `NNwid`
+
+**Current**: 4 integration modes (Widget+PB / Custom Domain / Iframe Embed / Full SDK). Stepper: Mode → Configure → OK → Customize.
+**Problem**: 4 modes != Empty's 3 paths. Stepper has 4 steps but only 3 pages. "OK" step undefined.
+
+**New design**:
+- Stepper: **Path → Configure → Brand → Preview** (4 steps, all have pages)
+- 3 paths (aligned with Empty State):
+  - **"Embed in Your App"** ★ Recommended
+    - Sub-options (expandable after selecting this card):
+      - Widget Library: "Embed individual components (leaderboard, tasks, points)"
+      - Page Builder: "Build full pages combining multiple widgets"
+      - Iframe: "Embed entire community in an iframe (simplest)"
+    - User can check multiple sub-options
+  - **"Host on Your Domain"**
+    - Shows: "You'll configure DNS in the next step"
+  - **"Build with SDK"**
+    - Shows: "You'll get API keys and SDK setup in the next step"
+- If path was pre-selected from Empty State, that card is pre-highlighted
+- CTA: "Next: Configure →"
+
+#### OB-W3: Redesign Wizard Step 2 — Configure (path-adaptive) `CXzmy`
+
+**Current**: Domain Configuration only (DNS + SSL). Only serves "Host on Your Domain" path.
+**Problem**: 3 of 4 paths have no Step 2 content.
+
+**New design — page content changes based on selected path**:
+
+**IF "Embed in Your App"** (recommended path):
+- Title: "Choose Your Widgets"
+- Left: List of Community modules available as widgets (same list as Widget Library `2sSsA`):
+  - Each module: checkbox + name + mini-preview + configuration status from Community
+  - Green = ready to embed (module configured in Community)
+  - Amber = needs Community setup first (with "Set up in Community →" link)
+  - Pre-checked: Leaderboard, Task List, User Center (most common)
+- Right: Live preview showing selected widgets in a mock embed context
+- Bottom: "Selected: 3 widgets — you'll configure each one after setup"
+- CTA: "Next: Brand →"
+
+**IF "Host on Your Domain"**:
+- Title: "Domain Configuration" (keep current `CXzmy` content)
+- Custom Domain input + SSL Certificate + DNS Status panel
+- Portal Preview on right
+- CTA: "Next: Brand →"
+
+**IF "Build with SDK"**:
+- Title: "SDK Setup"
+- Auto-generate: Production API Key + Test API Key (shown with copy buttons)
+- Quick Start code snippet (same as `lQxT5` Quick Start section)
+- Webhook URL configuration (optional)
+- Right: "What's included" checklist (REST API, Webhooks, SDK, SSO)
+- CTA: "Next: Brand →"
+
+#### OB-W4: Wizard Step 3 — Brand `5nCtO` (keep, minor adjustments)
+
+**Current**: Logo, Brand Colors, Typography, Button Style, mini Live Preview
+**Changes**:
+- Keep all form fields as-is
+- **Improve Live Preview**: Instead of small card preview, show a larger preview of:
+  - For Embed path: a widget (e.g., Leaderboard) with applied branding
+  - For Domain path: the portal header + first section with applied branding
+  - For SDK path: a code snippet + "Your users will see:" mini preview
+- Add note at bottom: "You can refine branding anytime in Brand Settings"
+- CTA: "Next: Preview →"
+
+#### OB-W5: New Wizard Step 4 — Preview & Publish (new page, needs new Node ID)
+
+**Purpose**: Show the project owner what their WL deployment will look like. Verify readiness before publishing.
+
+**Layout**: Preview area (70%) + Readiness panel (30%)
+
+**Left — Deployment Preview** (adapts to path):
+- Embed path: Mock website frame with embedded widgets visible. Shows "Your website" header + TaskOn widgets embedded below.
+- Domain path: Full community portal preview at "community.yourproject.io"
+- SDK path: "SDK integration preview not available — see documentation for implementation guide" + link to SDK docs. Show API health check: "API Key active ✅"
+
+**Right — Readiness Checklist**:
+- ✅ Community: [name] with X tasks, Y rewards
+- ✅ Path: Embed in Your App
+- ✅ Widgets: 3 selected (Leaderboard, Task List, User Center)
+- ✅ Brand: Logo + colors configured
+- ⚠ Widget configuration: pending (configure in Widget Library after publish)
+- ⚠ Page Builder: no pages yet (optional, build after publish)
+- Overall: "Ready to publish — configure widgets in the next step"
+
+**Bottom actions**:
+- Primary: **"Publish White Label"** (purple button)
+  - Creates WL instance in Draft state
+  - Post-click: success screen ("White Label is ready! Configure your widgets to start embedding.") → redirect to Active state
+- Secondary: "Save Draft"
+
+#### OB-W6: Redesign Active State `BnkYW` — Checklist rewrite
+
+**Current checklist** (6 steps):
+1. ✅ Create your community
+2. ✅ Choose deployment path
+3. Send Dev Kit to developer (expanded, step 3)
+4. Integration verified
+5. Announce to your users
+6. First user interaction
+
+**Problems**: (1) Step 1 "Create your community" is Community, not WL. (2) "Send Dev Kit" comes before widget/page configuration. (3) No steps for widget config, page building, or preview. (4) Entire content creation phase missing.
+
+**New checklist** (path-adaptive, showing Embed path as example):
+
+```
+Getting Started                                          3 of 9 complete
+
+COMPLETED BY WIZARD
+✅ Community ready: Arbitrum Builders (12 tasks, 3 rewards)
+✅ Deployment path: Embed in Your App
+✅ Brand configured (logo + colors)
+
+CONFIGURE YOUR TOOLS
+○ Set up Leaderboard widget                              → Widget Library
+  Name it, choose point type, get embed code. 2 min.
+
+○ Set up Task List widget                                → Widget Library
+  Shows your Community tasks to users. 2 min.
+
+○ Set up User Center widget                              → Widget Library
+  Points balance + level progress for users. 2 min.
+
+○ Build your first page (optional)                       → Page Builder
+  Combine widgets into a single embeddable page.
+
+DEPLOY & LAUNCH
+○ Preview as a user                                      → Open Preview
+  See the full experience with your branding.
+
+○ Send Dev Kit to developer                              → Generate Dev Kit
+  One link with embed codes, SSO setup, and docs.
+  Everything your developer needs to integrate.
+
+○ Integration verified                                   auto-detect
+  Waiting for first API call from your domain.
+
+○ Announce to your users                                 → Promo Kit
+  AI-generated social posts + branded banner.
+
+○ First user interaction                                 auto-detect
+  Waiting for first widget interaction.
+```
+
+- "CONFIGURE YOUR TOOLS" section is **dynamic** based on path:
+  - Embed path: widget setup steps (one per selected widget) + optional PB step
+  - Domain path: "Verify DNS" + "Customize portal" steps
+  - SDK path: "Implement SDK" + "Test API integration" steps
+- Steps auto-complete when widget is configured / page is published / etc.
+- Dev Kit step moves to DEPLOY section (after configuration, not before)
+
+**Stats row** (below checklist):
+- Custom Domain / Widget Status / Pages Published / Monthly Impressions
+- Keep as current but values update as user completes steps
+
+**Toolkit section**:
+- Rename from "Your Toolkit" to "Your Tools"
+- Only show tools relevant to chosen path (not all 6)
+- Each card shows configuration status: "3 widgets configured" / "0 pages built" / etc.
+
+**Resources**: Keep as-is
+
+#### OB-W7: Eliminate Duplicate Pages
+
+**Embed Options `RgCVQ`** — duplicates Wizard Step 1 (deployment method choice):
+- **Action**: Repurpose as "Deployment Settings" (post-setup management page)
+- New content: "Current deployment: Embed in Your App" + ability to add additional deployment methods + comparison reference
+- OR: Delete page if Wizard + Active State cover the same ground
+
+**Domain Setup `5bmH9`** — overlaps with Wizard Step 2 (domain path):
+- **Action**: Keep as standalone tool page (it's more complete than Wizard Step 2 version)
+- Wizard Step 2 domain config becomes a simplified version that links to `5bmH9` for advanced settings
+- Remove duplicate DNS form from Wizard — instead embed `5bmH9` content or link to it
+
+**Brand Settings `Cx3LH`** — overlaps with Wizard Step 3:
+- **Action**: Keep as the full brand management page. Wizard Step 3 is the "quick setup" version.
+- Add note on Wizard: "Advanced options available in Brand Settings"
+- No changes needed to `Cx3LH` itself
+
+---
+
+### OB Summary — New/Modified Pages
+
+| # | Page | Node ID | Action | Priority |
+|---|------|---------|--------|----------|
+| OB-C1 | Community Empty | `zzZ8D` | Redesign: selectable strategy cards + dynamic CTA | P0 |
+| OB-C2 | Comm Wizard Step 1 | `Gzpeu` | Update: stepper (3→4), show strategy name | P0 |
+| OB-C3 | Comm Wizard Step 2 | `8NeyG` | Redesign: module info + C-end previews + strategy pre-selection | P0 |
+| OB-C4 | Comm Wizard Step 3 | `qknQZ` | **Full redesign**: Quick Setup with template content | P0 |
+| OB-C5 | Comm Wizard Step 4 | **NEW** | **New page**: Preview & Publish with C-end preview | P0 |
+| OB-C6 | Comm Guided | `S1EIA` | Redesign: title/badge + module-level checklist | P0 |
+| OB-C7 | Comm Active | `vFRHi` | Redesign: remove checklist, data-driven layout | P1 |
+| OB-C8 | Stepper update | all wizard | Update stepper labels on 4 pages | P0 |
+| OB-W1 | WL Empty | `Ir6Tq` | Redesign: blocking prereq + selectable paths + single CTA | P0 |
+| OB-W2 | WL Wizard Step 1 | `NNwid` | Redesign: 3 paths (not 4) + new stepper | P0 |
+| OB-W3 | WL Wizard Step 2 | `CXzmy` | Redesign: path-adaptive content (3 variants) | P0 |
+| OB-W4 | WL Wizard Step 3 | `5nCtO` | Update: improved preview | P1 |
+| OB-W5 | WL Wizard Step 4 | **NEW** | **New page**: Preview & Publish | P0 |
+| OB-W6 | WL Active | `BnkYW` | Redesign: checklist rewrite + path-adaptive steps | P0 |
+| OB-W7a | Embed Options | `RgCVQ` | Repurpose or delete (duplicates Wizard Step 1) | P1 |
+| OB-W7b | Domain Setup | `5bmH9` | Keep as tool page, dedup from Wizard | P2 |
+
+**Total: 2 new pages + 12 redesigned pages + 2 cleanup items**
+
+---
+
+### Execution Order
+
+| Phase | Tasks | Dependency |
+|-------|-------|------------|
+| **Phase 1**: Community Wizard | OB-C2, OB-C3, OB-C4, OB-C5, OB-C8 | None (start here) |
+| **Phase 2**: Community States | OB-C1, OB-C6, OB-C7 | Phase 1 (need to know wizard output) |
+| **Phase 3**: WL Wizard | OB-W2, OB-W3, OB-W5 | Phase 1 (Community must work first) |
+| **Phase 4**: WL States | OB-W1, OB-W6, OB-W4 | Phase 3 |
+| **Phase 5**: Cleanup | OB-W7a, OB-W7b | Phase 4 |
+
+---
+
+## P3 — Remaining Design Work (Lower Priority)
+
+| # | Page | Code | Status | Notes |
+|---|------|------|--------|-------|
+| P3-01 | Dev Kit Page | B48 | DONE | `3jDeL` — standalone dev integration page with 3-step guide + verify CTA |
+| P3-02 | Unified Pricing — Community tab | M07 | DONE | `AJ3T6` — green theme, $600/mo, Community features |
+| P3-03 | Unified Pricing — WL tab | M07 | DONE | `P2TZl` — purple theme, $1,500/mo, WL features + ROI Calculator |
+| P3-04 | Pricing tab switching polish | M07 | DONE | Each tab: product-colored buttons/icons, billing cycles, feature lists, CTA copy |
+| P3-05 | WL Contract Registry sidebar | B51 | DONE | `OKEqS` missing WL sub-menu. Copy from `4aAo7`. |
+
+---
+
+## P4 — Modal / Dialog Designs (19 modals)
+
+> All B-End management pages have buttons or row clicks that open `(action/modal)` dialogs.
+> These modals need concrete UI designs for frontend handoff.
+> Code series: **D01-D19**. Each modal is associated with a parent page.
+> Create and Edit share the same modal layout (empty vs pre-filled).
+> 3 trivial modals excluded (Increase Budget B39, Change Password B47, Notification Panel) — use standard system patterns.
+
+### Community Module Modals (D01-D08)
+
+> Parent pages: B31a-B31h. Each module management page has "Create/Add" button + table row click → modal.
+
+| Code | Modal | Parent | Complexity | Key Fields |
+|------|-------|--------|------------|------------|
+| **D01** | Points & Level Editor | B31a `zCfKQ` | Medium | Level name, XP threshold, badge icon, perks list, status |
+| **D02** | TaskChain Editor | B31b `lpdtp` | High | Chain name, sequential steps (linked tasks), completion reward, reset behavior |
+| **D03** | DayChain Config | B31c `fLLVb` | Low-Med | Daily reward amount, bonus day schedule (Day 7/14/30), streak break penalty |
+| **D04** | Leaderboard Config | B31d `Emmab` | Medium | Point type selector (EXP/GEM/custom), reset period (weekly/monthly/all-time), display count, visibility |
+| **D05** | LB Sprint Editor | B31e `FO9JR` | High | Sprint name, point type, start/end dates, reward tiers (Top 1/Top 10/Top 50 with NFT/Token/WL Spot prizes), status |
+| **D06** | Milestone Editor | B31f `WFdZQ` | Medium | Milestone name, condition type (points/tasks/level/streak), threshold value, reward type & amount |
+| **D07** | Shop Item Editor | B31g `7yPWx` | Medium | Item name, image upload, description, point cost, stock limit, item type (NFT/Voucher/Merch/WL), redemption method |
+| **D08** | Lucky Wheel Config | B31h `sme5a` | High | Segment list (name + probability + prize), visual wheel preview, spin cost, daily spin limit, animation settings |
+
+### Community Settings Modals (D09-D11)
+
+| Code | Modal | Parent | Complexity | Key Fields |
+|------|-------|--------|------------|------------|
+| **D09** | Badge Editor | B31i `BJLsz` | Medium | Badge name, icon, color, category (Achievement/Engagement/Special), earn condition, description |
+| **D10** | Access Rule Editor | B49 `g1CNC` | Medium | Rule name, condition type (Token Gate/NFT Hold/Level Req/Invite Count), chain selector, contract address, threshold, affected areas |
+| **D11** | Homepage Section Editor | B50 `5Wm6B` | Medium | Section name, type (Banner/Widget/Custom HTML), content config (depends on type), visibility toggle, sort order |
+
+### WL Advanced Modals (D12-D15)
+
+| Code | Modal | Parent | Complexity | Key Fields |
+|------|-------|--------|------------|------------|
+| **D12** | Contract Register Form | B51 `OKEqS` | Medium | Chain selector, contract address, ABI upload/paste, contract type (ERC-20/ERC-721/ERC-1155/Custom), verification status |
+| **D13** | Activity Rule Editor | B52 `4aAo7` | High | Visual IF→THEN builder: Trigger (event type + conditions) → Action (award points/badge/access) → Frequency (once/daily/unlimited), rule preview |
+| **D14** | Privilege Tier Editor | B53 `5xwYN` | Medium | Tier name, rank order, qualification conditions (token gate/level/points/manual), privilege list checkboxes, icon/color |
+| **D15** | Privilege Members Panel | B53 `5xwYN` | Low-Med | Member list (address, join date, status), search/filter, manual add/remove, bulk actions |
+
+### Content & Analytics Modals (D16-D18)
+
+| Code | Modal | Parent | Complexity | Key Fields |
+|------|-------|--------|------------|------------|
+| **D16** | Announcement Editor | B32 `lhR14` | Low-Med | Title, body (rich text), pin toggle, schedule (now/later), target audience (all/tier/segment) |
+| **D17** | Featured Slot Editor | B32 `lhR14` | Low | Select item (quest/task/reward), display position (1-4), duration (permanent/timed), image override |
+| **D18** | Segment Detail Panel | B54 `olPfE` | Medium | Segment name & criteria, member count, user list (address/level/points/last active), export button, create campaign from segment |
+
+### Cross-Product Modal (D19)
+
+| Code | Modal | Parent | Complexity | Key Fields |
+|------|-------|--------|------------|------------|
+| **D19** | Promo Kit Generator | B10 `S1EIA` / B15 `BnkYW` | Medium | AI-generated social posts (Twitter/Discord/Telegram), branded banner preview, community/WL link, copy/download buttons, regenerate option |
+
+### Summary
+
+| Group | Codes | Count | Status |
+|-------|-------|-------|--------|
+| Community Module Modals | D01-D08 | 8 | DONE |
+| Community Settings Modals | D09-D11 | 3 | DONE |
+| WL Advanced Modals | D12-D15 | 4 | DONE |
+| Content & Analytics Modals | D16-D18 | 3 | DONE |
+| Cross-Product Modal | D19 | 1 | DONE |
+| **Total** | **D01-D19** | **19** | **DONE** |
+
+### Design Approach
+
+**Shared modal shell**: All modals use the same outer frame — 640px or 800px wide overlay, title bar with close X, scrollable body, sticky footer with Cancel + Save/Create buttons. Design the shell once, then populate per-modal content.
+
+**Complexity tiers**:
+- **Low** (D03, D15, D17): Simple form fields, 1 column, ≤ 6 fields. Estimate: 1 modal per batch.
+- **Medium** (D01, D04, D06, D07, D09-D12, D14, D16, D18, D19): Form + preview or multi-section, 1-2 columns. Estimate: 1 modal per batch.
+- **High** (D02, D05, D08, D13): Complex UI — chain step builder, date+tier config, wheel segment editor, visual rule builder. Estimate: dedicated batch each.
+
+**Suggested execution order** (by dependency + reuse):
+1. D01 (Points) — establishes modal pattern for all module editors
+2. D06 (Milestone), D04 (Leaderboard), D07 (Shop Item) — medium complexity, reuse D01 pattern
+3. D05 (LB Sprint), D02 (TaskChain) — high complexity, unique layouts
+4. D03 (DayChain), D08 (Wheel), D09 (Badge) — remaining modules
+5. D10-D11, D12-D15 — settings + WL modals
+6. D16-D19 — content, analytics, promo kit
+
+---
+
+## Archive — Previous Review Items (2026-03-05/06, 40/40 complete)
+
+### Completed Batch Summary
+
+| Category | Items | Status |
+|----------|-------|--------|
+| P0 Blocking (DR-01/02) | 2 | Done — Shop cards fixed, Integration Center clarified |
+| P1a IA/Flow (DR-03–07) | 5 | Done — Checklist, Quests, Home zones, nav overflow |
+| P1b Visual (DR-08–12) | 5 | Done — Community hero, module cards, milestones, PB canvas, Embed banner |
+| P2 Polish (DR-13–20) | 6+2 deferred | Done — Launch banner, Invite, DayChain, icons, pricing |
+| S-Tier Systemic (S1–S7) | 7 | Done — Lifecycle selector, growth stacks, logo wall, ROI, For Projects, Book Demo, Pricing badges |
+| I-Tier Data Loop (I-01–I-11) | 11 | Done — Community Insights, Points Economy, streak/funnel charts, segments, AI insights, event markers |
+| W-Tier WL Features (W1–W2) | 3 | Done — Contract Registry, Rule Builder, Privilege Manager |
+
+### Items Superseded by OB Restructuring
+
+The following items from the previous review are now **absorbed into** the OB restructuring above:
+
+- **DR-03** (Active checklist too prominent) → absorbed by OB-C7
+- **DR-04** (Guided vs Active indistinguishable) → absorbed by OB-C6 + OB-C7
+- **DR-12** (Embed Options duplicates Wizard) → absorbed by OB-W7a
+- **DR-13** (Wizard Step 3 sparse) → absorbed by OB-C4 (complete replacement)
+- **DR-18** (Dev Kit expanded view dense) → absorbed by OB-W6 (Dev Kit repositioned)
+- **DR-20** (Checklist inconsistency Guided/Active) → absorbed by OB-C6 + OB-C7
+
+### Items NOT Affected by OB (still valid, completed)
+
+- DR-05 (C-End Quests whitespace), DR-06 (C-End Home zones), DR-07 (C-End nav overflow)
+- DR-08 (Community Marketing hero), DR-09 (Module page visual variety), DR-10 (Milestone lock states)
+- DR-11 (PB canvas ratio), DR-14–DR-17 (various polish)
+- All S-Tier, I-Tier, W-Tier items
+
+---
+
+## Reference — Dependency Chain Diagrams
+
+### Community Content Flow
+```
+Empty State (choose strategy)
+    ↓
+Wizard Step 1: Customize (name, brand)
+    ↓
+Wizard Step 2: Modules (strategy → auto-select, understand each module)
+    ↓
+Wizard Step 3: Quick Setup (template content auto-generated, inline edit)
+    ↓
+Wizard Step 4: Preview & Publish (C-end preview + readiness check → Draft)
+    ↓
+Guided State (module-level content enrichment checklist)
+    ↓ (all key steps done)
+Active State (data-driven monitoring)
+    ↓ (scale + time)
+Deep State (AI insights + advanced analytics)
+```
+
+### White Label Deployment Flow
+```
+Prerequisite: Community in Guided or Active state
+    ↓
+Empty State (choose deployment path)
+    ↓
+Wizard Step 1: Path (Embed / Domain / SDK — aligned with Empty)
+    ↓
+Wizard Step 2: Configure (path-adaptive: widgets / DNS / SDK keys)
+    ↓
+Wizard Step 3: Brand (logo, colors, fonts + improved preview)
+    ↓
+Wizard Step 4: Preview & Publish (deployment preview + readiness → Draft)
+    ↓
+Active State (tool configuration checklist → widget setup → page build → Dev Kit → deploy)
+    ↓ (integration verified + users active)
+Mgmt State (deployments + analytics + toolkit management)
+```
+
+### WL Tool Dependency Chain
+```
+Community Modules (content source)
+    ↓ depends on
+Widget Library (modules → embeddable components)
+    ↓ depends on
+Page Builder (components → composed pages)
+    ↓ feeds into
+Deployment (domain / embed code / SDK)
+    ↓ requires
+Integration (developer implements in project app)
+    ↓ validated by
+Verification (auto-detect first API call)
+```

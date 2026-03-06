@@ -1,7 +1,17 @@
-# TaskOn 官网前端开发需求文档 v4.0
+# TaskOn 官网前端开发需求文档 v4.2
 
 > 本文档定义了 TaskOn 官网（marketing pages）、B-end 产品界面（after-login dashboard & product hubs）、及 C-end 用户界面（White Label 社区前台）的完整页面编码、按钮→页面路由映射、动态数据规格、及静态内容边界。
 > 供前端/后端工程师对照实施。
+>
+> v4.2 更新（OB Restructuring）：
+> - 新增 B55=Community Wizard Step 4 Preview & Publish (`7mVsZ`), B56=WL Wizard Step 4 Preview (`WsH2y`)
+> - B35 重定义：Review & Launch → Quick Setup（模板内容自动生成+内联编辑）
+> - B19 重命名：WL Embed Options → WL Deployment Settings
+> - B37 更新：Choose integration mode → Choose deployment path (Embed/Domain/SDK)
+> - B38 更新：Complete Setup → Next: Preview（不再是最终步，路由至 B56）
+> - B09/B10/B11/B14/B15/B17 描述更新（OB 重构后的新页面内容）
+> - Community Wizard: 3→4 steps (B13→B34→B35→B55), WL Wizard: 3→4 steps (B37→B17→B38→B56)
+> - 共 88 页面编码（M01-M14 + B01-B56 + B31a-B31i + C01-C09）。B48 (Dev Kit Page) 待设计。
 >
 > v4.1 更新：
 > - 修正 Community Wizard 页面编码：B13=Step1(`Gzpeu`), B34=Step2(`8NeyG`), B35=Step3(`qknQZ`)。旧节点 `cNwNP`/`Sq7A2` 已删除。
@@ -9,7 +19,6 @@
 > - 新增 §六 功能组件规格：Promo Kit Generator、Dev Kit Page (B48)、Auto-detection Systems
 > - 新增 WL Sidebar 子菜单路由（Overview/Widgets/Pages）
 > - 新增 B31a-B31h（8 个 Community 模块管理页面）
-> - 共 79 页面编码（M01-M14 + B01-B48 + B31a-B31h + C01-C09）。仅剩 T01-T05/T25 为 SKIPPED。B48 (Dev Kit Page) 待设计。
 
 ---
 
@@ -25,8 +34,8 @@
 | **M04** | Community Product | `GyyL4` | `/products/community` | Light, green |
 | **M05** | White Label Product | `cbBdG` | `/products/white-label` | Light, purple |
 | **M06** | Boost Product | `Lym65` | `/products/boost` | Light, orange |
-| **M07** | Platform Pricing | `CXtOH` | `/pricing` | Light |
-| **M08** | White Label Pricing | `EDoSn` | `/pricing/enterprise` | Light, purple |
+| **M07** | Unified Pricing | `HO2Ny` | `/pricing` | Light, 3 product tabs (Quest/Community/WL) |
+| ~~M08~~ | ~~White Label Pricing~~ | ~~`EDoSn`~~ | — | Deprecated: merged into M07 Unified Pricing |
 | **M09** | Contact / Book Demo | `4q01T` | `/contact` | Light |
 | **M10** | About Us | `03CDo` | `/about` | Light |
 | **M11** | Case Studies | `XIChW` | `/case-studies` | Light |
@@ -48,17 +57,17 @@
 | **B06** | Quest Hub (Management) | `XvXEQ` | `/quest` | Table + filters + pagination |
 | **B07** | Quest Wizard Step 1 | `dn8Eu` | `/quest/create` | Template selection |
 | **B08** | Quest Wizard Step 2 | `hBgxY` | `/quest/create` (step 2) | Task configuration |
-| **B09** | Community Hub (Empty) | `zzZ8D` | `/community` | Templates + highlight strip |
-| **B10** | Community Hub (Guided) | `S1EIA` | `/community` | Onboarding checklist + modules |
-| **B11** | Community Hub (Active) | `vFRHi` | `/community` | Quick stats + checklist + modules |
+| **B09** | Community Hub (Empty) | `zzZ8D` | `/community` | Selectable strategy cards + single CTA |
+| **B10** | Community Hub (Guided) | `S1EIA` | `/community` | 3-section checklist (Wizard/Enrich/Go Live) + modules |
+| **B11** | Community Hub (Active) | `vFRHi` | `/community` | Stats + trend arrows + module performance cards |
 | **B12** | Community Hub (Deep) | `TQR51` | `/community` | 6 modules + engagement chart |
 | **B13** | Community Wizard Step 1 | `Gzpeu` | `/community/create` (step 1) | Customize: name, description, brand color |
-| **B14** | White Label Hub (Empty) | `Ir6Tq` | `/white-label` | 3 goals + 6 toolkit cards |
-| **B15** | White Label Hub (Active) | `BnkYW` | `/white-label` | Stats + 6 toolkit (4 configured) |
+| **B14** | White Label Hub (Empty) | `Ir6Tq` | `/white-label` | Selectable deployment path cards + single CTA |
+| **B15** | White Label Hub (Active) | `BnkYW` | `/white-label` | 3-section checklist (Wizard/Configure/Deploy) + toolkit |
 | **B16** | White Label Hub (Mgmt) | `UPAfV` | `/white-label` | All tools + deployments + analytics |
-| **B17** | WL Wizard Step 2 | `CXzmy` | `/white-label/setup` (step 2) | Domain + SSL + embed code |
+| **B17** | WL Wizard Step 2 | `CXzmy` | `/white-label/setup` (step 2) | Path-adaptive: widgets/DNS/SDK config |
 | **B18** | WL Domain Setup | `5bmH9` | `/white-label/domain` | 3-step domain config + status |
-| **B19** | WL Embed Options | `RgCVQ` | `/white-label/embed` | 3 embed mode cards + comparison |
+| **B19** | WL Deployment Settings | `RgCVQ` | `/white-label/deploy` | Current deployment path + add additional methods |
 | **B20** | WL Widget Library (Empty) | `2sSsA` | `/white-label/widgets` | 7 community modules (6+1 unconfigured) |
 | **B21** | WL Widget Config | `n4pJK` | `/white-label/widgets/:id/config` | 2-col: settings + preview + embed code |
 | **B22** | WL Widget Library (Active) | `S432k` | `/white-label/widgets` | My Widgets (2) + community modules |
@@ -85,10 +94,10 @@
 | **B32** | Content Management | `lhR14` | `/community/content` | Announcements + featured + modules |
 | **B33** | Preview Mode | `2UiNC` | `/community/preview` | Embedded C-end preview |
 | **B34** | Community Wizard Step 2 | `8NeyG` | `/community/create` (step 2) | Configure modules (toggles + inline config) |
-| **B35** | Community Wizard Step 3 | `qknQZ` | `/community/create` (step 3) | Review & Launch (preview + checklist) |
+| **B35** | Community Wizard Step 3 | `qknQZ` | `/community/create` (step 3) | Quick Setup: auto-generated template content + inline edit |
 | **B36** | Community Module Detail | `usBsM` | `/community/modules/:type` | Module config (Points example) |
-| **B37** | WL Wizard Step 1 | `NNwid` | `/white-label/setup` (step 1) | Choose integration mode |
-| **B38** | WL Wizard Step 3 | `5nCtO` | `/white-label/setup` (step 3) | Customize branding |
+| **B37** | WL Wizard Step 1 | `NNwid` | `/white-label/setup` (step 1) | Choose deployment path (Embed/Domain/SDK) |
+| **B38** | WL Wizard Step 3 | `5nCtO` | `/white-label/setup` (step 3) | Brand: logo, colors, typography + live preview |
 | **B39** | Boost Campaign Detail | `Sq4jV` | `/boost/:id` | Campaign metrics + management |
 | **B40** | WL Brand Settings | `Cx3LH` | `/white-label/brand` | Logo, colors, typography |
 | **B41** | WL SDK & API | `lQxT5` | `/white-label/sdk` | API keys, SDK docs, endpoints |
@@ -98,6 +107,15 @@
 | **B45** | Analytics Dashboard | `fLxTr` | `/analytics` | Cross-product analytics |
 | **B46** | Settings | `ESrVt` | `/settings` | Account settings |
 | **B47** | Settings / Profile | `Nh7xq` | `/settings/profile` | Profile management |
+| **B31i** | Badges | `BJLsz` | `/community/modules/badges` | Badge management: create/edit/archive badges, stats table |
+| **B49** | Access Rules | `g1CNC` | `/community/settings/access-rules` | Token-gate & role-based access rules management |
+| **B50** | Homepage Editor | `5Wm6B` | `/community/settings/homepage` | Drag-order section management for C-End homepage |
+| **B51** | WL Contract Registry | `OKEqS` | `/white-label/contracts` | Smart contract registry for on-chain reward distribution |
+| **B52** | WL Activity Rule Builder | `4aAo7` | `/white-label/rules` | Visual rule builder for automated activity-based triggers |
+| **B53** | WL Privilege Manager | `5xwYN` | `/white-label/privileges` | User privilege tiers, token-gated access levels |
+| **B54** | Community Insights | `olPfE` | `/community/insights` | Cross-module analytics, economy health, user segments, retention |
+| **B55** | Community Wizard Step 4 | `7mVsZ` | `/community/create` (step 4) | Preview & Publish: C-end preview + readiness checklist |
+| **B56** | WL Wizard Step 4 | `WsH2y` | `/white-label/setup` (step 4) | Preview: deployment preview + readiness checklist |
 
 ### C-End Pages（White Label 社区前台，C01-C09）
 
@@ -311,28 +329,31 @@
 | "Try Quest →" | Final CTA (cross-sell) | → M03 |
 | Footer links | Footer | 见 §2.3 |
 
-### M07: Platform Pricing (`/pricing`)
+### M07: Unified Pricing (`/pricing`) — 替代旧 M07+M08
+
+> **产品 Tab 切换**: Quest / Community / White Label（3 个 tab，切换后更新定价卡片、功能列表、账单周期选项）
+>
+> **账单周期规则（按产品不同）:**
+> - **Quest & Community**: Quarterly（季付）/ Semi-Annual（半年付）/ Annual（年付）。**不支持月付。**
+> - **White Label**: Monthly（月付）/ Quarterly（季付）/ Semi-Annual（半年付）。**不支持年付。**
+>
+> **定价基准（月等效价格）:**
+> - Quest: $300/mo | Community: $600/mo | White Label: $1,500/mo
+>
+> **设计状态**: 当前画面展示 Quest tab + Quarterly 选中态。前端需根据 tab 切换动态更新 billing toggle 选项。
 
 | 按钮/CTA | 位置 | 目标 |
 |----------|------|------|
 | Header links | Header | 见 §2.1 |
-| Monthly/Annual toggle | Billing | (action) 前端切换 |
-| Quest/Community tabs | Tabs | (action) 前端切换 |
-| Free "Get Started Free" | Pricing card | → `app.taskon.xyz/create` (ext) |
-| Pro "Start Free Trial" | Pricing card | → `app.taskon.xyz/create?plan=pro` (ext) |
-| "Get White Label Pricing" | WL upsell banner | → M08 |
+| Quest / Community / White Label tabs | Product tabs | (action) 前端切换产品 + 更新账单周期选项 |
+| Billing cycle toggle (3 options) | Billing | (action) 前端切换账单周期 + 更新价格 |
+| "Start 7-Day Free Trial" | Pricing card | → `app.taskon.xyz/create?product={quest\|community\|wl}&plan=trial` (ext) |
+| "Subscribe & Pay Now" | Pricing card | → `app.taskon.xyz/create?product={quest\|community\|wl}&cycle={q\|sa\|a\|m}` (ext) |
+| Growth Stacks cards | Cross-sell section | (info only, no navigation) |
+| ROI Calculator section | WL tab only | (shown conditionally when WL tab selected) |
 | FAQ expand/collapse | FAQ | (action) |
-| Footer links | Footer | 见 §2.3 |
-
-### M08: White Label Pricing (`/pricing/enterprise`)
-
-| 按钮/CTA | 位置 | 目标 |
-|----------|------|------|
-| Header links | Header | 见 §2.1（"Talk to Sales" → M09） |
-| "← Back to Platform Pricing" | Hero | → M07 |
-| Standard "Start 14-Day Free Trial" | Pricing card | → `app.taskon.xyz/create?plan=wl-standard` (ext) |
-| Pro "Book a Demo" | Pricing card | → M09 `/contact` |
-| "Book a Demo" | CTA section | → M09 `/contact` |
+| "Start Your Free Trial Today" | Final CTA | → `app.taskon.xyz/create` (ext) |
+| "Book a Demo" | Final CTA | → M09 `/contact` |
 | Footer links | Footer | 见 §2.3 |
 
 ### M09: Contact / Book Demo (`/contact`)
@@ -499,7 +520,7 @@
 | Sidebar / Top bar | 全局 | 见 §2.4, §2.5 |
 | Checklist Step 1: "Create your community" | Checklist (完成) | (action) 已完成标记 |
 | Checklist Step 2: "Configure modules" | Checklist (完成) | → B36 `/community/modules/:type` |
-| Checklist Step 3: "Preview & polish" | Checklist (完成) | → B33 (Preview Mode) |
+| Checklist Step 3: "Preview & publish" | Checklist (完成) | → B33 (Preview Mode) |
 | Checklist Step 4: "Share with your community" | Checklist (展开态) | 见下方详细路由 |
 | ├─ Share Link "Copy" | Link bar | (action) 复制链接到剪贴板 |
 | ├─ Twitter button | Social row | (ext) 预填 share 链接到 Twitter |
@@ -624,16 +645,17 @@
 | Setup Status checklist | Right panel | (action) 展示进度 |
 | "Need Help?" card | Bottom | → (ext) 帮助中心 |
 
-### B19: WL Embed Options (`/white-label/embed`)
+### B19: WL Deployment Settings (`/white-label/deploy`)
 
 | 按钮/CTA | 位置 | 目标 |
 |----------|------|------|
 | "← Back to White Label" | Breadcrumb | → B14/B15/B16 |
+| Current deployment path display | Content | 无链接 (展示) |
+| "Add Deployment Method" | Content | (action) 添加额外部署方式 |
 | "Iframe Embed" card | Embed modes | → B42 `/white-label/embed/iframe` |
 | "Open Widget Library" ★ card | Embed modes | → B20 (Widget Library) |
 | "Open Page Builder" card | Embed modes | → B23 (Page Builder) |
 | Comparison table | Content | 无链接 (展示) |
-| Tip card | Bottom | 无链接 |
 
 ### B20: WL Widget Library — Empty (`/white-label/widgets`)
 
@@ -819,6 +841,41 @@
 | Table row click | Table | (action/modal) 编辑配置 |
 | Pagination | Bottom | (action) |
 
+### B31i: Badges (`/community/modules/badges`)
+
+| 按钮/CTA | 位置 | 目标 |
+|----------|------|------|
+| Sidebar / Top bar | 全局 | 见 §2.4, §2.5 |
+| "Create Badge" | Header | (action/modal) 创建新 badge（名称、图标、颜色、获取条件） |
+| Filter tabs (All/Active/Draft/Archived) | Filter bar | (action) 前端筛选 |
+| Table row click | Table | (action/modal) 编辑 badge 配置 |
+| Badge category filter | Table header | (action) 按类别筛选（Achievement/Engagement/Special） |
+| Pagination | Bottom | (action) |
+
+### B49: Access Rules (`/community/settings/access-rules`)
+
+| 按钮/CTA | 位置 | 目标 |
+|----------|------|------|
+| Sidebar / Top bar | 全局 | 见 §2.4, §2.5 |
+| "Create Rule" | Header | (action/modal) 创建新访问规则 |
+| Filter tabs (All/Active/Paused/Archived) | Filter bar | (action) 前端筛选 |
+| Table row click | Table | (action/modal) 编辑规则（条件类型：Token Gate/NFT/Level/Invite） |
+| Rule toggle (enable/disable) | Table row | (API) `PUT /api/community/settings/access-rules/:id` |
+| Pagination | Bottom | (action) |
+
+### B50: Homepage Editor (`/community/settings/homepage`)
+
+| 按钮/CTA | 位置 | 目标 |
+|----------|------|------|
+| Sidebar / Top bar | 全局 | 见 §2.4, §2.5 |
+| "+ Add Section" | Header | (action/modal) 添加新 section（类型：Banner/Widget/Custom） |
+| Filter tabs (All/Visible/Hidden) | Filter bar | (action) 前端筛选 |
+| Table row click | Table | (action/modal) 编辑 section（名称、类型、可见性、排序） |
+| Drag reorder | Table rows | (action) 拖拽排序 section 顺序 |
+| Visibility toggle | Table row | (API) `PUT /api/community/settings/homepage/:id` |
+| "Preview" | Header secondary | → B33 (Preview Mode) |
+| Pagination | Bottom | (action) |
+
 ### B32: Content Management (`/community/content`)
 
 | 按钮/CTA | 位置 | 目标 |
@@ -849,17 +906,30 @@
 | Module inline config expand | Left panel | (action) 展开模块设置 |
 | Summary preview | Right panel | (action) 实时汇总 |
 | "Back" | Bottom | → B13 (Community Step 1) |
-| "Next: Review & Launch" | Bottom | → B35 (Community Step 3) |
+| "Next: Quick Setup" | Bottom | → B35 (Community Step 3 — Quick Setup) |
 
-### B35: Community Wizard Step 3 (`/community/create`, step 3)
+### B35: Community Wizard Step 3 — Quick Setup (`/community/create`, step 3)
 
 | 按钮/CTA | 位置 | 目标 |
 |----------|------|------|
 | "Save Draft" | Top bar | (API) |
-| Review checklist items | Content | 无链接 (展示) |
-| C-end preview | Right panel | (action) 预览效果 |
+| Module quick-setup cards (expand/collapse) | Left panel | (action) 展开模块编辑 |
+| Inline edit fields (task names, point values, etc.) | Left panel | (action) 编辑模板内容 |
+| Summary checklist | Right panel | 无链接 (展示) |
 | "Back" | Bottom | → B34 (Community Step 2) |
-| "Launch Community" | Bottom | (API) → B10 (success redirect to Guided Workspace) |
+| "Next: Preview & Publish" | Bottom | → B55 (Community Step 4 — Preview & Publish) |
+
+### B55: Community Wizard Step 4 — Preview & Publish (`/community/create`, step 4)
+
+| 按钮/CTA | 位置 | 目标 |
+|----------|------|------|
+| "Save Draft" | Top bar | (API) `POST /api/community/drafts` |
+| C-end preview mock (Home/Quests/Leaderboard tabs) | Preview area | (action) 预览各标签页 |
+| Readiness checklist items (✅/⚠) | Right panel | 无链接 (展示) |
+| Community URL "Copy" button | Right panel | (action) 复制链接 |
+| "After publishing" info card | Right panel | 无链接 (展示) |
+| "Back" | Bottom | → B35 (Community Step 3 — Quick Setup) |
+| "Publish Community" | Bottom | (API) `POST /api/community/publish` → B10 (success redirect to Guided) |
 
 ### B36: Community Module Detail (`/community/modules/:type`)
 
@@ -870,23 +940,35 @@
 | "Save Changes" | Bottom | (API) |
 | "Reset to Default" | Bottom | (action) |
 
-### B37: WL Wizard Step 1 (`/white-label/setup`, step 1)
+### B37: WL Wizard Step 1 — Choose Path (`/white-label/setup`, step 1)
 
 | 按钮/CTA | 位置 | 目标 |
 |----------|------|------|
 | "Save Draft" | Top bar | (API) `POST /api/white-label/drafts` |
-| Integration mode cards | Content | (action) 选择集成模式 |
+| Deployment path cards (Embed/Domain/SDK) | Content | (action) 选择部署路径 |
 | "Cancel" | Bottom | → B14/B15/B16 (返回 WL Hub) |
 | "Next: Configure" | Bottom | → B17 (WL Step 2) |
 
-### B38: WL Wizard Step 3 (`/white-label/setup`, step 3)
+### B38: WL Wizard Step 3 — Brand (`/white-label/setup`, step 3)
 
 | 按钮/CTA | 位置 | 目标 |
 |----------|------|------|
 | "Save Draft" | Top bar | (API) |
-| Branding customization fields | Content | (action) |
+| Branding customization fields (logo, colors, typography) | Content | (action) |
+| Live preview (path-adaptive) | Right panel | (action) 实时预览 |
 | "Back" | Bottom | → B17 (WL Step 2) |
-| "Complete Setup" | Bottom | (API) → B15 (success redirect to Active Hub) |
+| "Next: Preview" | Bottom | → B56 (WL Step 4 — Preview) |
+
+### B56: WL Wizard Step 4 — Preview (`/white-label/setup`, step 4)
+
+| 按钮/CTA | 位置 | 目标 |
+|----------|------|------|
+| "Save Draft" | Top bar | (API) `POST /api/white-label/drafts` |
+| Deployment preview mock (path-adaptive: widgets/portal/API) | Preview area | (action) 预览部署效果 |
+| Readiness checklist items (✅/⚠) | Right panel | 无链接 (展示) |
+| "After publishing" info card | Right panel | 无链接 (展示：Widget Library→B20, Page Builder→B23, Dev Kit→B48, Analytics→B43) |
+| "Back" | Bottom | → B38 (WL Step 3 — Brand) |
+| "Publish White Label" | Bottom | (API) `POST /api/white-label/publish` → B15 (success redirect to WL Active) |
 
 ### B39: Boost Campaign Detail (`/boost/:id`)
 
@@ -948,6 +1030,51 @@
 | "Test Connection" | Form | (API) |
 | "Save" | Bottom | (API) |
 | "Disconnect" | Bottom | (API) |
+
+### B51: WL Contract Registry (`/white-label/contracts`)
+
+| 按钮/CTA | 位置 | 目标 |
+|----------|------|------|
+| Sidebar / Top bar | 全局 | 见 §2.4, §2.5（WL 子菜单） |
+| "Register Contract" | Header | (action/modal) 添加合约地址（chain + address + ABI） |
+| Filter tabs (All/Active/Pending/Expired) | Filter bar | (action) 前端筛选 |
+| Table row click | Table | (action/modal) 查看/编辑合约详情 |
+| "Verify" button | Table row | (API) `POST /api/wl/contracts/:id/verify` |
+| Pagination | Bottom | (action) |
+
+### B52: WL Activity Rule Builder (`/white-label/rules`)
+
+| 按钮/CTA | 位置 | 目标 |
+|----------|------|------|
+| Sidebar / Top bar | 全局 | 见 §2.4, §2.5（WL 子菜单） |
+| "Create Rule" | Header | (action/modal) 可视化规则编辑器 |
+| Filter tabs (All/Active/Draft/Paused) | Filter bar | (action) 前端筛选 |
+| Table row click | Table | (action/modal) 编辑规则（触发条件 + 动作 + 频率） |
+| Rule toggle (enable/disable) | Table row | (API) `PUT /api/wl/rules/:id` |
+| Pagination | Bottom | (action) |
+
+### B53: WL Privilege Manager (`/white-label/privileges`)
+
+| 按钮/CTA | 位置 | 目标 |
+|----------|------|------|
+| Sidebar / Top bar | 全局 | 见 §2.4, §2.5（WL 子菜单） |
+| "Create Tier" | Header | (action/modal) 创建权限层级 |
+| Filter tabs (All/Active/Draft) | Filter bar | (action) 前端筛选 |
+| Table row click | Table | (action/modal) 编辑层级（名称、条件、权限列表） |
+| "Manage Members" | Table row | (action/modal) 查看/管理层级成员 |
+| Pagination | Bottom | (action) |
+
+### B54: Community Insights (`/community/insights`)
+
+| 按钮/CTA | 位置 | 目标 |
+|----------|------|------|
+| Sidebar / Top bar | 全局 | 见 §2.4, §2.5 |
+| Date range picker | Header | (action) |
+| Module filter tabs | Filter bar | (action) 按模块筛选 |
+| "Export Report" | Header | (action) 下载 CSV/PDF |
+| Segment cards | User Segments | (action/modal) 查看用户分群详情 |
+| Economy health indicators | Economy panel | (info only) |
+| Retention curve click | Chart | (action) 查看详细留存数据 |
 
 ### B45: Analytics Dashboard (`/analytics`)
 
@@ -1116,7 +1243,7 @@
 | `/api/partners/featured` | GET | M01 Trust Bar | 86400s | P2 |
 | `/api/partners/all` | GET | M02 Logo Wall | 86400s | P2 |
 | `/api/testimonials/featured` | GET | M02 | 86400s | P2 |
-| `/api/pricing/plans` | GET | M07, M08 | 3600s | P1 |
+| `/api/pricing/plans` | GET | M07 (Unified Pricing, replaces M07+M08) | 3600s | P1 |
 | `/api/contact` | POST | M09 | N/A | P1 |
 | `/api/case-studies` | GET | M11 | 86400s | P2 |
 | `/ws/activity` | WS | M01 Live Feed | real-time | P1 |
@@ -1135,7 +1262,8 @@
 | `/api/quest/drafts` | POST | B07, B08 | N/A | P1 |
 | `/api/community/stats` | GET | B10-B12 | 60s | P1 |
 | `/api/community/list` | GET | B10-B12 | 30s | P1 |
-| `/api/community/drafts` | POST | B13, B34, B35 | N/A | P1 |
+| `/api/community/drafts` | POST | B13, B34, B35, B55 | N/A | P1 |
+| `/api/community/publish` | POST | B55 | N/A | P0 |
 | `/api/community/sectors` | GET | B31 | 30s | P1 |
 | `/api/community/sectors` | PUT | B31 | N/A | P1 |
 | `/api/community/content` | GET | B32 | 30s | P1 |
@@ -1156,7 +1284,8 @@
 | `/api/white-label/embed-code` | GET | B17, B21, B42 | 0 (实时) | P1 |
 | `/api/white-label/brand` | GET/PUT | B40 | 60s | P1 |
 | `/api/white-label/sdk` | GET | B41 | 60s | P1 |
-| `/api/white-label/drafts` | POST | B17, B37, B38 | N/A | P1 |
+| `/api/white-label/drafts` | POST | B17, B37, B38, B56 | N/A | P1 |
+| `/api/white-label/publish` | POST | B56 | N/A | P0 |
 | `/api/boost/stats` | GET | B28, B29 | 60s | P1 |
 | `/api/boost/campaigns` | GET | B28, B29 | 30s | P1 |
 | `/api/boost/campaigns/:id` | GET | B39 | 30s | P1 |
@@ -1264,13 +1393,13 @@
 | **P1** | Brand Homepage 静态 + 全站路由 + Header/Footer | M01 | 设计稿确认 |
 | **P2** | 首页动态 APIs | M01 | 后端 API |
 | **P3** | Projects Landing + 4 产品页 + Boost (全静态) | M02-M06 | 设计稿确认 |
-| **P4** | 2 定价页 + Contact 表单 | M07, M08, M09 | 后端 API + CMS |
+| **P4** | 统一定价页 + Contact 表单 | M07 (Unified), M09 | 后端 API + CMS |
 | **P5** | WebSocket (activity, presence) | M01 | 基础设施 |
 | **P6** | 辅助 Marketing 页 (About, Case Studies, Solutions) | M10-M14 | 内容就绪 |
 | **P7** | B-End: 登录/认证 + Sidebar/TopBar + Dashboard 3 states | B01-B03 | 认证系统 |
 | **P8** | B-End: Quest 全线 (Hub 3 states + Wizard 2 steps) | B04-B08 | Quest API |
-| **P9** | B-End: Community 全线 (Hub 4 states + Wizard 3 steps + Module Mgmt ×9 + Content) | B09-B13, B31-B36, B31a-B31h | Community API (Wizard: B13→B34→B35) |
-| **P10** | B-End: WL 全线 (Hub 3 states + Wizard 3 steps + 10 sub-pages) | B14-B26, B37-B44 | WL API + DNS |
+| **P9** | B-End: Community 全线 (Hub 4 states + Wizard 4 steps + Module Mgmt ×9 + Content) | B09-B13, B31-B36, B31a-B31h, B55 | Community API (Wizard: B13→B34→B35→B55) |
+| **P10** | B-End: WL 全线 (Hub 3 states + Wizard 4 steps + 10 sub-pages) | B14-B26, B37-B44, B56 | WL API + DNS (Wizard: B37→B17→B38→B56) |
 | **P11** | B-End: Boost 全线 (Hub 3 states + Wizard 4 steps + Campaign Detail) | B27-B30d, B39 | Boost API |
 | **P12** | B-End: Analytics + Settings | B45-B47 | 全部 API |
 | **P13** | B-End: Preview Mode | B33 | Community + WL API |
