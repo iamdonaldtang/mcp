@@ -955,61 +955,287 @@ Content Area
 
 ## 12. Smart Rewards
 
+> **Smart Rewards 是 WL 独占功能**，由 Activity Rule Builder（自动化触发）+ Privilege Manager（权益分层）组成。
+> 核心逻辑：Rule Builder 定义「什么行为获得什么奖励」，Privilege Manager 定义「达到什么条件享受什么权益」。
+> 两者通过 Points / Badge / Level 等中间状态联动 —— Rule 产出积分/徽章，Privilege 消费积分/徽章作为准入门槛。
+
 ### 12.1 B52 — Activity Rule Builder
 
 **设计稿**: Node `4aAo7` | URL: `/white-label/rules`
 
 #### 页面概述
-- **功能**: 可视化创建自动化活动触发规则
+
+- **核心功能**: 可视化 IF-THEN 规则引擎，将链上/链下用户行为自动映射为奖励
+- **业务价值**: 项目方无需开发即可配置「做了 X 就给 Y」的自动奖励逻辑，驱动用户完成高价值行为
+- **与 Community 模块关系**: Rule Builder 产出的积分会流入 Community 的 Points & Level 系统，进而影响 Leaderboard 排名、Benefits Shop 兑换能力、Privilege 资格
 
 #### 页面结构
 
 ```
 Content Area
-├── Header: "Activity Rule Builder" + "+ Create Rule" button
+├── Header
+│   ├── Icon: bolt (amber bg #1F1A08)
+│   ├── Title: "Activity Rule Builder"
+│   ├── Subtitle: "Create if-then rules to automatically reward users for on-chain actions"
+│   └── "+ Create Rule" button (purple) → D13
 ├── Stats Row (4 cards)
 │   ├── Active Rules: 8
-│   ├── Daily Triggered (24h): 3,247
-│   ├── Points Distributed (24h): 18,540
-│   └── Unique Users Triggered: 892
-├── "Active Rules" label
-├── Rules List
-│   ├── "Reward Every Swap" [Active] — IF Swap ≥ $100 on DEX Builder... THEN 1,247 times today
-│   ├── "Daily First Action 2x" [Active] — IF first in 24h... +150 pts daily... 3 quest bonus today
-│   ├── "LP Bonus" [Draft] — IF liquidity ≥ $1K in THEN...
-│   └── "Staking Milestone" [Active] — IF stake ≥ 10K for 30d...
-├── "RULE PRESETS" label
-├── Preset Cards (3)
-│   ├── "Reward Every Swap" — Use Preset →
-│   ├── "Daily First Action 2x" — Use Preset →
-│   └── "LP Bonus + Staking Milestone" — Use Preset →
-├── "ANTI-SYBIL CONFIGURATION" label
-├── Anti-Sybil Cards (3)
+│   ├── Rules Triggered (24h): 3,247
+│   ├── Points Distributed (24h): 18,540 (↑ 12% vs yesterday, purple highlight)
+│   └── Unique Users Rewarded: 892
+├── Active Rules Table (card style, rounded corners)
+│   ├── Header: "Active Rules"
+│   ├── Row: "Reward Every Swap" [Active] — IF swap ≥ $10 on DEX Router → THEN +50 pts · Triggered 1,247 times today
+│   ├── Row: "Daily First Action 2x" [Active] — IF first daily transaction → THEN +100 pts (2x multiplier) · Triggered 423 times today
+│   ├── Row: "LP Bonus" [Draft] — IF add liquidity ≥ $500 → THEN +200 pts · Triggered 89 times today
+│   └── Row: "Staking Milestone" [Active] — IF stake ≥ 30 days continuously → THEN +500 pts (one-time) · Triggered 34 times today
+├── RULE PRESETS (section header)
+│   ├── "Reward Every Swap" — Auto-reward users for each token swap above a threshold. Best for DEX activity.
+│   ├── "Daily First Action 2x" — Double points for the first on-chain action each day. Drives daily active usage.
+│   └── "LP Bonus + Staking Milestone" — Reward liquidity provision and long-term staking with tiered point bonuses.
+├── ANTI-SYBIL CONFIGURATION (section header)
 │   ├── Min Wallet Age: 90 days
 │   ├── Min Transactions: >10 unique txs
-│   └── Bot Detection: Enabled ✅ (Preview button)
+│   ├── Bot Detection: Enabled ✅ (Preview button)
+│   └── Note: "Anti-sybil checks are applied before any rule triggers. Wallets that fail checks are silently excluded."
 ```
 
 #### Rule 数据模型
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| id | string | 规则 ID |
-| name | string | 规则名 |
-| status | enum | `active` / `draft` / `paused` |
-| trigger | object | `{ event, condition, value }` |
-| action | object | `{ type: 'points' \| 'badge' \| 'tier', value }` |
-| frequency | enum | `once` / `daily` / `unlimited` |
-| antiSybil | object | 反作弊配置 |
+```typescript
+interface ActivityRule {
+  id: string;
+  name: string;                    // 规则名称，如 "Reward Every Swap"
+  status: 'active' | 'draft' | 'paused';
+
+  // IF 部分 — 触发条件
+  trigger: {
+    event: TriggerEvent;           // 触发事件类型
+    condition: string;             // 条件描述，如 "Any task in Sector: Getting Started"
+    value?: number;                // 阈值，如 swap ≥ $10 的 10
+    chainId?: string;              // 链 ID（链上事件必填）
+    contractAddress?: string;      // 合约地址（链上事件必填，关联 B51 合约注册）
+  };
+
+  // THEN 部分 — 执行动作
+  action: {
+    type: 'award_points' | 'grant_badge' | 'upgrade_tier' | 'webhook';
+    pointType?: string;            // 积分类型 ID (EXP / GEM / 自定义)
+    value?: number;                // 积分数量，如 50 XP
+    badgeId?: string;              // 徽章 ID（type=grant_badge 时）
+    tierId?: string;               // 权限层级 ID（type=upgrade_tier 时）
+    webhookUrl?: string;           // 外部回调（type=webhook 时）
+    multiplier?: number;           // 倍率，如 2x
+  };
+
+  // 频率控制
+  frequency: 'once' | 'daily' | 'unlimited';
+
+  // 反作弊
+  antiSybil: AntiSybilConfig;
+
+  // 统计（只读）
+  stats: {
+    triggeredToday: number;
+    triggeredTotal: number;
+    pointsDistributed24h: number;
+    uniqueUsersRewarded: number;
+  };
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+// 支持的触发事件
+type TriggerEvent =
+  // 链上事件（需要 B51 合约注册）
+  | 'token_swap'          // 代币兑换
+  | 'add_liquidity'       // 添加流动性
+  | 'remove_liquidity'    // 移除流动性
+  | 'token_transfer'      // 代币转账
+  | 'nft_mint'            // NFT 铸造
+  | 'nft_transfer'        // NFT 转移
+  | 'staking_deposit'     // 质押存入
+  | 'staking_withdraw'    // 质押提取
+  | 'contract_interaction'// 通用合约交互
+  // 平台事件（无需合约注册）
+  | 'task_completed'      // 完成任务
+  | 'daily_login'         // 每日登录
+  | 'referral_success'    // 推荐成功
+  | 'milestone_reached'   // 达成里程碑
+  | 'level_up';           // 升级
+
+interface AntiSybilConfig {
+  minWalletAge: number;    // 最小钱包年龄（天）
+  minTransactions: number; // 最小交易数
+  botDetection: boolean;   // 是否开启机器人检测
+}
+```
+
+#### IF-THEN 规则引擎逻辑
+
+```
+用户行为 → 事件匹配 → Anti-Sybil 检查 → 条件判断 → 频率检查 → 执行动作 → 更新统计
+```
+
+**详细流程**:
+
+1. **事件捕获**: 链上事件通过 B51 注册的合约 + 链上监听器捕获；平台事件由 TaskOn 内部系统产生
+2. **Anti-Sybil 前置检查**: 所有规则触发前，先检查钱包年龄/交易数/机器人检测。**不通过的钱包静默排除**（不报错，不通知用户）
+3. **条件匹配**: 检查事件是否满足 IF 条件（如 swap 金额 ≥ 阈值、在指定 Sector 完成任务等）
+4. **频率检查**:
+   - `once`: 每个用户只触发一次（全生命周期去重）
+   - `daily`: 每个用户每日最多触发一次（UTC 0:00 重置）
+   - `unlimited`: 每次满足条件都触发（适合 swap 奖励等高频场景）
+5. **执行动作**:
+   - `award_points` → 调用 Points 系统 API 增加积分 → **联动 Leaderboard 排名实时更新**
+   - `grant_badge` → 调用 Badge 系统发放徽章 → **可能触发 Privilege 的 Achievement-Based 资格**
+   - `upgrade_tier` → 直接提升用户 Privilege 层级
+   - `webhook` → POST 到项目方指定 URL（用于项目方自有系统联动）
+
+#### 联动关系图
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Activity Rule Builder                     │
+│              IF (trigger) → THEN (action)                   │
+└──────────┬──────────────┬───────────────┬───────────────────┘
+           │              │               │
+    award_points     grant_badge     upgrade_tier
+           │              │               │
+           ▼              ▼               ▼
+  ┌────────────┐  ┌───────────┐  ┌────────────────┐
+  │ Points &   │  │  Badges   │  │   Privilege     │
+  │ Level      │  │  (B31i)   │  │   Manager (B53) │
+  │ (B31a)     │  └─────┬─────┘  └────────┬───────┘
+  └──────┬─────┘        │                 │
+         │              │                 │
+         ▼              ▼                 ▼
+  ┌────────────┐  ┌───────────────┐  ┌──────────────┐
+  │ Leaderboard│  │ Privilege     │  │ C-End 用户   │
+  │ (C03)      │  │ Qualification │  │ 享受权益     │
+  │ LB Sprint  │  │ (Mode C)     │  │ (fee discount│
+  │ (C04)      │  └───────────────┘  │  gas rebate  │
+  └──────┬─────┘                     │  yield boost)│
+         │                           └──────────────┘
+         ▼
+  ┌────────────┐
+  │ Benefits   │
+  │ Shop (C06) │
+  │ 积分兑换   │
+  └────────────┘
+```
+
+#### Rule Presets 业务说明
+
+| Preset | 适用场景 | 默认配置 | 预期效果 |
+|--------|---------|---------|---------|
+| **Reward Every Swap** | DEX 项目促交易量 | IF swap ≥ $10 → +50 pts, unlimited | 每笔合格交易即时奖励，高频激励 |
+| **Daily First Action 2x** | 所有项目促 DAU | IF first daily tx → +100 pts (2x), daily | 鼓励每日至少一次链上交互 |
+| **LP Bonus + Staking Milestone** | DeFi 项目促 TVL | IF LP ≥ $500 → +200 pts, unlimited; IF stake ≥ 30d → +500 pts, once | 短期流动性 + 长期锁仓双重激励 |
+
+#### Anti-Sybil 配置说明
+
+| 检查项 | 默认值 | 说明 | 失败处理 |
+|--------|-------|------|---------|
+| **Min Wallet Age** | 90 天 | 钱包首次交易距今天数 | 静默排除，不触发规则 |
+| **Min Transactions** | >10 笔 | 钱包历史唯一交易数 | 静默排除，不触发规则 |
+| **Bot Detection** | 启用 | 机器学习模型检测刷量行为 | 静默排除 + 标记可疑钱包 |
+
+> **重要**: Anti-Sybil 是全局配置，对该项目下所有 Rule 生效。修改后立即对新触发的事件生效，已发放的奖励不追溯。
+
+#### D13 — Activity Rule Editor (Modal)
+
+**设计稿**: Node `IJZ0E` | 宽度 800px
+
+**Modal 结构**:
+```
+Title Bar: "Create Activity Rule" + × close
+Body:
+├── Rule Name: text input (placeholder: "e.g. Reward Daily Logins, NFT Holder Bonus")
+├── IF Block (amber border #FED7AA, bg #1F1508)
+│   ├── Badge: "IF" (orange #EA580C)
+│   ├── Label: "When this event happens..."
+│   ├── Event dropdown: "Task Completed" (可选: 见 TriggerEvent 类型)
+│   └── Condition dropdown: "Any task in Sector: Getting Started"
+├── ↓ Arrow
+├── THEN Block (green border #BBF7D0, bg #0A1F1A)
+│   ├── Badge: "THEN" (green #16A34A)
+│   ├── Label: "Perform this action..."
+│   ├── Action dropdown: "Award Points"
+│   └── Value input: "50" + unit "XP"
+├── Frequency: toggle group [Once per user (default) | Daily | Unlimited]
+Footer: [Cancel] [Create Rule] (purple)
+```
+
+**交互逻辑**:
+
+1. **Event dropdown 选项联动**:
+   - 选择链上事件 (swap/LP/staking 等) → Condition 下拉显示已注册合约列表（来自 B51）
+   - 如无合约注册 → 显示 "No contracts registered. Register one first →" 链接到 B51
+   - 选择平台事件 (task_completed/daily_login 等) → Condition 下拉显示 Sectors/任务类型
+2. **Action dropdown 选项联动**:
+   - Award Points → 显示 value 数字输入 + point type 选择器 (EXP/GEM/自定义)
+   - Grant Badge → 显示 badge 选择器（来自 B31i 已配置的徽章列表）
+   - Upgrade Tier → 显示 tier 选择器（来自 B53 已配置的层级列表）
+   - Webhook → 显示 URL 输入框
+3. **Frequency 互斥选择**: 三个选项 radio 样式，选中为蓝色填充 (#0F1A2E + #3B82F6 文字)
+4. **保存**:
+   - 创建模式: POST `/api/wl/rules` → 默认 status=draft
+   - 编辑模式: PUT `/api/wl/rules/:id`
+   - 保存成功 → 关闭 Modal → 刷新 B52 规则列表
+5. **从 Preset 进入**: 自动填充所有字段，用户可修改后保存
 
 #### 按钮路由
 
-| 按钮 | 目标 |
-|------|------|
-| "+ Create Rule" | → D13 Activity Rule Editor (`IJZ0E`) |
-| Row click | → D13 (edit) |
-| "Use Preset →" | (API) 加载预设 → D13 |
-| Toggle enable/disable | (API) `PUT /api/wl/rules/:id` |
+| 按钮 | 位置 | 目标 | 说明 |
+|------|------|------|------|
+| "+ Create Rule" | Header | → D13 (create) | 空表单 |
+| Row click | Rules Table | → D13 (edit) | 预填已有数据 |
+| "Use Preset →" | Preset Cards | → D13 (preset) | 预填模板数据 |
+| Rule toggle | Table row | (API) `PUT /api/wl/rules/:id` | 切换 active↔paused |
+| Filter tabs | Table 上方 | (前端筛选) | All / Active / Draft / Paused |
+| "Preview" | Anti-Sybil Bot Detection | (action) | 预览当前被排除的钱包列表 |
+
+#### Rule 状态流转
+
+```
+                  ┌─────────┐
+     Create Rule  │  Draft  │
+     ─────────►   │         │
+                  └────┬────┘
+                       │ Toggle Enable
+                       ▼
+                  ┌─────────┐    Toggle Disable    ┌─────────┐
+                  │ Active  │ ◄──────────────────► │ Paused  │
+                  │         │    Toggle Enable      │         │
+                  └────┬────┘                      └────┬────┘
+                       │ Delete                         │ Delete
+                       ▼                                ▼
+                  ┌─────────┐
+                  │ Deleted │ (soft delete, 可恢复)
+                  └─────────┘
+```
+
+- **Draft → Active**: 首次启用，开始监听事件并触发
+- **Active → Paused**: 暂停触发，已发放奖励不追溯
+- **Paused → Active**: 恢复触发，从恢复时刻起生效
+- **Delete**: 软删除，30 天内可恢复
+
+#### API
+
+| Endpoint | Method | 说明 | 请求体关键字段 |
+|----------|--------|------|---------------|
+| `/api/wl/rules` | GET | 获取规则列表 | query: `?status=active&page=1&limit=20` |
+| `/api/wl/rules` | POST | 创建规则 | `{ name, trigger, action, frequency }` |
+| `/api/wl/rules/:id` | GET | 获取单条规则详情 | — |
+| `/api/wl/rules/:id` | PUT | 更新规则 | 同 POST body + `{ status }` |
+| `/api/wl/rules/:id` | DELETE | 软删除规则 | — |
+| `/api/wl/rules/presets` | GET | 获取预设模板列表 | — |
+| `/api/wl/rules/stats` | GET | 获取汇总统计 | query: `?period=24h` |
+| `/api/wl/anti-sybil` | GET | 获取反作弊配置 | — |
+| `/api/wl/anti-sybil` | PUT | 更新反作弊配置 | `{ minWalletAge, minTransactions, botDetection }` |
+| `/api/wl/anti-sybil/preview` | GET | 预览被排除钱包 | query: `?page=1&limit=50` |
 
 ---
 
@@ -1017,42 +1243,301 @@ Content Area
 
 **设计稿**: Node `5xwYN` | URL: `/white-label/privileges`
 
+#### 页面概述
+
+- **核心功能**: 定义用户权益层级，根据积分/等级/徽章/持仓等条件自动或手动授予项目原生权益
+- **业务价值**: 让项目方能将 TaskOn 积分体系转化为**真实产品权益**（手续费折扣、Gas 返还、收益加成、优先体验等），形成「行为→积分→权益」的完整价值闭环
+- **与 Rule Builder 的关系**: Rule Builder 是「生产端」（产出积分/徽章），Privilege Manager 是「消费端」（消耗积分/徽章作为准入门槛）
+
 #### 页面结构
 
 ```
 Content Area
-├── Header: "Privilege Manager" + "+ Create Privilege" button
+├── Header
+│   ├── Icon: stars (purple bg #1A1033)
+│   ├── Title: "Privilege Manager"
+│   ├── Subtitle: "Define project-native privileges that reward loyal users with real product benefits"
+│   └── "+ Create Privilege" button (purple) → D14
 ├── Stats Row (4 cards)
 │   ├── Active Privileges: 5
-│   ├── Total Members: 1,247
-│   ├── Privilege Rewards ($): $12,840
-│   └── Webhook: Connected ✅
-├── "Active Privileges" label
-├── Privilege Tiers List
-│   ├── "Trading First Discount" [Active] — Tier criteria...
-│   ├── "Gold Status" [Active] — Points + Activity gate...
-│   ├── "Trex Scout" [Active] — Referral with 5+ tier...
-│   └── "Priority Access" [Active] — Early access to all...
-├── "NEW PRIVILEGE MODELS" label
-├── Model Cards (3)
-│   ├── Mode A: Status-Based — Use template →
-│   ├── Mode B: Contribution-Based — Use template →
-│   └── Mode C: Achievement-Based — Use template →
-├── "INTEGRATION STATUS" label
-├── Integration Status Row (3)
+│   ├── Active Holders: 1,247
+│   ├── Total Value Distributed: $12,840 (↑ 8% this month, purple highlight)
+│   └── API Integration: Connected ✅ (green text)
+├── Active Privileges Table (card style)
+│   ├── Header: "Active Privileges"
+│   ├── Row: "Trading Fee Discount" [Active] — 10% fee discount · Status-based: Level ≥ 3 · 487 active holders
+│   ├── Row: "Gas Rebate" [Active] — Up to 50% gas refund · Status-based: 1,000+ points balance · 312 active holders
+│   ├── Row: "Yield Boost" [Active] — +2% APY bonus · Achievement-based: Diamond Hands badge · 156 active holders
+│   └── Row: "Priority Access" [Active] — Early access to new features · Achievement-based: OG Pioneer milestone · 89 holders
+├── QUALIFICATION MODES (section header)
+│   ├── Mode A: Status-Based — "Auto-grant privileges based on user level or points balance. Privileges activate/expire automatically as status changes."
+│   ├── Mode B: Redemption-Based — "Users spend points in Benefits Shop to claim time-limited privilege vouchers. Managed via existing Shop module."
+│   └── Mode C: Achievement-Based — "One-time privilege grant upon earning a specific Badge or completing a Milestone. Permanent or time-limited."
+├── INTEGRATION STATUS (section header)
 │   ├── API Connection: Enabled ✅
 │   ├── Webhook URL: https://...
-│   └── Usage Reporting: Active ✅
+│   ├── Usage Reporting: Active ✅
+│   └── Note: "Your project queries the TaskOn API to check user privilege status and applies benefits in your own product logic."
 ```
+
+#### Privilege Tier 数据模型
+
+```typescript
+interface PrivilegeTier {
+  id: string;
+  name: string;                     // 层级名称，如 "VIP", "Whale", "OG"
+  rankOrder: number;                // 排序序号（1 = 最高层级）
+  status: 'active' | 'draft' | 'paused';
+
+  // 视觉配置
+  icon: string;                     // Material Symbols icon name (如 "diamond")
+  color: string;                    // 层级主题色 (#9B7EE0 / #F59E0B / #3B82F6 / #EF4444)
+
+  // 准入条件（三种模式互斥）
+  qualification: {
+    mode: 'status_based' | 'redemption_based' | 'achievement_based';
+
+    // Mode A: Status-Based
+    condition?: 'token_gate' | 'level_req' | 'points_threshold' | 'manual_assignment';
+    tokenGate?: {                   // condition=token_gate
+      contractAddress: string;      // 代币合约地址（关联 B51）
+      minBalance: number;           // 最低持仓量
+      chainId: string;
+    };
+    levelReq?: {                    // condition=level_req
+      minLevel: number;             // 最低等级
+    };
+    pointsThreshold?: {             // condition=points_threshold
+      pointType: string;            // 积分类型 ID
+      minBalance: number;           // 最低积分余额
+    };
+
+    // Mode B: Redemption-Based
+    shopItemId?: string;            // 关联 Benefits Shop 商品 ID
+
+    // Mode C: Achievement-Based
+    badgeId?: string;               // 需要持有的徽章 ID
+    milestoneId?: string;           // 需要达成的里程碑 ID
+  };
+
+  // 权益列表（多选）
+  privileges: PrivilegeItem[];
+
+  // 时效
+  duration: 'permanent' | 'time_limited';
+  durationDays?: number;            // time_limited 时的有效天数
+
+  // 统计（只读）
+  stats: {
+    activeHolders: number;
+    totalValueDistributed: number;
+    lastGrantedAt: string;
+  };
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+// 权益项（项目方在自己产品中执行）
+interface PrivilegeItem {
+  type: 'early_access' | 'exclusive_shop' | 'point_multiplier' | 'custom_badge'
+      | 'fee_discount' | 'gas_rebate' | 'yield_boost' | 'priority_support' | 'custom';
+  label: string;                    // 显示名称
+  value?: number;                   // 具体数值（如 10% discount, 2x multiplier）
+  enabled: boolean;
+}
+```
+
+#### 三种 Qualification Mode 详细说明
+
+##### Mode A: Status-Based（最常用）
+
+**逻辑**: 系统根据用户当前状态**自动判定**是否有资格，资格随状态变化**实时生效/失效**。
+
+| Condition | 判定依据 | 数据源 | 实时性 |
+|-----------|---------|--------|-------|
+| **Token Gate** | 钱包持有指定代币 ≥ N | B51 注册合约 + 链上查询 | 每次 API 查询时实时检查 |
+| **Level Req** | 用户等级 ≥ N | Points & Level (B31a) | 等级变更时即时更新 |
+| **Points Threshold** | 积分余额 ≥ N | Points & Level (B31a) | 积分变更时即时更新 |
+| **Manual Assignment** | 管理员手动添加 | D15 Members Panel | 手动操作即时生效 |
+
+**联动规则**:
+- 用户积分从 1,000 降到 999 → 自动**失去** Points Threshold 类权益
+- 用户从 Level 3 升到 Level 4 → 自动**获得** Level Req ≥ 4 的权益
+- 用户出售代币导致余额低于阈值 → 下次 API 查询时**失去**权益
+
+##### Mode B: Redemption-Based
+
+**逻辑**: 用户在 C-End Benefits Shop (C06) 中花费积分**主动兑换**权益凭证，凭证有时效。
+
+**联动流程**:
+```
+B53 创建 Privilege Tier (Mode B)
+  → 自动在 Benefits Shop (B31g) 创建对应商品
+  → C-End Shop (C06) 展示可兑换
+  → 用户花费积分兑换
+  → 获得时限权益凭证（如 30 天 VIP）
+  → 凭证到期自动失效
+```
+
+- **与 Benefits Shop 的关系**: Privilege Manager 创建 Mode B 层级时，会自动在 B31g Benefits Shop 中创建关联商品。商品价格/库存在 B31g 管理，权益内容在 B53 管理。
+- **到期提醒**: 凭证到期前 3 天，系统通过 Webhook 通知项目方 → 项目方可推送续费提醒
+
+##### Mode C: Achievement-Based
+
+**逻辑**: 用户获得指定 Badge 或达成指定 Milestone 后，**一次性**获得权益（可永久或限时）。
+
+**联动流程**:
+```
+Rule Builder (B52) 触发 grant_badge → 用户获得 Badge
+  → Privilege Manager 检测到 Badge 匹配 → 自动授予权益
+
+Community Milestone (B31f) 达成 → 用户完成 Milestone
+  → Privilege Manager 检测到 Milestone 匹配 → 自动授予权益
+```
+
+- **不可撤销**: Badge 一旦获得不可回收，因此 Achievement-Based 权益一旦授予也不自动失效（除非设置了 time_limited）
+- **适用场景**: OG 用户永久福利、早期贡献者专属权益
+
+#### 权益项说明
+
+| 权益项 | 说明 | 执行方 | 典型值 |
+|--------|------|--------|-------|
+| **Early access to new quests** | 新活动/功能提前体验 | 项目方产品 | 提前 24-48h |
+| **Exclusive shop items** | 专属商品/NFT 可见 | Benefits Shop | 特定商品只对该层级可见 |
+| **2x point multiplier** | 积分翻倍 | TaskOn 系统自动执行 | 2x / 3x / 5x |
+| **Custom badge** | 专属徽章展示 | TaskOn 系统自动发放 | 身份标识 |
+| **Fee discount** | 交易手续费折扣 | 项目方合约/后端 | 10% / 20% / 50% |
+| **Gas rebate** | Gas 费返还 | 项目方合约 | Up to 50% |
+| **Yield boost** | 收益加成 | 项目方 DeFi 合约 | +2% APY |
+| **Priority support** | 优先客服 | 项目方运营 | 专属频道 |
+
+> **重要**: Fee discount / Gas rebate / Yield boost 等链上权益由**项目方自行实现**。TaskOn 通过 API 提供用户权益状态查询，项目方在自己的合约/后端逻辑中检查并执行。
+
+#### 权益查询 API（项目方调用）
+
+```
+项目方产品 → GET /api/wl/privileges/check?wallet=0x...
+  → 返回该钱包当前拥有的所有权益列表
+  → 项目方根据返回结果在自己产品中执行折扣/返还等逻辑
+```
+
+这是**项目方集成的核心接口**，Dev Kit (B48) 中会包含调用示例。
+
+#### D14 — Privilege Tier Editor (Modal)
+
+**设计稿**: Node `FypcB` | 宽度 640px
+
+**Modal 结构**:
+```
+Title Bar: "Create Privilege Tier" + × close
+Body:
+├── Row: Tier Name (text input, placeholder: "e.g. VIP, Whale, OG") + Rank Order (number input, default: 1)
+├── Row: Tier Icon (icon preview, diamond icon in purple circle) + Tier Color (4 color swatches: purple/amber/blue/red, purple selected with white border)
+├── Qualification Condition
+│   ├── Dropdown: "Token Gate (hold 100+ tokens)" (options: Token Gate / Level Req / Points Threshold / Manual Assignment)
+│   └── Hint text: "Token Gate · Level Req · Points Threshold · Manual Assignment"
+├── Privileges (checkbox list)
+│   ├── ☑ Early access to new quests
+│   ├── ☑ Exclusive shop items
+│   ├── ☐ 2x point multiplier
+│   └── ☐ Custom badge
+Footer: [Cancel] [Create Tier] (purple)
+```
+
+**交互逻辑**:
+
+1. **Qualification Condition 联动**:
+   - 选 Token Gate → 展开子表单: Contract Address (从 B51 列表选择) + Min Balance + Chain
+   - 选 Level Req → 展开子表单: Min Level (number input)
+   - 选 Points Threshold → 展开子表单: Point Type (dropdown) + Min Balance
+   - 选 Manual Assignment → 无子表单，保存后通过 D15 手动添加成员
+2. **Rank Order**: 数值越小层级越高（1 = 最高）。如果输入与已有层级冲突，已有层级自动 +1 后移
+3. **Privileges 多选**: 至少选一项。勾选 "2x point multiplier" 时展开倍率输入框
+4. **保存**:
+   - 创建: POST `/api/wl/privileges` → 默认 status=draft
+   - 编辑: PUT `/api/wl/privileges/:id`
+   - 保存成功 → 关闭 Modal → 刷新 B53 列表
+
+#### D15 — Privilege Members Panel (Modal)
+
+**设计稿**: Node `zNH8l` | 宽度 480px
+
+**Modal 结构**:
+```
+Title Bar: "VIP Tier Members" (动态层级名) + "24 members" + × close
+Body:
+├── Search: "Search by address..." (wallet address search)
+├── Action Bar: [+ Add Member] (purple) + [↑ Bulk Import] (secondary)
+├── Member List
+│   ├── 0x7a3b...f291 — Joined Jan 5, 2026 — × remove
+│   ├── 0x9c1e...a847 — Joined Feb 12, 2026 — × remove
+│   ├── 0x2d5f...c103 — Joined Mar 1, 2026 — × remove
+│   └── 0x6b8a...e459 — Joined Mar 3, 2026 — × remove
+Footer: [↓ Export CSV]
+```
+
+**交互逻辑**:
+
+1. **Add Member**: 弹出地址输入框，输入 wallet address → 验证格式 → 添加到列表
+2. **Bulk Import**: 上传 CSV 文件（格式: 每行一个 wallet address），批量添加
+3. **Remove (×)**: 确认弹窗 "Remove 0x7a3b...f291 from VIP tier?" → 确认后移除
+4. **Search**: 按 wallet address 前缀搜索，实时过滤列表
+5. **Export CSV**: 导出当前层级所有成员地址 + 加入时间
+
+**适用场景**: 主要用于 Manual Assignment 模式。Status-Based / Achievement-Based 模式下，成员列表为系统自动管理（只读浏览 + 手动移除）。
 
 #### 按钮路由
 
-| 按钮 | 目标 |
-|------|------|
-| "+ Create Privilege" | → D14 Privilege Tier Editor (`FypcB`) |
-| Row click | → D14 (edit) |
-| "Manage Members" | → D15 Privilege Members Panel (`zNH8l`) |
-| "Use template →" | (API) 加载模板 → D14 |
+| 按钮 | 位置 | 目标 | 说明 |
+|------|------|------|------|
+| "+ Create Privilege" | Header | → D14 (create) | 空表单 |
+| Row click | Privileges Table | → D14 (edit) | 预填已有数据 |
+| "Manage Members" (隐含) | Table row 操作区 | → D15 Members Panel | 查看/管理该层级成员 |
+| "Most common →" | Mode A card | → D14 (preset: Status-Based) | 预选 qualification.mode |
+| "Via Benefits Shop →" | Mode B card | → B31g Benefits Shop | 跳转 Shop 管理 |
+| "Configure →" | Mode C card | → D14 (preset: Achievement-Based) | 预选 qualification.mode |
+| Filter tabs | Table 上方 | (前端筛选) | All / Active / Draft |
+
+#### Privilege 状态流转
+
+```
+                  ┌─────────┐
+  Create Tier     │  Draft  │   (未发布，可编辑所有字段)
+  ────────────►   │         │
+                  └────┬────┘
+                       │ Activate
+                       ▼
+                  ┌─────────┐    Pause              ┌─────────┐
+                  │ Active  │ ◄────────────────────► │ Paused  │
+                  │         │    Resume              │         │
+                  └────┬────┘                        └────┬────┘
+                       │                                  │
+                       │ (Active 后 qualification.mode    │
+                       │  不可更改，仅可调整阈值/权益)      │
+                       └──────────────────────────────────┘
+```
+
+- **Draft**: 可自由编辑所有字段
+- **Active**: qualification.mode 锁定不可更改（防止已授权用户突然失去资格）。可调整: 阈值数值、权益列表、层级名称/图标/颜色
+- **Paused**: 暂停新用户获得资格，已有用户权益保留。恢复后继续生效
+
+#### API
+
+| Endpoint | Method | 说明 | 请求体关键字段 |
+|----------|--------|------|---------------|
+| `/api/wl/privileges` | GET | 获取层级列表 | query: `?status=active&page=1` |
+| `/api/wl/privileges` | POST | 创建层级 | `{ name, rankOrder, icon, color, qualification, privileges, duration }` |
+| `/api/wl/privileges/:id` | GET | 获取单个层级详情 | — |
+| `/api/wl/privileges/:id` | PUT | 更新层级 | 同 POST body + `{ status }` |
+| `/api/wl/privileges/:id` | DELETE | 删除层级 | — |
+| `/api/wl/privileges/:id/members` | GET | 获取层级成员列表 | query: `?search=0x&page=1&limit=50` |
+| `/api/wl/privileges/:id/members` | POST | 添加成员 | `{ walletAddress }` 或 `{ addresses: [...] }` (批量) |
+| `/api/wl/privileges/:id/members/:wallet` | DELETE | 移除成员 | — |
+| `/api/wl/privileges/:id/members/export` | GET | 导出 CSV | — |
+| `/api/wl/privileges/check` | GET | **项目方调用**: 查询用户权益 | query: `?wallet=0x...` → 返回权益列表 |
+| `/api/wl/privileges/stats` | GET | 汇总统计 | — |
+| `/api/wl/privileges/integration` | GET | 集成状态 | — |
 
 ---
 
