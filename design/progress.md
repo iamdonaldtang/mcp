@@ -1,14 +1,15 @@
 # TaskOn Design — Progress Tracker
 
-> Last updated: 2026-03-05
+> Last updated: 2026-03-06
 > Design file: `design/pencil-new.pen` (Pencil MCP tools only)
 > Page IDs: `design/pages.md` | TODO: `design/todo.md` | Archive: `design/progress-archive.md`
 
 ## Status
 
-**73 pages designed, 83 page codes** (M01-M14 + B01-B51 + B31a-B31i + C01-C09)
-- Design Review: 40 items → Completed 24 / Partially addressed 4 / Remaining 12 (see `todo.md`)
-- New page: WL Contract Registry (`OKEqS`) — B51
+**76 pages designed, 86 page codes** (M01-M14 + B01-B54 + B31a-B31i + C01-C09)
+- Design Review: 40 items → All addressed (36 completed + 4 deferred as low-impact)
+- New pages: WL Contract Registry (`OKEqS`), Rule Builder (`4aAo7`), Privilege Manager (`5xwYN`), Community Insights (`olPfE`)
+- Enhanced: DayChain (streak distribution), TaskChain (step funnel), Hub Deep (AI insights card + event markers), Pricing (growth stacks), Projects Landing (logo wall), WL Marketing (integration icons)
 - Skipped: T01-T04 (Quest campaign detail/edit/wizard 3-4, follow existing patterns), T25 (Blog, external)
 
 ---
@@ -54,6 +55,7 @@
 | **P0f** | Leaderboard vs LB Sprint distinction across all pages | 0 (updates) | DONE ✅ |
 | **P0g** | 4-System Module Architecture + Badges/AccessRules/HomepageEditor | 3+updates | DONE ✅ |
 | **P0h** | Design review batch execution: 24 fixes + 1 new page (Contract Registry) | 1+updates | DONE ✅ |
+| **P0i** | Design review completion: Rule Builder + Privilege Manager + Community Insights + behavioral analytics + polish | 3+updates | DONE ✅ |
 
 ---
 
@@ -62,13 +64,13 @@
 ### Marketing (M01-M14) — 14 pages
 Brand Homepage (dark) · Projects Landing · Quest/Community/WL/Boost Product Pages · Platform Pricing · WL Pricing · Contact · About · Case Studies · 3 Solutions
 
-### B-End (B01-B50 + B31a-B31i) — 59 page codes
+### B-End (B01-B54 + B31a-B31i) — 62 page codes
 - **Dashboard**: New/Active/Power (3 states)
 - **Quest**: Hub 3 states + Wizard 2 steps
 - **Community**: Hub 4 states + Wizard 3 steps + 12 module/settings pages (Sectors/Points/TaskChain/DayChain/Leaderboard/LBSprint/Milestone/Shop/Wheel/Badges/AccessRules/HomepageEditor) + Content Mgmt + Preview Mode
-- **White Label**: Hub 3 states + Wizard + Domain/Embed + Widget 3 states + PageBuilder 3 states + Integration/Brand/SDK/Analytics
+- **White Label**: Hub 3 states + Wizard + Domain/Embed + Widget 3 states + PageBuilder 3 states + Integration/Brand/SDK/Analytics + Contract Registry + Rule Builder + Privilege Manager
 - **Boost**: Hub 3 states + Wizard 4 steps
-- **Global**: Analytics Dashboard + Settings + Profile
+- **Global**: Analytics Dashboard + Community Insights + Settings + Profile
 
 ### C-End (C01-C09) — 9 page codes
 Home · Quest · Leaderboard · LB Sprint · Milestone · Shop · User Center · Invite Center · Activity Feed

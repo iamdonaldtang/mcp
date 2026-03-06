@@ -39,7 +39,10 @@
 | WL Integration Center (tab view, deprecated) | `gS64G` |
 | WL SDK & API | `lQxT5` |
 | WL Page Analytics | `69HPh` |
-| WL Contract Registry (NEW) | `OKEqS` |
+| WL Contract Registry | `OKEqS` |
+| WL Activity Rule Builder | `4aAo7` |
+| WL Privilege Manager | `5xwYN` |
+| Community Insights | `olPfE` |
 | Boost Hub (Empty/Active/Mgmt) | `stYvi`, `5C3WP`, `8gT3V` |
 | Boost Campaign Detail | `Sq4jV` |
 | Boost Wizard (Step1-4) | `SDfui`, `l9tmF`, `KMtqR`, `fZpcQ` |

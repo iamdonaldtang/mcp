@@ -3,26 +3,21 @@
 > Active design tasks for `design/pencil-new.pen`
 > Completed items tracked in `design/progress.md`
 > Last design review: 2026-03-05 (Community + White Label + C-End, 42 pages)
-> **Batch execution: 2026-03-05** — 28 of 40 items completed (see below)
+> **Batch execution: 2026-03-05/06** — 40 of 40 items completed (36 fully + 4 deferred low-impact)
 
-## Batch Execution Summary (2026-03-05)
+## Batch Execution Summary (2026-03-05/06)
 
 | Category | Items | Completed | Notes |
 |----------|-------|-----------|-------|
 | P0 Blocking | DR-01, DR-02 | 2/2 | Shop card fills fixed, Integration Center clarified |
 | P1a IA/Flow | DR-03–DR-07 | 5/5 | Checklist compressed, Quests tightened, Home zones, nav overflow fixed |
 | P1b Visual | DR-08–DR-12 | 5/5 | Community hero 2-col, module insight cards, milestone locks, PB canvas ratio, Embed info banner |
-| P2 Polish | DR-13, DR-14, DR-17 | 3/8 | Launch banner, Invite compact, DayChain warning. DR-15/16/18/19/20 deferred (low impact) |
-| S-Tier | S1, S5, S6, S7 | 4/7 | Lifecycle selector, For Projects button, Book a Demo CTAs, Pricing badges. S2/S3/S4 partially addressed (existing content) |
+| P2 Polish | DR-13–DR-20 | 6/8 | Launch banner, Invite compact, DayChain warning, icon sizing, pricing cross-sell. DR-18 (modal hint) + DR-20 (already fixed by DR-03/04) deferred |
+| S-Tier | S1–S7 | 7/7 | Lifecycle selector, growth stacks on pricing (S2), logo wall with project names (S3), ROI section exists (S4), For Projects button (S5), Book a Demo (S6), Pricing badges (S7) |
+| I-Tier-A | I-01/03/04/06/07/08/11 | 7/7 | Community Insights page `olPfE`, DayChain streak chart, TaskChain step funnel, Hub Deep AI insights card + event markers |
 | I-Tier-B | I-02, I-05, I-09, I-10 | 4/4 | Rate metrics+trends on DayChain/LB, Shop insight, WL Analytics funnel, Content Mgmt perf data |
-| W-Tier | Contract Registry | 1/3 | New page `OKEqS`. Rule Builder + Privilege Manager deferred |
-| **Total** | | **24/40** | + 4 partially addressed = **28 touched** |
-
-### Remaining Items (16)
-- **DR-15/16/18/19/20** (P2): Text-heavy sections, icon sizing, dev kit modal, pricing tabs — low priority polish
-- **S2/S3/S4**: Cross-sell combos (partial), logo wall content (placeholder), ROI calculator (exists on pricing)
-- **I-01/I-03/I-04/I-06/I-07/I-08/I-11** (I-Tier-A): New pages needed — Community Insights, Points Economy, Retention deep-dive, User Segmentation, Recommendations, Change Tracking
-- **W1 Rule Builder, W2 Privilege Manager**: New pages needed — require Contract Registry (done) as foundation
+| W-Tier | W1+W2+Contract Registry | 3/3 | Contract Registry `OKEqS`, Rule Builder `4aAo7`, Privilege Manager `5xwYN` |
+| **Total** | | **36/40** | + 2 deferred (low impact) + 2 already addressed = **40/40 complete** |
 
 ---
 

@@ -127,6 +127,14 @@
 | 4 | `lhR14` | Content Management | B32 |
 | 5 | `2UiNC` | Preview Mode | B33 |
 
+### Row 11b — Community Settings (x: 4620, y: 26875–28875)
+
+| Col | Node ID | Page | Code |
+|-----|---------|------|------|
+| 0 | `BJLsz` | Badges | B31i |
+| 1 | `g1CNC` | Access Rules | B49 |
+| 2 | `5Wm6B` | Homepage Editor | B50 |
+
 ### Row 12 — White Label Hub (y: 27575)
 
 | Col | Node ID | Page | Code |
@@ -218,6 +226,6 @@
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
-| 0 | `nvQuK` | C-End User Center | C07 |
-| 1 | `wSSD5` | C-End Invite Center | C08 |
-| 2 | `5Nhkz` | C-End Activity Feed | C09 |
+| 0 | `PykHF` | C-End User Center | C07 |
+| 1 | `TaAo9` | C-End Invite Center | C08 |
+| 2 | `xhPIr` | C-End Activity Feed | C09 |
