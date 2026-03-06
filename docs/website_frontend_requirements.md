@@ -116,6 +116,12 @@
 | **B54** | Community Insights | `olPfE` | `/community/insights` | Cross-module analytics, economy health, user segments, retention |
 | **B55** | Community Wizard Step 4 | `7mVsZ` | `/community/create` (step 4) | Preview & Publish: C-end preview + readiness checklist |
 | **B56** | WL Wizard Step 4 | `WsH2y` | `/white-label/setup` (step 4) | Preview: deployment preview + readiness checklist |
+| **B57** | WL Wizard Domain Config | `YGODW` | `/white-label/setup` (step 2, domain path) | Domain-specific Step 2 config |
+| **B58** | WL Wizard Iframe Config | `Kr5W5` | `/white-label/setup` (step 2, iframe path) | Iframe-specific Step 2 config |
+| **B59** | WL Wizard PB Config | `XHwzp` | `/white-label/setup` (step 2, PB path) | PageBuilder-specific Step 2 config |
+| **B60** | WL Wizard SDK Config | `eNFmU` | `/white-label/setup` (step 2, SDK path) | SDK-specific Step 2 config |
+| **B19v** | WL Embed Options | `Rwq2K`/`II7Nz`/`ITWrL`/`4ujzw` | `/white-label/embed` | Neutral/Iframe/Widget/PB selection states |
+| **B61** | Community Integration | `ZL5K5` | `/community/integrations` | Community-specific integration center |
 
 ### C-End Pages（White Label 社区前台，C01-C09）
 
@@ -133,9 +139,9 @@
 | **C04** | LB Sprint Tab | `y5fUZ` | `/lb-sprint` | Time-bounded leaderboard competition with start/end dates, point-type-based (EXP/GEM), non-points incentives (NFT/tokens/WL), reward tiers, past sprints |
 | **C05** | Milestone Tab | `53iKE` | `/milestones` | Level progress + milestone cards (claimed/claimable/locked) |
 | **C06** | Shop Tab | `coM7o` | `/shop` | Rewards shop + 6 items (redeem/not enough/sold out) |
-| **C07** | User Center | `nvQuK` | `/profile` | Profile card + stats + achievement badges + activity history + referral stats |
-| **C08** | Invite Center | `wSSD5` | `/invite` | Referral link + share buttons + reward tiers (3) + top inviters leaderboard |
-| **C09** | Activity Feed | `5Nhkz` | `/activity` | Live community feed + filter chips + trending cards |
+| **C07** | User Center | `PykHF` | `/profile` | Profile card + stats + achievement badges + activity history + referral stats |
+| **C08** | Invite Center | `TaAo9` | `/invite` | Referral link + share buttons + reward tiers (3) + top inviters leaderboard |
+| **C09** | Activity Feed | `xhPIr` | `/activity` | Live community feed + filter chips + trending cards |
 
 ---
 

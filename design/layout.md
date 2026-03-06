@@ -99,6 +99,7 @@
 | 1 | `S1EIA` | Community Hub — Guided | B10 |
 | 2 | `vFRHi` | Community Hub — Active | B11 |
 | 3 | `TQR51` | Community Hub — Deep | B12 |
+| 4 | `ZL5K5` | Community Integration Center | B61 |
 
 ### Row 9 — Community Wizard (y: 23375)
 
@@ -149,25 +150,65 @@
 | 1 | `BnkYW` | WL Hub — Active | B15 |
 | 2 | `UPAfV` | WL Hub — Management | B16 |
 
-### Row 13 — White Label Wizard (y: 29850)
+### Row 13 — WL Wizard: Step 1 Path + Embed Selection (y: 29850)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
 | 0 | `NNwid` | WL Wizard — Step 1 Path | B37 |
-| 1 | `CXzmy` | WL Wizard — Step 2 Configure | B17 |
-| 2 | `5nCtO` | WL Wizard — Step 3 Brand | B38 |
-| 3 | `WsH2y` | WL Wizard — Step 4 Preview | B56 |
+| 1 | `Rwq2K` | WL Embed Options — Neutral (Step 1.5) | B19v |
 
-### Row 14 — WL Deploy: Domain & Embed (y: 31000)
+### Row 13a — WL Wizard Block B: Domain Path (y: 30950)
+
+| Col | Node ID | Page | Code |
+|-----|---------|------|------|
+| 0 | `YGODW` | Step 2 — Domain Config | B57 |
+
+### Row 13b — WL Wizard Block C1: Embed > Iframe Path (y: 32050)
+
+| Col | Node ID | Page | Code |
+|-----|---------|------|------|
+| 0 | `II7Nz` | Embed Options (Iframe selected) | B19v |
+| 1 | `Kr5W5` | Step 2 — Iframe Config | B58 |
+
+### Row 13c — WL Wizard Block C2: Embed > Widget Path (y: 33450)
+
+| Col | Node ID | Page | Code |
+|-----|---------|------|------|
+| 0 | `ITWrL` | Embed Options (Widget selected) | B19v |
+| 1 | `k8t4U` | Step 2 — Widget Config (copy) | B17 |
+| 2 | `CXzmy` | Step 2 — Widget Config (canonical) | B17 |
+
+### Row 13d — WL Wizard Block C3: Embed > Page Builder Path (y: 34850)
+
+| Col | Node ID | Page | Code |
+|-----|---------|------|------|
+| 0 | `4ujzw` | Embed Options (PB selected) | B19v |
+| 1 | `XHwzp` | Step 2 — PageBuilder Config | B59 |
+| 2 | `zW40A` | Step 2 — PB Config (Has Pages) | B59 |
+
+### Row 13e — WL Wizard Block D: SDK Path (y: 36250)
+
+| Col | Node ID | Page | Code |
+|-----|---------|------|------|
+| 0 | `eNFmU` | Step 2 — SDK Config | B60 |
+
+### Row 13f — WL Wizard: Shared Steps 3-4 (y: 37350)
+
+| Col | Node ID | Page | Code |
+|-----|---------|------|------|
+| 0 | `5nCtO` | WL Wizard — Step 3 Brand | B38 |
+| 1 | `WsH2y` | WL Wizard — Step 4 Preview | B56 |
+
+### Row 14 — WL Deploy: Domain & Embed (y: 38500)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
 | 0 | `5bmH9` | WL Domain Setup | B18 |
-| 1 | `RgCVQ` | WL Deployment Settings | B19 |
+| 1 | `RgCVQ` | WL Deployment Settings (canonical) | B19 |
 | 2 | `ByGS0` | WL Iframe Embed | B42 |
 | 3 | `Cx3LH` | WL Brand Settings | B40 |
 
-### Row 15 — WL Widget Library (y: 32300)
+### Row 15 — WL Widget Library (y: 39800)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
@@ -175,7 +216,7 @@
 | 1 | `n4pJK` | Widget Config | B21 |
 | 2 | `S432k` | Widget Library — Active | B22 |
 
-### Row 16 — WL Page Builder (y: 33600)
+### Row 16 — WL Page Builder (y: 41100)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
@@ -183,7 +224,7 @@
 | 1 | `sGDcq` | Page Builder — Editor | B24 |
 | 2 | `J08v5` | Page Builder — Active | B25 |
 
-### Row 17 — WL Integration & Extras (y: 35000)
+### Row 17 — WL Integration & Extras (y: 42500)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
@@ -192,7 +233,7 @@
 | 2 | `lQxT5` | WL SDK & API | B41 |
 | 3 | `69HPh` | WL Page Analytics | B43 |
 
-### Row 17b — WL Advanced (y: 36550)
+### Row 17b — WL Advanced (y: 44050)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
@@ -202,7 +243,7 @@
 
 ---
 
-### Row 18 — Boost Hub (y: 38350)
+### Row 18 — Boost Hub (y: 45850)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
@@ -211,7 +252,7 @@
 | 2 | `8gT3V` | Boost Hub — Management | B29 |
 | 3 | `Sq4jV` | Boost Campaign Detail | B39 |
 
-### Row 19 — Boost Wizard (y: 39450)
+### Row 19 — Boost Wizard (y: 46950)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
@@ -220,7 +261,7 @@
 | 2 | `KMtqR` | Boost Wizard — Step 3 | B30c |
 | 3 | `fZpcQ` | Boost Wizard — Step 4 | B30d |
 
-### Row 20 — Cross-Product (y: 40450)
+### Row 20 — Cross-Product (y: 47950)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
@@ -231,7 +272,7 @@
 
 ---
 
-### Row 21 — C-End Community (y: 42150)
+### Row 21 — C-End Community (y: 49650)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
@@ -242,7 +283,7 @@
 | 4 | `53iKE` | C-End Milestone | C05 |
 | 5 | `coM7o` | C-End Shop | C06 |
 
-### Row 22 — C-End User Pages (y: 44050)
+### Row 22 — C-End User Pages (y: 51550)
 
 | Col | Node ID | Page | Code |
 |-----|---------|------|------|
@@ -252,7 +293,7 @@
 
 ---
 
-### Row 23 — Modals Row 1 (y: 45750)
+### Row 23 — Modals Row 1 (y: 53250)
 
 | x | Node ID | Modal | Code |
 |---|---------|-------|------|
@@ -261,14 +302,14 @@
 | 1480 | `gtOam` | Milestone Editor | D06 |
 | 2220 | `b1JOT` | Shop Item Editor | D07 |
 
-### Row 24 — Modals Row 2 (y: 46650)
+### Row 24 — Modals Row 2 (y: 54150)
 
 | x | Node ID | Modal | Code |
 |---|---------|-------|------|
 | 0 | `NnzO9` | LB Sprint Editor | D05 |
 | 900 | `bZiB5` | TaskChain Editor | D02 |
 
-### Row 25 — Modals Row 3 (y: 47850)
+### Row 25 — Modals Row 3 (y: 55350)
 
 | x | Node ID | Modal | Code |
 |---|---------|-------|------|
@@ -276,7 +317,7 @@
 | 740 | `YbFvp` | Badge Editor | D09 |
 | 1480 | `k2gwC` | Lucky Wheel Config | D08 |
 
-### Row 26 — Modals Row 4 (y: 49150)
+### Row 26 — Modals Row 4 (y: 56650)
 
 | x | Node ID | Modal | Code |
 |---|---------|-------|------|
@@ -284,7 +325,7 @@
 | 740 | `rDDZo` | Homepage Section Editor | D11 |
 | 1480 | `NcxsI` | Contract Register Form | D12 |
 
-### Row 27 — Modals Row 5 (y: 50550)
+### Row 27 — Modals Row 5 (y: 58050)
 
 | x | Node ID | Modal | Code |
 |---|---------|-------|------|
@@ -292,21 +333,22 @@
 | 900 | `FypcB` | Privilege Tier Editor | D14 |
 | 1640 | `zNH8l` | Privilege Members Panel | D15 |
 
-### Row 28 — Modals Row 6 (y: 51600)
+### Row 28 — Modals Row 6 (y: 59100)
 
 | x | Node ID | Modal | Code |
 |---|---------|-------|------|
 | 0 | `6TLjE` | Announcement Editor | D16 |
 | 740 | `DVVpL` | Featured Slot Editor | D17 |
 
-### Row 29 — Modals Row 7 (y: 52700)
+### Row 29 — Modals Row 7 (y: 60200)
 
 | x | Node ID | Modal | Code |
 |---|---------|-------|------|
 | 0 | `4FPLn` | Segment Detail Panel | D18 |
 | 900 | `2qNbJ` | Promo Kit Generator | D19 |
+| 1800 | `fY99y` | Publish Readiness Check | D20 |
 
-### Row 30 — Dev Kit Page (y: 54500)
+### Row 30 — Dev Kit Page (y: 62000)
 
 | x | Node ID | Page | Code |
 |---|---------|------|------|

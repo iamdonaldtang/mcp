@@ -31,9 +31,22 @@
 | Community Modules: Badges (B31i) | `BJLsz` |
 | Community Settings: Access Rules (B49) / Homepage Editor (B50) | `g1CNC`, `5Wm6B` |
 | Community Operations: Content/Preview | `lhR14`, `2UiNC` |
+| Community Integration Center (B61) | `ZL5K5` |
 | WL Hub (Empty/Active/Mgmt) | `Ir6Tq`, `BnkYW`, `UPAfV` |
-| WL Wizard (B37: Path/B17: Configure/B38: Brand/B56: Preview) | `NNwid`, `CXzmy`, `5nCtO`, `WsH2y` |
-| WL Domain Setup / Deployment Settings / Iframe | `5bmH9`, `RgCVQ`, `ByGS0` |
+| WL Wizard Step 1 Path (B37) | `NNwid` |
+| WL Wizard Step 2 — Domain Config (B57) | `YGODW` |
+| WL Wizard Step 2 — Iframe Config (B58) | `Kr5W5` |
+| WL Wizard Step 2 — Widget Config (B17, canonical) | `CXzmy` |
+| WL Wizard Step 2 — Widget Config (copy) | `k8t4U` |
+| WL Wizard Step 2 — PageBuilder Config (B59) | `XHwzp` |
+| WL Wizard Step 2 — PB Config Has Pages (B59) | `zW40A` |
+| WL Wizard Step 2 — SDK Config (B60) | `eNFmU` |
+| WL Wizard Step 3 Brand (B38) / Step 4 Preview (B56) | `5nCtO`, `WsH2y` |
+| WL Embed Options — Iframe selected | `II7Nz` |
+| WL Embed Options — Widget selected | `ITWrL` |
+| WL Embed Options — PB selected | `4ujzw` |
+| WL Embed Options — Neutral (Step 1.5) | `Rwq2K` |
+| WL Domain Setup / Deployment Settings (canonical) / Iframe | `5bmH9`, `RgCVQ`, `ByGS0` |
 | WL Widget Library (Empty/Config/Active) | `2sSsA`, `n4pJK`, `S432k` |
 | WL Page Builder (Empty/Editor/Active) | `DRYwN`, `sGDcq`, `J08v5` |
 | WL Brand Settings | `Cx3LH` |
@@ -81,6 +94,7 @@
 | D17 Featured Slot Editor | `DVVpL` | B32 |
 | D18 Segment Detail Panel | `4FPLn` | B54 |
 | D19 Promo Kit Generator | `2qNbJ` | B10/B15 |
+| D20 Publish Readiness Check | `fY99y` | ALL Publish buttons |
 
 ## Component Library
 - Node ID: `327GX`
