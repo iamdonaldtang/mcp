@@ -1,6 +1,7 @@
 # White Label 产品 B端前端开发需求文档
 
-> 版本: v1.0 | 日期: 2026-03-06
+> 版本: v2.0 | 日期: 2026-03-07
+> v2.0 变更: 新增每页操作详情表、完整 Modal 字段验证规则、B16/B42/B51 完整页面规格、级联效果、边界条件（共补充 112 项缺失内容）
 > 基于设计稿 `design/pencil-new.pen` + 现有文档 `website_frontend_requirements.md` v4.2
 > 供前端/后端工程师对照实施
 
@@ -25,6 +26,10 @@
 15. [侧栏架构](#15-侧栏架构)
 16. [API 接口汇总](#16-api-接口汇总)
 17. [状态路由策略](#17-状态路由策略)
+18. [附录 A: D20 Publish Touchpoints](#附录-a-d20-publish-touchpoints-wl)
+19. [附录 B: 设计稿 Node ID 索引](#附录-b-设计稿-node-id-索引)
+20. [附录 C: 级联效果 (CASCADE)](#附录-c-级联效果-cascade--v20-新增)
+21. [附录 D: 边界条件 (EDGE)](#附录-d-边界条件-edge--v20-新增)
 
 ---
 
@@ -174,6 +179,16 @@ Content Area
 | "Integration Center" tag | → B26 |
 | Resources links | → (ext) 帮助 / M05 |
 
+#### 操作详情 (v2.0 新增, W-01 ~ W-05)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-01 | 路径卡片选择 | click card | — | 选中: 紫色 border 2px `#9B7EE0` + 内容展开(适用场景+技术要求+预计时间); 同时只能选一个 (单选互斥); 默认 "Embed" 预选 | — |
+| W-02 | CTA 文案变化 | path selected | — | 按钮文案动态: "Set Up with Embed" / "Set Up with Domain" / "Set Up with SDK"; 无选中时不会出现 (默认有 Embed 预选) | — |
+| W-03 | 路径卡片展开详情 | click (selected card) | — | 选中后展开区 slide-down: 适用场景 (2-3 行) + 技术要求 ("None"/"Low code"/"Full stack") + 预计时间 ("5 min"/"30 min"/"2-4 hours") | — |
+| W-04 | "Recommended" badge | render | — | **仅 Embed 路径**有 ★ RECOMMENDED 标识 (紫色 badge, 卡片右上角); 其他路径无 | — |
+| W-05 | 路由守卫 (已有 WL) | route enter | `GET /api/white-label/status` | 用户已有 WL 配置 → **302 重定向到 B15/B16** (不应看到 Empty 页); 仅 `configuredTools=0` 时可访问 | — |
+
 ---
 
 ### 3.3 B15 — White Label Hub Active
@@ -247,6 +262,16 @@ Content Area (gap: 32px)
 | SDK & API card | → B41 |
 | Integration Center card | → B26 |
 
+#### 操作详情 (v2.0 新增, W-06 ~ W-10)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-06 | Checklist 步骤展开内容 | click step row (accordion) | — | 每步展开详情: ① "Set up first Widget" → "Open Widget Library →" 按钮 → B20. ② "Run your first widget" → 状态检测 (已有 deployed widget?). ③ "Build your first page" → "Open Page Builder →" → B23. ④ "Integration verified" → WebSocket 状态指示器 (见 W-08). ⑤ "Preview as user" → "Open Preview" → B33. ⑥ "Announce to users" → Share 区 + "Generate Promo Kit" → D19. ⑦ "Send Dev Kit" → 见 W-07. ⑧ "First user interaction" → 见 W-10 | — |
+| W-07 | "Send Dev Kit" | expand step | `POST /api/devkit/{project_id}/generate` | 展开显示: Dev Kit URL `taskon.xyz/devkit/{id}` + "Copy" 按钮 (clipboard → toast "Copied!") + "Open in New Tab" 按钮 (target=_blank) + "Email to Developer" 按钮 → 弹出 email input → `POST /api/devkit/{id}/send-email` → toast "Dev Kit link sent" | 生成失败 → toast error |
+| W-08 | "Integration verified" 步骤 | auto (WebSocket) | `/ws/wl/integration-ping` | WebSocket 监听首次来自项目域名的 API ping; 状态指示器: 🔴 "Waiting for first API ping..." → 🟢 "Verified! First ping from {domain} at {time}"; 自动标记步骤 ✅ | WebSocket 断连 → 降级为 polling GET /api/wl/integration-status 每 30s |
+| W-09 | Toolkit 卡片 "Configure →" | click | — | 6 个卡片各自跳转: Custom Domain → B18, Widget Library → B20/B22, Page Builder → B23/B25, Brand Settings → B40, SDK & API → B41, Integration Center → B26 | — |
+| W-10 | "First user interaction" 步骤 | auto (WebSocket) | `/ws/wl/first-interaction` | WebSocket 监听首个来自 C端的用户交互事件 (task completion / widget click / page view); 检测到后自动标记 ✅ + toast "First user interaction detected!" | 同 W-08 降级 |
+
 ---
 
 ### 3.4 B16 — White Label Hub Management
@@ -291,6 +316,15 @@ Content Area (gap: 32px)
 | Deployment "Widgets" | → B22 |
 | Deployment "Pages" | → B25 |
 | Analytics → Full | → B45 `/analytics` |
+
+#### 操作详情 (v2.0 新增, W-11 ~ W-14)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-11 | 完整页面结构 | render | `GET /api/white-label/status` | **B16 是管理视图** (Node `UPAfV`): Header + 4 Stats + Toolkit Grid (同 B15) + Active Deployments (3 卡片: Domain / Widgets / Pages) + Usage Analytics (chart + metrics) | — |
+| W-12 | Deployment Stats | render | `GET /api/white-label/deployments` | 4 stats: 已部署版本 ("v2.3, published 2d ago") / 活跃用户 (24h unique visitors) / 总交互数 (widget interactions + page completions) / API 调用数 (24h, from SDK usage) | — |
+| W-13 | Feature Management 卡片 | render + click | — | 5 工具卡片 (Widget Library / Page Builder / Smart Rewards / Brand / SDK): 每个显示状态 badge (Active/Not Set/Draft) + 关键指标 (如 "5 widgets active") + "Manage →" 按钮跳转对应页面 | — |
+| W-14 | "View All Deployments" | click | — | → 查看历史发布记录: 弹出 side panel (类似 D18), 显示版本号 / 发布时间 / 发布者 / 变更摘要; 数据源: `GET /api/white-label/deployments/history` | — |
 
 ---
 
@@ -348,6 +382,16 @@ Content Area (centered)
 | "Cancel" | → B14/B15/B16 (WL Hub) |
 | "Next: Configure" | → B17/B57/B58/B59/B60 (根据选择) |
 
+#### 操作详情 (v2.0 新增, W-15 ~ W-19)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-15 | Embed 路径选中后注释 | select Embed | — | 卡片下方: "Next: Choose embed method (Iframe / Widget Library / Page Builder)" (灰色 14px 副文) | — |
+| W-16 | Domain 路径选中后注释 | select Domain | — | "Next: Configure your custom domain and CNAME records" | — |
+| W-17 | SDK 路径选中后注释 | select SDK | — | "Next: Generate your API keys and integration code" | — |
+| W-18 | "Next" 按钮路由 | click Next | — | Embed → B17 (Widget Config, 默认); 在 B17 内可切换到 Iframe/PB variant. Domain → B57. SDK → B60 | — |
+| W-19 | 无选择时 Next | — | — | **Next disabled** (opacity 0.5 + cursor not-allowed); 实际不会出现因为 Embed 默认预选; 但若通过代码清空选择, 则 disabled | — |
+
 ---
 
 ### 4.3 B17 — Step 2: Widget Configure (Embed path)
@@ -391,6 +435,50 @@ Right Panel: Embed Preview
 | "Set up in Community →" | → B10/B11 Community Hub |
 | "Back" | → B37 |
 | "Next: Brand" | → B38 |
+
+#### Step 2 各变体字段规格 (v2.0 新增, W-20 ~ W-36)
+
+**B17 — Widget Config (Embed path)**
+
+| # | 字段 | 类型 | 必填 | 验证 | 说明 |
+|---|------|------|------|------|------|
+| W-20 | Embed Method | radio | ✅ | Widget Library (default) / Iframe / Page Builder | 选择影响后续: Widget→继续本页选 widgets; Iframe→跳转 B58; PB→跳转 B59 |
+| W-21 | Widget Selection | checkbox list | ✅ (≥1) | 至少选 1 个 module | 列表来源: Community 已配置模块 (green ✅); 未配置模块 (gray ○ + "Set up in Community →") |
+| W-22 | SSO Method | radio | ✅ | Wallet Auth / OAuth2+JWT / None (preview only) | None = 只能预览无法交互 |
+| W-23 | Target Domain | URL input | ✅ | valid domain format (no protocol) | 将嵌入的页面所在域名, 用于 CORS 配置; placeholder "app.yourproject.io" |
+
+**B57 — Domain Config**
+
+| # | 字段 | 类型 | 必填 | 验证 | 说明 |
+|---|------|------|------|------|------|
+| W-24 | Custom Domain | text input | ✅ | valid domain format; 不含 protocol/path | "community.yourproject.io" |
+| W-25 | CNAME Target | display (readonly) | — | — | TaskOn 提供: `custom.taskon.xyz`; Copy 按钮 |
+| W-26 | DNS Provider | select | — | Cloudflare / Route53 / Namecheap / GoDaddy / Other | 选择后显示对应平台配置教程链接 (外部) |
+| W-27 | Verify DNS | button | — | — | 手动触发: `POST /api/white-label/verify-domain` → 显示 polling 状态 ("Checking..." spinner → "✓ Verified" green / "✗ Not found yet, retrying..." amber → 30s 后 auto-retry) |
+
+**B58 — Iframe Config**
+
+| # | 字段 | 类型 | 必填 | 验证 | 说明 |
+|---|------|------|------|------|------|
+| W-28 | Iframe URL | display (auto) | — | — | `share.taskon.io/embed/{project_id}`; Copy 按钮 |
+| W-29 | SSO Option | radio | — | With SSO / Without SSO (read-only mode) | Without SSO: iframe 内容可浏览但无法交互 |
+| W-30 | Allowed Origins | text input | — | 逗号分隔的域名列表; 各域名 valid format | 允许嵌入的域名白名单; 空 = 允许所有 (不推荐) |
+| W-31 | Iframe Code | code block (readonly) | — | — | 自动生成 `<iframe src="..." width="100%" height="600" frameborder="0"></iframe>`; Copy 按钮 |
+
+**B59 — PB Config (has-pages variant)**
+
+| # | 字段 | 类型 | 必填 | 验证 | 说明 |
+|---|------|------|------|------|------|
+| W-32 | 已有 Pages 列表 | radio list | ✅ (≥1) | — | 选择基于哪个已有 Page 继续 (Node `zW40A`); 显示 page name + 创建时间 |
+| W-33 | 无已有 Pages 时 | template cards | ✅ (≥1) | — | 显示 Page Builder 模板选择 (Node `XHwzp`): Rewards Hub / Community Portal / Custom |
+
+**B60 — SDK Config**
+
+| # | 字段 | 类型 | 必填 | 验证 | 说明 |
+|---|------|------|------|------|------|
+| W-34 | SDK Mode | radio | ✅ | Full Custom (Headless) / Hybrid (SDK + TaskOn UI fallback) | Full Custom: 全部自定义, 仅 API; Hybrid: SDK 组件 + fallback UI |
+| W-35 | API Key | display (auto) | — | — | 自动生成 `pk_live_xxx`; Copy 按钮; "Regenerate" 按钮 (确认 dialog) |
+| W-36 | Project ID | display (readonly) | — | — | 唯一标识符; Copy 按钮 |
 
 ---
 
@@ -447,6 +535,14 @@ Right Panel: Live Preview
 | "Back" | → B17/B57-B60 |
 | "Next: Preview" | → B56 |
 
+#### 操作详情 (v2.0 新增, W-37 ~ W-39)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-37 | Brand 字段 (同 B40 子集) | form | — | 字段: Logo (upload, 可选) + Primary Color (hex, 必填) + Secondary Color (hex, 必填) + Heading Font (select, 必填) + Body Font (select, 必填) + Button Style (radio: filled/outline/rounded, 必填); 验证同 B40 | — |
+| W-38 | 右侧 Live Preview 更新 | any form change | — | Logo/颜色/字体变化即时反映在右侧 preview mock; debounce 200ms; preview 显示: header (logo + project name) + heading (font preview) + button (style preview) + widget mock (颜色主题) | — |
+| W-39 | "Skip for now" | click link | — | 灰色文本链接 "Skip for now — you can configure this later in Brand Settings"; 点击 → 跳过 B38, 使用默认品牌设置, 直接到 B56; toast "You can customize branding anytime from Brand Settings" | — |
+
 ---
 
 ### 4.5 B56 — Step 4: Preview & Publish
@@ -494,6 +590,15 @@ Right Panel: Launch Readiness
 
 **重要**: 发布按钮先触发 D20 Publish Readiness Check。
 
+#### 操作详情 (v2.0 新增, W-40 ~ W-43)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-40 | WL Preview 内容 | render | `GET /api/white-label/preview` | 左侧 Deployment Preview 根据已配置路径显示: **Embed** → yourproject.io mockup + 已选 widget 模块预览; **Domain** → custom domain portal 预览; **SDK** → API 集成代码 + Headless 架构图; 顶部 desktop/mobile toggle 切换视图 | API 失败 → 显示 "Unable to load preview" + Retry |
+| W-41 | Readiness Checklist | render | `GET /api/white-label/readiness` | 右侧 checklist 项 (WL 版): ✅ Community active (name + task count) / ✅ Deployment path selected / ✅ Widgets selected (count) / ✅ Brand configured / ⚠️ "Begin config for your widgets" (amber, 无 widget 已配置时) / ⚠️ "Page Builder not started" (amber, 选了 PB 但未创建 page 时); Domain 路径额外: ✅/⚠️ DNS verified; "After publishing" info card 显示后续步骤 | — |
+| W-42 | "Publish White Label" | click | `POST /api/white-label/publish` | 点击 → **先弹出 D20** Publish Readiness Check (订阅+Twitter 验证) → D20 通过 → 调用 publish API → button spinner → 成功: toast "White Label published!" + 自动跳转 B15 Hub Active; Dev Kit URL 自动生成 (见 W-43) | API 失败 → toast error "Publish failed: {reason}" + 留在 B56 |
+| W-43 | Dev Kit 自动生成 | publish success | `POST /api/devkit/{project_id}/generate` | Publish 成功后自动触发 Dev Kit 生成: URL = `taskon.xyz/devkit/{project_id}`; B15 Checklist "Send Dev Kit" 步骤自动可用; 生成失败不阻塞 publish (后台重试) | 生成失败 → B15 "Send Dev Kit" 步骤显示 "Generating..." + 后台 30s 重试 |
+
 ---
 
 ## 5. Domain 管理
@@ -538,6 +643,16 @@ Right Panel: Domain Status
 |----------|--------|----------|
 | `/api/white-label/verify-domain` | POST | HTTP 轮询 (每 10s) |
 
+#### 操作详情 (v2.0 新增, W-44 ~ W-48)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-44 | DNS 验证自动轮询 | page load + manual | `POST /api/white-label/verify-domain` | 页面加载后自动开始 polling (每 30s); 状态指示器: "Checking..." (spinner) → "✓ DNS Verified" (green) / "✗ Not found yet, will retry..." (amber); 手动 "Verify Now" 按钮可立即触发一次检查; 成功后停止 polling | 3 次连续失败 → 降低频率到每 60s; 显示 "DNS propagation may take up to 48 hours" |
+| W-45 | CNAME 记录展示 | render | — | DNS Configuration 表格: Type=`CNAME` / Host=`community` (或用户自定义子域名) / Value=`custom.taskon.xyz` / TTL=`300`; "Copy DNS Record" 按钮 → 复制整行文本格式 → toast "Copied!"; Provider 教程链接 (Cloudflare/Route53/Namecheap/GoDaddy) | — |
+| W-46 | SSL 状态 | auto (after DNS) | — | DNS 验证通过后自动触发 SSL 配置 (Let's Encrypt); 右侧 Domain Status checklist: ✅ Domain added → ✅ DNS verified → ⏳ "SSL: Provisioning..." (spinner) → ✅ "SSL: Active" (green); SSL 通常 2-5 分钟; Portal Preview 在 SSL active 后才显示 HTTPS 锁图标 | SSL 失败 → "SSL provisioning failed. Retrying..." + 自动重试 3 次 |
+| W-47 | "Edit Domain Settings" | click | — | 进入编辑模式: Domain input 变为可编辑; **修改域名后点 Save → 触发 D20** (因为域名变更需要重新验证 DNS + SSL); 注意: 是 save 触发 D20, 不是 edit 按钮本身 | — |
+| W-48 | 域名冲突 | verify-domain response | `POST /api/white-label/verify-domain` | 如果域名已被其他 TaskOn 项目 claim: API 返回 409 → 显示红色 error: "This domain is already claimed by another project. Please use a different subdomain." + domain input 红色 border; 不会自动重试 | 已 claimed 时 Save 按钮 disabled |
+
 ---
 
 ## 6. Embed & Deployment
@@ -580,6 +695,15 @@ Content Area
 | "Browse Widget Library →" | → B20 Widget Library |
 | "Open Page Builder →" | → B23 Page Builder |
 
+#### 操作详情 (v2.0 新增, W-49 ~ W-52)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-49 | Neutral 状态 (B19v) | render | — | Node `Rwq2K`: 3 个 Embed Method 卡片 (Iframe / Widget Library ★RECOMMENDED / Page Builder); 每卡片: 标题 + "What You Get" 列表 (3-4 bullet points) + CTA 按钮; 底部 Quick Comparison Table (Setup Time / Code Required / Layout Control / Best For); Tip banner "Not sure which to pick? Start with Widget Library..." | — |
+| W-50 | 选择 Iframe | click "Get Embed Code →" | — | → 跳转 B42 Iframe Embed 页面 (`/white-label/embed/iframe`) | — |
+| W-51 | 选择 Widget Library | click "Browse Widget Library →" | `GET /api/white-label/widgets` | 检查已有 widget: 0 → 跳转 B20 (Empty); 1+ → 跳转 B22 (Active) | — |
+| W-52 | 选择 Page Builder | click "Open Page Builder →" | `GET /api/white-label/pages` | 检查已有 page: 0 → 跳转 B23 (Empty); 1+ → 跳转 B25 (Active) | — |
+
 ### 6.2 B42 — Iframe Embed
 
 **设计稿**: Node `ByGS0` | URL: `/white-label/embed/iframe`
@@ -603,6 +727,16 @@ Content Area
 │   ├── Redirect URL: input
 │   └── "Test Connection" button
 ```
+
+#### 操作详情 (v2.0 新增, W-53 ~ W-57)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-53 | 完整页面结构 | render | `GET /api/white-label/embed/iframe` | Node `ByGS0`: Breadcrumb ("← Back to White Label") + Header ("Iframe Embed" + "Preview" button) + Embed Configuration (Source URL readonly + Display Mode dropdown + Width/Height inputs) + Embed Code (auto-generated `<iframe>` code block + "Copy Code" button) + SSO Configuration (JWT Provider dropdown + Redirect URL input + "Test Connection" button) | — |
+| W-54 | Iframe URL | render | — | Source URL: `share.taskon.io/embed/{project_id}` (readonly, auto-generated); "Copy" 按钮 → clipboard → toast "URL Copied!"; URL 在 WL publish 后自动生效 | — |
+| W-55 | Iframe Code 生成 | config change | — | 配置变化时自动更新代码: `<iframe src="share.taskon.io/embed/{project_id}" width="{width}" height="{height}" frameborder="0" allow="clipboard-write"></iframe>`; Display Mode 影响默认尺寸: Full Page (100%×800px) / Sidebar (360px×600px) / Modal (480px×640px); "Copy Code" → clipboard → toast | — |
+| W-56 | SSO 配置 | form | — | JWT Provider: 选择后显示对应集成代码 snippet; "Wallet Auth" → 显示 `window.taskonEmbed.auth({ type: 'wallet' })` 代码; "OAuth2/JWT" → 显示 JWT token 传递代码 (`postMessage` API); Redirect URL: SSO 回调地址; 均有 Copy 按钮 | — |
+| W-57 | "Test Embed" / "Preview" | click "Preview" button | — | 页面底部展开 inline iframe 预览区 (slide-down animation 300ms): 显示实际 iframe 渲染效果; 预览区含 "Close Preview" 按钮; SSO 未配置时预览显示只读模式 (灰色遮罩 + "SSO not configured" 提示) | iframe 加载失败 → 显示 "Unable to load preview. Check if your domain is configured correctly." |
 
 ---
 
@@ -722,6 +856,16 @@ Content Area
 | "Add Widget →" | → B21 (new) |
 | "Deploy Widget" | → 触发 D20 |
 
+#### Widget Library 操作详情 (v2.0 新增, W-58 ~ W-62)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-58 | B21 Widget Config 完整字段 | form | `GET /api/white-label/widgets/:id` | 左侧: Widget Name (text, 必填 1-50) + Module Type (select: Leaderboard/Tasks/User Center/Shop/DayChain/Quest, 必填) + Theme (Light/Dark toggle) + Show Top N (number, 默认 10) + Refresh Interval (select: 5/15/30/60 min) + Display Options (checkbox: point badges / rank change / avatar address) + Style Config (Primary Color: inherit from brand / custom hex; Border Radius: 0-24px slider; Padding: 8/12/16/24px select); 右侧: Live Preview (实时更新) | — |
+| W-59 | B21 Embed Code 生成 | save widget | `POST /api/white-label/widgets` | "Save & Get Embed Code" → API call → 成功: 右侧 Embed Code 区显示 `<script src="cdn.taskon.io/widget.js"></script><taskon-{module} project="{id}" widget="{widget_id}" theme="{theme}"></taskon-{module}>`; "Copy" 按钮 → clipboard → toast "Embed code copied!"; Tip: "Paste this code into your website's HTML" | 保存失败 → toast error |
+| W-60 | B22 Active 操作 | click per widget | various | 每个 widget 卡片操作: **Configure** → B21 (edit mode, 预填数据); **Copy Embed** → clipboard + toast; **Deploy** → 触发 D20 Publish Readiness Check; **Delete** → confirm dialog "Delete widget '{name}'? This will remove it from all embedded locations." → 确认 → `DELETE /api/white-label/widgets/:id` → 列表刷新 + toast "Widget deleted" | 删除被 Rule 引用 → 403 + toast "Cannot delete: widget is used in active deployments" |
+| W-61 | Widget 状态 badge | render | — | 每个 widget 卡片右上角状态: **Configured** (绿色 `#16A34A` bg `#0A2E1A`): 已配置未部署; **Deployed** (蓝色 `#3B82F6` bg `#0F1A2E`): 已部署到生产; **Draft** (灰色 `#64748B` bg `#1E293B`): 配置未完成; 状态来源: API response `.status` 字段 | — |
+| W-62 | B20 Template cards | click template | — | Empty 状态下 "Community Modules" 网格: 每个 module card = icon + name + metrics (if configured) + CTA; Configured modules (green border): "Add Widget →" → B21 (预填 moduleType); Not Yet Configured (amber border): "Set Up in Community →" → B10/B11; 模板数据来源: `GET /api/community/modules/status` 获取各模块配置状态 | — |
+
 ---
 
 ## 8. Page Builder（3 状态）
@@ -832,6 +976,19 @@ Content Area
 | Page "Copy" embed | (action) |
 | Template cards | → B24 (pre-filled) |
 
+#### Page Builder 操作详情 (v2.0 新增, W-63 ~ W-70)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-63 | B24 Canvas 拖拽 | drag widget block | — | 拖拽手柄: 左侧 `⋮⋮` (drag_indicator icon); 拖拽中: 被拖 block opacity 0.5 + 蓝色 border 2px `#3B82F6`; 其他 block 之间出现占位符 (4px 蓝色虚线); 放下: 300ms ease transition + 右侧 "Widgets on Page" 列表同步更新排序; 拖拽范围限制在 Canvas 内 | — |
+| W-64 | B24 "+ Add Widget Block" | click | `GET /api/white-label/widgets?status=configured` | 按钮 → 展开 dropdown (slide-down 200ms): 列出 "Available Widgets" (来自 B22 已配置的 widget 列表); 每项: widget name + module type icon + "Add" 按钮; 已在 page 上的 widget 显示 "Already added" (灰色, 不可点); 点击 "Add" → widget block 追加到 Canvas 底部 + dropdown 关闭 | 无可用 widget → dropdown 内显示 "No widgets configured. Go to Widget Library →" |
+| W-65 | B24 Widget Block "× Remove" | click × icon | — | 每个 widget block 右上角 × 按钮; hover → ×变红; click → confirm popover "Remove this widget from page?" [Cancel] [Remove]; 确认 → block 300ms slide-up 移除 + 右侧 "Widgets on Page" 列表同步更新; **不会删除 widget 本身** (仅从 page 移除) | — |
+| W-66 | B24 URL Slug | input | `GET /api/white-label/pages/check-slug?slug={value}` | 基于 Page Name 自动生成 (toLowerCase + replace spaces with hyphens + remove special chars); 可手动编辑; 输入时 debounce 500ms → API 检查唯一性; 冲突 → 红色 border + "This slug is already taken. Suggestion: {slug}-2"; 完整 URL preview: `https://share.taskon.io/pages/{slug}` | — |
+| W-67 | B24 Theme Toggle | click Light/Dark | — | Canvas preview 即时切换: Light → 白色 bg + dark text; Dark → #0A0F1A bg + light text; Widget blocks 内部配色跟随; 300ms transition; Toggle 样式: 当前选中项 filled purple, 另一项 outline | — |
+| W-68 | B24 Settings Widget 排序 | drag in list | — | 右侧 "Widgets on Page" 列表: 每项有 ⋮⋮ drag handle; 拖拽重排 → **Canvas 同步更新** widget block 顺序 (300ms transition); 列表与 Canvas 双向同步 (Canvas 拖拽也更新列表, 列表拖拽也更新 Canvas) | — |
+| W-69 | B25 "Edit Page" | click | `GET /api/white-label/pages/:id` | 加载已有 Page 数据 (page name, slug, theme, widgets, widget order) → 跳转 B24 (edit mode); B24 top bar 显示 "Edit: {page_name}"; 所有字段预填已有数据; "Publish Page" 按钮变为 "Update Page" (仍触发 D20) | 404 → toast "Page not found" + redirect B25 |
+| W-70 | B25 Page stats | render | `GET /api/white-label/pages/:id/analytics?summary=true` | 每个 Page 卡片: Page Views (total) / Unique Visitors (30d) / Widget Clicks (30d) / Completion Rate (%); 数据从 B43 Page Analytics 同一 API 取摘要; "Analytics" 按钮 → B43 (完整分析页) | API 失败 → stats 显示 "—" |
+
 ---
 
 ## 9. Brand Settings
@@ -873,6 +1030,18 @@ Content Area
 | `/api/white-label/brand` | GET | 获取当前品牌设置 |
 | `/api/white-label/brand` | PUT | 保存品牌设置 |
 
+#### 操作详情 (v2.0 新增, W-71 ~ W-77)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-71 | Logo 上传 | click "Change" | `POST /api/white-label/brand/logo` (multipart) | "Change" → file picker (accept: .svg, .png); 选择文件 → 客户端验证 (格式+尺寸+大小) → 上传 spinner → 预览区域立即更新; Specs: SVG/PNG, min 256×256px, max 2MB; 当前 logo 显示为 64×64 缩略图 + 文件名 | 见 W-72 |
+| W-72 | Logo 上传错误 | validation / upload | — | 格式错误: "Unsupported format. Please upload SVG or PNG." (red text); 尺寸过小: "Image too small. Minimum 256×256 pixels required." (red text); 体积过大: "File too large. Maximum 2MB allowed." (red text); 上传失败: toast "Upload failed. Please try again." + 保留原 logo | — |
+| W-73 | Color Picker | click color swatch | — | 点击色块 → 展开 color picker popover: hex input (#000000 format) + hue slider (0-360°) + saturation/brightness 面板; 变化即时反映在: ① 色块 preview ② 右侧 preview 区 (如存在); debounce 100ms; 点击 popover 外部关闭; 支持粘贴 hex 值 (自动补 #) | 无效 hex → input 红色 border + 不更新预览 |
+| W-74 | Font Dropdown | select | — | 约 20 种 Google Fonts: Inter (默认), Roboto, Open Sans, Lato, Montserrat, Poppins, Nunito, Raleway, Ubuntu, Playfair Display, Merriweather, Source Code Pro, Fira Code, Space Grotesk, DM Sans, Plus Jakarta Sans, Outfit, Manrope, Lexend, Sora; 选择后 → 右侧 Heading/Body Preview 文本字体即时变化 (font-family swap) | — |
+| W-75 | Custom CSS Editor | code input | — | Monospace code editor area (min-height 120px); 基础语法高亮: 单色关键字 (properties: purple, values: green, selectors: blue); "Preview" link → 右侧 preview panel 实时应用 CSS (iframe sandbox, 防 XSS); CSS 限制: max 10KB; 仅支持 .taskon-widget 命名空间下的选择器 | CSS 语法错误 → editor 下方 amber warning "CSS may contain syntax errors" |
+| W-76 | "Save Changes" | click | `PUT /api/white-label/brand` | button spinner → 成功: toast "Brand settings updated" + button 恢复; **级联效果**: 已部署的 Widget/Page 在**下次用户访问时**自动加载新品牌设置 (CDN 缓存 TTL 5min → 最迟 5 分钟生效); 不需要手动 re-deploy | 保存失败 → toast error "Failed to save brand settings" |
+| W-77 | 已部署时品牌变更 | save success | — | **无需重新发布**: Brand 设置为全局配置, 通过 API 动态加载; 已部署 Widget/Page 在下次请求 `GET /api/white-label/brand` 时获取最新值; 页脚提示: "Changes will take effect on next deployment or within 5 minutes for live widgets."; **不会**弹出 re-deploy 确认 | — |
+
 ---
 
 ## 10. SDK & API
@@ -911,6 +1080,17 @@ Content Area
 2. **Regenerate Key**: 确认弹窗 → (API) 重新生成
 3. **Webhook 管理**: 添加/编辑/删除 webhook endpoints
 4. **Usage 显示**: 进度条可视化
+
+#### 操作详情 (v2.0 新增, W-78 ~ W-83)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-78 | "Regenerate Key" | click | `POST /api/white-label/sdk/keys/regenerate` | confirm dialog: "⚠️ Regenerate API Key?" body: "This will **immediately invalidate** your current key. All integrations using this key will stop working until updated." buttons: [Cancel] [Regenerate] (red); 确认 → spinner → 成功: 新 key 显示 (pk_live_xxx) + toast "New API key generated. Update your integrations." + 旧 key 立即失效 | 失败 → toast error; 旧 key 保持有效 |
+| W-79 | Webhook "+ Add Endpoint" | click | `POST /api/white-label/sdk/webhooks` | 按钮 → inline 展开表单 (slide-down): URL input (placeholder "https://api.yourproject.io/webhook") + Events 多选 checkbox (见 W-81) + [Cancel] [Save Webhook]; Save → API → 成功: 新 webhook 追加到列表 + toast "Webhook added" + 表单收起 | URL 格式无效 → input 红色 border + "Please enter a valid HTTPS URL"; 保存失败 → toast error |
+| W-80 | Webhook "Test" | click per webhook | `POST /api/white-label/sdk/webhooks/:id/test` | 发送测试事件 (`{ event: "test.ping", timestamp: "..." }`) → button spinner → 显示结果: "✓ 200 OK (145ms)" (green) 或 "✗ 500 Internal Server Error (2,340ms)" (red); 结果显示 5s 后自动消失 | 超时 (10s) → "✗ Timeout — endpoint did not respond within 10 seconds" |
+| W-81 | Webhook Events | checkbox list | — | 可选事件: ☑ `task.completed` / ☑ `points.earned` / ☑ `user.joined` / ☐ `level.up` / ☐ `badge.earned` / ☐ `sprint.ended` / ☐ `milestone.reached` / ☐ `privilege.granted`; 至少选 1 个; 已有 webhook 编辑时保留已选 | — |
+| W-82 | API Usage 进度条 | hover | — | 进度条 (高度 8px, 圆角 4px): 绿色 (#16A34A) 填充 + 灰色 (#1E293B) 背景; hover tooltip: "12,450 of 50,000 requests used (24.9%) — Resets on {month_end_date}"; 进度 >80%: 颜色变 amber (#F59E0B); >95%: 颜色变 red (#EF4444) | — |
+| W-83 | API 用量警告 | render (>80%) | — | 用量 >80% 时: 页面顶部 amber 警告条 (bg #1F1A08, border #F59E0B): "⚠️ You've used {percent}% of your monthly API quota ({used}/{total} requests). Consider upgrading your plan." + "Upgrade Plan →" 链接 → M07 Pricing page; >95% 时文案变红: "🚨 API quota nearly exhausted. Service may be throttled." | — |
 
 ---
 
@@ -951,13 +1131,185 @@ Content Area
 
 所有 "Configure" / "Connect" → B44 `/white-label/integrations/:type`
 
+#### 操作详情 (v2.0 新增, W-84 ~ W-88)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-84 | Twitter OAuth | click "Connect" | `/api/white-label/integrations/twitter/auth` | popup window (600×700) → Twitter OAuth 2.0 授权页 → 用户点 "Authorize" → 回调到 TaskOn → popup 关闭 → 父页面刷新: Twitter 状态变 "Connected" (green badge) + 显示 @handle; "Configure" 按钮出现 (→ B44 配置详情) | 用户取消授权 → popup 关闭, 状态不变; Token expired → 见 W-88 |
+| W-85 | GA4 Connect | click "Connect" | `POST /api/white-label/integrations/analytics` | inline 展开: "Measurement ID" input (placeholder "G-XXXXXXXXXX") + [Cancel] [Connect]; 提交 → API 验证 ID 格式 (G- prefix + 10 chars) → 成功: status 变 "Connected" + toast "Google Analytics connected"; 配置后所有 WL 页面自动注入 GA tracking code | 无效 ID → "Invalid Measurement ID format. Should be G- followed by 10 characters." |
+| W-86 | SSO / OAuth 配置 | click "Connect" (Developer Tools) | — | → 跳转 B44 `/white-label/integrations/sso`: SSO 配置专页; 两种模式: **Wallet Auth** (选择支持的钱包: MetaMask/WalletConnect/Coinbase) + **OAuth2/Custom JWT** (配置: Client ID + Client Secret + Redirect URI + JWT Secret); 保存 → SSO 在所有 WL widget/page 中生效 | — |
+| W-87 | SDK Configuration "Connect" | click | — | → 跳转 B41 SDK & API 页面 (不是 B44); 这是快捷入口, 因为 SDK 已有独立完整页面 | — |
+| W-88 | 集成 error 状态 | render | — | 集成卡片 error 样式: red border `#EF4444` + error icon (warning, red) + 状态文案 (如 "Token expired" / "API key invalid" / "Connection lost") + "Reconnect →" 按钮; "Reconnect" → 重新触发对应 OAuth/验证流程; 常见错误: Twitter token expired (90d) → re-auth; GA ID changed → re-enter; RPC unreachable → check endpoint | — |
+
 ---
 
 ## 12. Smart Rewards
 
-> **Smart Rewards 是 WL 独占功能**，由 Activity Rule Builder（自动化触发）+ Privilege Manager（权益分层）组成。
-> 核心逻辑：Rule Builder 定义「什么行为获得什么奖励」，Privilege Manager 定义「达到什么条件享受什么权益」。
-> 两者通过 Points / Badge / Level 等中间状态联动 —— Rule 产出积分/徽章，Privilege 消费积分/徽章作为准入门槛。
+> **Smart Rewards 是 WL 独占功能**，由 Contract Registry（合约注册）+ Activity Rule Builder（自动化触发）+ Privilege Manager（权益分层）组成。
+> 核心逻辑：Contract Registry 注册链上合约 → Rule Builder 定义「什么行为获得什么奖励」→ Privilege Manager 定义「达到什么条件享受什么权益」。
+> 三者通过 Points / Badge / Level 等中间状态联动 —— Contract 提供链上事件源，Rule 产出积分/徽章，Privilege 消费积分/徽章作为准入门槛。
+
+### 12.0 B51 — Contract Registry (v2.0 新增, W-89 ~ W-100)
+
+**设计稿**: Node `OKEqS` | URL: `/white-label/contracts`
+
+#### 页面概述
+
+- **核心功能**: 注册和管理链上智能合约，为 Rule Builder (B52) 提供链上事件数据源
+- **业务价值**: 项目方注册自己的合约后，Rule Builder 可监听合约事件 (swap / LP / staking / NFT mint 等) 并自动触发奖励
+- **与 Rule Builder 的关系**: Contract Registry 是「数据层」（注册合约+解析事件），Rule Builder 是「逻辑层」（IF event THEN reward）
+- **与 Privilege Manager 的关系**: Token Gate 类型的 Privilege 通过此处注册的合约进行链上余额查询
+
+#### 页面结构
+
+```
+Content Area
+├── Header
+│   ├── Icon: description (purple bg #1A1033)
+│   ├── Title: "Contract Registry"
+│   ├── Subtitle: "Register your smart contracts to enable on-chain activity tracking and token-gated privileges"
+│   └── "+ Register Contract" button (purple) → D12
+├── Stats Row (4 cards)
+│   ├── Total Contracts: 12
+│   ├── Verified: 10 (green)
+│   ├── Events Captured (24h): 8,420
+│   └── Active Rules (linked): 8 (→ B52)
+├── Contracts Table (card style, rounded corners)
+│   ├── Header: "Registered Contracts" + Filter tabs (All / Verified / Pending / Error)
+│   ├── Columns: Contract Name | Network | Address | Status | Monitored Events | Actions
+│   ├── Row: "DEX Router" | Arbitrum | 0x1234...abcd | ✅ Verified | Swap, AddLiquidity | [View Events] [Edit] [···]
+│   ├── Row: "Staking Pool" | Arbitrum | 0x5678...efgh | ✅ Verified | Deposit, Withdraw | [View Events] [Edit] [···]
+│   ├── Row: "NFT Collection" | Ethereum | 0x9abc...ijkl | ⏳ Pending | Transfer, Mint | [Verify] [Edit] [···]
+│   └── Row: "Token Contract" | BSC | 0xdef0...mnop | ❌ Error | — | [Retry] [Edit] [Delete]
+├── SUPPORTED NETWORKS (section header)
+│   └── Network badges: Ethereum · BSC · Polygon · Arbitrum · Optimism · Base · Avalanche
+├── Tip banner: "Contracts are verified automatically after registration. Verification checks that the contract exists on-chain and its ABI is valid."
+```
+
+#### Contract 数据模型
+
+```typescript
+interface RegisteredContract {
+  id: string;
+  name: string;                     // 内部标识名 (如 "DEX Router")
+  network: SupportedNetwork;        // 所在链
+  address: string;                  // 合约地址 (0x + 40 hex chars)
+  abi: object[];                    // 合约 ABI (JSON array)
+  status: 'verified' | 'pending' | 'error';
+  monitoredEvents: string[];        // 从 ABI 中选择的要监听的事件名列表
+  verifiedAt?: string;              // 验证通过时间
+  errorMessage?: string;            // status=error 时的错误信息
+
+  // 统计 (只读)
+  stats: {
+    eventsCaptured24h: number;      // 24h 内捕获的事件数
+    linkedRules: number;            // 引用此合约的 Rule 数量
+    lastEventAt?: string;           // 最近一次事件时间
+  };
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+type SupportedNetwork =
+  | 'ethereum' | 'bsc' | 'polygon' | 'arbitrum'
+  | 'optimism' | 'base' | 'avalanche';
+```
+
+#### D12 — Contract Register Form (Modal)
+
+**宽度**: 640px
+
+**Modal 结构**:
+```
+Title Bar: "Register Contract" + × close
+Body:
+├── Contract Name: text input (placeholder: "e.g. DEX Router, Staking Pool")
+├── Network: select dropdown (Ethereum / BSC / Polygon / Arbitrum / Optimism / Base / Avalanche)
+│   └── 选择后显示: Network icon + name + Chain ID
+├── Contract Address: text input (placeholder: "0x...")
+│   └── 验证: 0x prefix + 40 hex characters; 输入后自动 checksum 验证
+├── ABI: textarea (placeholder: "Paste contract ABI JSON here...")
+│   ├── 或 "Upload ABI File" button (accept: .json)
+│   └── 解析状态: 粘贴/上传后自动解析 → "✓ ABI parsed: 12 functions, 5 events found" (green)
+│       或 "✗ Invalid ABI format" (red)
+├── Events to Monitor: checkbox list (从 ABI 解析结果动态生成)
+│   ├── ☑ Swap (address indexed sender, uint256 amountIn, uint256 amountOut)
+│   ├── ☑ AddLiquidity (address indexed provider, uint256 amount)
+│   ├── ☐ RemoveLiquidity (...)
+│   └── ☐ Transfer (...)
+│   └── 提示: "Select at least 1 event to monitor"
+├── ☑ Verify on Save (toggle, default: on)
+│   └── "Automatically verify contract exists on-chain after saving"
+Footer: [Cancel] [Register Contract] (purple)
+```
+
+**字段验证规格**:
+
+| # | 字段 | 类型 | 必填 | 验证规则 | 说明 |
+|---|------|------|------|---------|------|
+| W-95 | Contract Name | text input | ✅ | 1-60 chars; 项目内唯一 | 内部标识, 不需要与链上名称一致 |
+| W-96 | Network | select | ✅ | 从支持列表选择 | Ethereum / BSC / Polygon / Arbitrum / Optimism / Base / Avalanche |
+| W-97 | Contract Address | text input | ✅ | `0x` + 40 hex chars; EIP-55 checksum | 粘贴后自动格式化; 重复地址+同一链 → "This contract is already registered" |
+| W-98 | ABI | textarea / JSON upload | ✅ | valid JSON array; 至少包含 1 个 event | 粘贴或上传 .json; 解析后显示 function/event 数量; 不可编辑解析结果 |
+| W-99 | Events to Monitor | checkbox list | ✅ (≥1) | 从 ABI events 动态生成 | 每个 event: name + indexed params 签名; 选择 ≥1 个 |
+| W-100 | Verify on Save | toggle | — | 默认 on | on → 保存后立即 POST `/api/wl/contracts/:id/verify`; off → 保存为 pending, 后续手动验证 |
+
+**交互逻辑**:
+
+1. **ABI 解析联动**: 粘贴或上传 ABI → 客户端 JSON parse → 提取所有 `type: "event"` 条目 → 动态渲染 Events checkbox list; ABI 无效 → checkbox 列表不显示 + 红色错误
+2. **Contract Address 重复检查**: 输入后 debounce 500ms → `GET /api/wl/contracts/check?address={}&network={}` → 重复 → 红色提示 "Already registered"
+3. **Verify on Save 流程**: 保存 → `POST /api/wl/contracts` → status=pending → 自动触发 `POST /api/wl/contracts/:id/verify` → 验证合约在链上存在 + ABI 匹配 → status 变 verified/error
+4. **编辑模式**: 已验证合约可编辑 name 和 monitored events; **不可修改** address/network/ABI (需删除重建)
+
+#### 操作详情 (W-89 ~ W-94)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-89 | 完整页面结构 | render | `GET /api/wl/contracts` | Node `OKEqS`: Header + 4 Stats + Contracts Table (filter tabs + columns) + Supported Networks badges + Tip banner; Stats 中 "Active Rules" 数字可点击 → B52 Rule Builder | API 失败 → skeleton → error state "Unable to load contracts" + Retry |
+| W-90 | Stats Row | render | `GET /api/wl/contracts/stats` | 4 cards: Total Contracts (count) / Verified (count, green text `#16A34A`) / Events Captured 24h (number + sparkline) / Active Rules (count, 可点击 → B52); "Active Rules" 显示引用任何已注册合约的 rule 数量 | — |
+| W-91 | Contracts Table | render + filter | `GET /api/wl/contracts?status={filter}` | 列: Contract Name / Network (chain icon + name) / Address (truncated 0x1234...abcd + Copy icon) / Status badge (Verified=green / Pending=amber spinner / Error=red) / Monitored Events (comma-separated event names) / Actions; Filter tabs: All / Verified / Pending / Error; 分页 20/page | — |
+| W-92 | "+ Register Contract" | click | — | → 打开 D12 Modal (create mode, 空表单) | — |
+| W-93 | Contract verify | auto/manual | `POST /api/wl/contracts/:id/verify` | **自动**: Verify on Save=on 时保存后立即触发; **手动**: Pending/Error 行的 "Verify" / "Retry" 按钮; 验证过程: button spinner → 链上查询合约代码 + ABI event 签名匹配 → 成功: status=verified + green ✅ + toast "Contract verified" → 失败: status=error + errorMessage 显示 | 常见错误: "Contract not found on {network}" / "ABI does not match deployed bytecode" / "Network RPC timeout" |
+| W-94 | Row 操作 | click action buttons | various | **View Events** → side panel (720px): 最近 100 条捕获事件列表 (timestamp + event name + params + tx hash link); **Edit** → D12 (edit mode, 预填, address/network/ABI readonly); **Delete** → confirm dialog "Delete contract '{name}'?" → 检查: 如被 Rule 引用 → dialog 额外警告 "This contract is referenced by {n} active rules. Deleting will disable those rules." → 确认 → `DELETE /api/wl/contracts/:id` → 刷新; **被 Rule 引用时仍可删除** (级联 disable rules) | — |
+
+#### Contract 状态流转
+
+```
+              ┌──────────┐
+  Register    │ Pending  │   (刚注册，等待验证)
+  ──────────► │          │
+              └────┬─────┘
+                   │ Verify
+        ┌──────────┼──────────┐
+        ▼          │          ▼
+   ┌──────────┐   │    ┌──────────┐
+   │ Verified │   │    │  Error   │
+   │          │   │    │          │
+   └──────────┘   │    └────┬─────┘
+                  │         │ Retry
+                  └─────────┘
+```
+
+- **Pending**: 刚注册，等待链上验证
+- **Verified**: 合约在链上确认存在 + ABI 匹配 → 可被 Rule Builder 引用
+- **Error**: 验证失败 (合约不存在 / ABI 不匹配 / RPC 超时) → 可 Retry
+
+#### API
+
+| Endpoint | Method | 说明 | 请求体关键字段 |
+|----------|--------|------|---------------|
+| `/api/wl/contracts` | GET | 合约列表 | query: `?status=verified&page=1&limit=20` |
+| `/api/wl/contracts` | POST | 注册合约 | `{ name, network, address, abi, monitoredEvents, verifyOnSave }` |
+| `/api/wl/contracts/:id` | GET | 合约详情 | — |
+| `/api/wl/contracts/:id` | PUT | 更新合约 (仅 name + monitoredEvents) | `{ name, monitoredEvents }` |
+| `/api/wl/contracts/:id` | DELETE | 删除合约 (级联 disable 引用的 rules) | — |
+| `/api/wl/contracts/:id/verify` | POST | 触发链上验证 | — |
+| `/api/wl/contracts/:id/events` | GET | 查看捕获事件历史 | query: `?page=1&limit=100` |
+| `/api/wl/contracts/check` | GET | 重复检查 | query: `?address=0x...&network=ethereum` |
+| `/api/wl/contracts/stats` | GET | 汇总统计 | — |
+
+---
 
 ### 12.1 B52 — Activity Rule Builder
 
@@ -1571,6 +1923,16 @@ Content Area
 │   └── Page Views (12,845) → Interactions (5,768, 44.9%) → Completions (1,847, 32%)
 ```
 
+#### 操作详情 (v2.0 新增, W-101 ~ W-105)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-101 | Date Range Picker | click | `GET /api/white-label/pages/:id/analytics?from={}&to={}` | 预设: 7d (默认) / 30d / 90d 快捷按钮 + "Custom" → calendar 双日期选择器; 选择后所有图表+Stats+表格数据刷新; 加载中: skeleton overlay on charts + stats 数字闪烁; custom 最大范围 365 天 | 无数据范围 → charts 显示 "No data for this period" |
+| W-102 | Chart D/W/M toggle | click | 同上 (追加 `granularity=day|week|month`) | "Page Views Over Time" chart 粒度切换: Day (每日柱状) / Week (每周柱状) / Month (每月柱状); hover tooltip: "{date}: {views} page views ({delta}% vs previous period)"; chart 类型: area chart (filled), 紫色主色 `#9B7EE0` | — |
+| W-103 | "Top Pages" 行点击 | click row | — | 点击某页面行 → 下方 "Widget Interactions" 表格筛选为该页面的 widget 数据; 选中行高亮 (bg `#1A1033`); 再次点击取消筛选 (显示全部); 行数据: 页面 slug + views (number) + share (%) + trend arrow (↑↓) | — |
+| W-104 | "Export" | click | `GET /api/white-label/pages/:id/analytics/export?format=csv&from={}&to={}` | button spinner → 后台生成 CSV → 浏览器触发下载; CSV 包含: 日期, 页面, page views, unique visitors, widget clicks, completions; 文件名: `wl-analytics-{slug}-{date}.csv` | 生成失败 → toast "Export failed. Please try again." |
+| W-105 | Conversion Funnel | hover + click | — | 3-step 可视化漏斗 (左→右递减): Page Views → Interactions → Completions; 每步 hover tooltip: "{count} ({percent}% of total, {dropoff}% drop from previous step)"; 点击步骤 → smooth scroll 到对应详情区 (Views→chart, Interactions→widget table, Completions→stats card) | — |
+
 ---
 
 ## 14. Dev Kit Page
@@ -1618,6 +1980,18 @@ Standalone Page (无 Sidebar，独立暗色主题)
 |----------|--------|------|
 | `GET /api/devkit/{project_id}` | GET | 获取项目配置 (widgets, SSO, API key) |
 | `POST /api/devkit/{project_id}/verify` | POST | 触发集成验证 |
+
+#### 操作详情 (v2.0 新增, W-106 ~ W-112)
+
+| # | 操作 | 触发方式 | API 调用 | 即时 UI 变化 | 错误处理 |
+|---|------|---------|---------|------------|---------|
+| W-106 | Dev Kit URL 生成 | WL publish | — | URL: `taskon.xyz/devkit/{project_id}`; project_id 在 WL 首次 publish 时生成 (UUID v4); URL 公开可访问, **无需 TaskOn 登录**; Dev Kit 页面独立暗色主题 (bg `#0A0F1A`), 无 sidebar; 市场人员通过 B15 "Send Dev Kit" 获取链接发给开发者 | — |
+| W-107 | Package manager tabs | click tab | — | 3 个 tab: **npm** (默认) / **yarn** / **CDN**; 切换显示对应安装命令: npm → `npm install @taskon/widget-sdk`; yarn → `yarn add @taskon/widget-sdk`; CDN → `<script src="https://cdn.taskon.io/sdk/v1/widget.min.js"></script>`; 每个 code block 右上角 "Copy" 按钮 → clipboard → toast "Copied!" | — |
+| W-108 | SSO Provider selector | click radio | — | 2 个选项: **Wallet Authentication** (推荐, 零后端) → 显示 wallet SDK 集成代码 (`taskon.auth.connectWallet()`) + 支持钱包列表 (MetaMask/WalletConnect/Coinbase); **OAuth2 / Custom JWT** → 显示 JWT 配置代码 (JWT Secret input + Redirect URI + 代码 snippet `taskon.auth.jwt({ token })`) ; 代码中 project_id 已预填 | — |
+| W-109 | Widget 展开 | click widget row | — | "Embed Your Widgets" 区: 每个已配置 widget 为可展开行 (accordion); 展开 (slide-down 200ms): 嵌入代码 (project_id + widget_id 预填, Copy 按钮) + mini preview (widget 缩略图 200×150); 折叠态: widget name + module type icon + "▸"; 展开态: "▾" + 代码 + preview; 同时可多个展开 | — |
+| W-110 | "Verify Integration" | click | `POST /api/devkit/{project_id}/verify` | button → spinner ("Verifying...") → API 检查是否收到来自项目域名的 API ping (检查最近 5 分钟): 有 ping → 成功 (见 W-111); 无 ping → "No API ping detected yet. Make sure your widget code is deployed and your domain is correctly configured." (amber text) + 按钮恢复为 "Try Again" | API 超时 (10s) → "Verification timed out. Please try again." |
+| W-111 | 验证成功 | verify response | — | 按钮变为 "✓ Integration Verified" (green, `#16A34A`, disabled 不可再点); 下方显示: "Integration verified at {ISO timestamp} from {detected_domain}" (green text); confetti animation (2s, subtle); "Ready to Verify?" section 标题变为 "✅ Integration Complete"; 状态持久化 (刷新页面仍显示已验证) | — |
+| W-112 | Dev Kit 过期 | render | `GET /api/devkit/{project_id}` → 404 | 项目删除或 Dev Kit URL 被撤销时: 整页显示友好错误: 大图标 (link_off, 64px, gray) + "This Dev Kit link is no longer valid" (24px) + "The project owner may have revoked access or deleted this project." (16px gray) + "Contact your project administrator for a new link." + TaskOn logo footer | — |
 
 ---
 
@@ -1670,6 +2044,26 @@ Active item 样式: purple bg `#1A1033` + text `#9B7EE0` + fontWeight 600
 | `/api/devkit/:project_id` | GET | Dev Kit 配置 | B48 | 60s |
 | `/api/devkit/:project_id/verify` | POST | 集成验证 | B48 | N/A |
 | `/api/promo-kit/generate` | POST | Promo Kit | B15 | N/A |
+| `/api/white-label/readiness` | GET | 发布前就绪检查 | B56 | 0 |
+| `/api/white-label/preview` | GET | 部署预览数据 | B56 | 0 |
+| `/api/white-label/embed/iframe` | GET | Iframe 配置 | B42 | 60s |
+| `/api/white-label/deployments` | GET | 部署列表 | B16 | 60s |
+| `/api/white-label/deployments/history` | GET | 发布历史 | B16 | 60s |
+| `/api/white-label/sdk/keys/regenerate` | POST | 重新生成 API Key | B41 | N/A |
+| `/api/white-label/sdk/webhooks` | GET/POST | Webhook 管理 | B41 | 60s |
+| `/api/white-label/sdk/webhooks/:id/test` | POST | 测试 Webhook | B41 | N/A |
+| `/api/white-label/brand/logo` | POST | Logo 上传 | B40 | N/A |
+| `/api/white-label/pages/check-slug` | GET | URL slug 唯一性检查 | B24 | 0 |
+| `/api/white-label/pages/:id/analytics/export` | GET | 分析数据导出 | B43 | N/A |
+| `/api/white-label/integrations/twitter/auth` | GET | Twitter OAuth | B26 | N/A |
+| `/api/white-label/integrations/analytics` | POST | GA4 集成 | B26 | N/A |
+| `/api/wl/contracts/:id` | GET/PUT/DELETE | 合约 CRUD | B51 | 60s |
+| `/api/wl/contracts/:id/events` | GET | 合约事件历史 | B51 | 30s |
+| `/api/wl/contracts/check` | GET | 合约重复检查 | B51 (D12) | 0 |
+| `/api/wl/contracts/stats` | GET | 合约汇总统计 | B51 | 60s |
+| `/api/community/modules/status` | GET | 模块配置状态 | B20 | 60s |
+| `/api/devkit/:project_id/generate` | POST | 生成 Dev Kit | B56, B15 | N/A |
+| `/api/devkit/:project_id/send-email` | POST | 邮件发送 Dev Kit | B15 | N/A |
 
 ### 16.2 WebSocket 端点
 
@@ -1769,3 +2163,110 @@ function getWLHubState(wl: WhiteLabel): PageCode {
 | D15 Privilege Members Panel | `zNH8l` |
 | D19 Promo Kit Generator | `2qNbJ` |
 | D20 Publish Readiness Check | `fY99y` |
+
+---
+
+## 附录 C: 级联效果 (CASCADE) — v2.0 新增
+
+### C.1 Brand 变更级联
+
+| 操作 | 影响范围 | 生效时机 | 说明 |
+|------|---------|---------|------|
+| B40 "Save Changes" | 所有已部署 Widget + Page | 下次用户访问 (CDN TTL 5min) | Logo/Color/Font 变更通过 API 动态加载, 无需 re-deploy |
+| B38 Wizard Brand | 初始配置 | 发布时生效 | Wizard 中的 Brand 设置写入 B40 配置 |
+
+### C.2 Community → WL 级联
+
+| Community 操作 | WL 影响 | 说明 |
+|---------------|---------|------|
+| 启用新模块 (B34) | B20 Widget Library 新增可用 module card (green) | Widget Library 列表来源 = Community 已配置模块 |
+| 禁用模块 (B34) | B20 对应 module card 变为 amber "Set Up in Community →"; **已创建的 Widget 不自动删除**, 状态变 "Source module disabled" (gray) | 保护已部署 widget 不丢失 |
+| 删除任务/积分类型 (B31) | Rule Builder (B52) 中引用该任务的 Rule 状态变 "Error: Source deleted" | 显示 amber 警告条, 需手动修复 |
+| Points 类型变更 (B31a) | Privilege Manager (B53) 中 Points Threshold 条件可能失效 | 自动检查并 flag 不一致 |
+
+### C.3 Contract → Rule → Privilege 级联
+
+| 操作 | 级联 | 说明 |
+|------|------|------|
+| B51 删除合约 | B52 引用该合约的 Rules 自动 disable (status=error, reason="Contract deleted") | 用户在删除确认时看到警告 |
+| B52 Rule 触发 award_points | B31a Points balance 更新 → Leaderboard 实时排名更新 → B53 Points Threshold 类 Privilege 资格实时变化 | 全自动, 无需手动操作 |
+| B52 Rule 触发 grant_badge | B31i Badges 列表更新 → B53 Achievement-Based Privilege 自动授予 | 一次性, 不可撤销 |
+| B53 创建 Mode B Privilege | B31g Benefits Shop 自动创建关联商品 | 商品价格/库存在 B31g 管理, 权益在 B53 管理 |
+| B53 删除 Privilege Tier | 已持有用户权益在到期前保留; Mode B 关联商品自动下架 | 不追溯已发放权益 |
+
+### C.4 Publish 级联
+
+| 操作 | 级联 | 说明 |
+|------|------|------|
+| B56 "Publish WL" | Dev Kit 自动生成 (W-43); B15 Checklist 自动标记前 3 步为 ✅; Widget/Page/Domain 配置锁定为 v1 snapshot | 首次发布 |
+| B24 "Publish Page" (via D20) | B25 Page 列表新增; B43 Analytics 开始收集数据; B16 "Published Pages" stats +1 | — |
+| B22 "Deploy Widget" (via D20) | Widget status → "Deployed" (blue); embed code 激活; B16 "Widgets Created" stats +1 | — |
+
+### C.5 Subscription 级联
+
+| 订阅状态 | WL 影响 | 说明 |
+|---------|---------|------|
+| WL 订阅过期 | 所有已部署 Widget/Page 显示 "Powered by TaskOn" watermark (不可移除); Brand 自定义部分回退为 TaskOn 默认; SDK API 降级为 readonly | 不删除数据, 续费后恢复 |
+| WL 订阅降级 (从 Pro→Basic) | 超出 Basic 限额的 Page/Widget 变为 Draft (不自动删除); 需手动选择保留哪些 | 降级前 14 天邮件通知 |
+
+---
+
+## 附录 D: 边界条件 (EDGE) — v2.0 新增
+
+### D.1 数据上限
+
+| 实体 | 限制 | 超限行为 |
+|------|------|---------|
+| Widgets per project | 20 (Basic) / 50 (Pro) | "+ Add Widget" disabled + tooltip "Upgrade to Pro for more widgets" |
+| Pages per project | 5 (Basic) / 20 (Pro) | 同上 |
+| Contracts per project | 10 (Basic) / 50 (Pro) | "+ Register Contract" disabled |
+| Rules per project | 20 (Basic) / 100 (Pro) | "+ Create Rule" disabled |
+| Privilege Tiers | 10 per project | "+ Create Privilege" disabled |
+| Webhooks | 5 per project | "+ Add Endpoint" disabled |
+| ABI JSON size | max 500KB | 上传/粘贴超限 → "ABI file too large (max 500KB)" |
+| Custom CSS | max 10KB | 编辑器字符计数 + 超限禁止保存 |
+| Dev Kit concurrent | 1 per project | 重新生成会覆盖旧链接 |
+
+### D.2 权限与角色
+
+| 操作 | 最低角色 | 未授权行为 |
+|------|---------|-----------|
+| Publish WL (B56) | Admin | 按钮 disabled + "Only admins can publish" tooltip |
+| Regenerate API Key (B41) | Admin | 按钮 disabled |
+| Register Contract (B51) | Admin / Editor | Member 无权限 |
+| Create/Edit Rule (B52) | Admin / Editor | Member 只读浏览 |
+| Manage Privilege Members (D15) | Admin | Editor 只读浏览 |
+| Brand Settings (B40) | Admin / Editor | Member 无权限 |
+| Dev Kit Send Email (B15) | Admin / Editor | Member 无权限 |
+
+### D.3 网络与恢复
+
+| 场景 | 处理 |
+|------|------|
+| 页面加载 API 失败 | Skeleton → 3s 后显示 "Unable to load. Check your connection." + "Retry" 按钮 |
+| 表单提交失败 | Toast error + 表单数据保留 (不清空) + 按钮恢复 enabled |
+| WebSocket 断连 (B15) | 自动重连 3 次 (1s/3s/10s); 失败 → 降级为 HTTP polling (30s 间隔) |
+| DNS 验证 RPC 超时 | "DNS verification temporarily unavailable. Will retry automatically." + 60s 后重试 |
+| Widget iframe 加载失败 | iframe fallback: 显示 "Widget temporarily unavailable" + 项目 logo |
+| Dev Kit 页面 404 | 见 W-112: 友好错误页, 不显示 TaskOn 内部错误信息 |
+
+### D.4 并发与冲突
+
+| 场景 | 处理 |
+|------|------|
+| 多人同时编辑 B40 Brand | 后保存者覆盖 (last-write-wins); 无实时协作; 保存前不检查版本冲突 |
+| 同时 Publish B56 | 第一个请求成功; 第二个返回 409 "Already published" → toast + redirect B15 |
+| Widget 被删除时 Page 引用 | Page 中该 widget block 显示 "Widget removed" 占位符 (gray box); 不影响 Page 整体 |
+| Rule 引用的合约被删除 | Rule status → error (见 CASCADE C.3); Rule 不自动删除, 等待用户修复或手动删除 |
+| Privilege Mode B 关联商品被直接从 Shop 删除 | Privilege Tier 显示 amber 警告 "Linked shop item deleted. Users can no longer redeem." |
+
+### D.5 空数据特殊处理
+
+| 页面 | 空数据情况 | 显示 |
+|------|-----------|------|
+| B43 Page Analytics | 新页面无访问数据 | 所有 stats = 0; chart = empty state "No data yet. Share your page to start tracking."; 不显示 funnel |
+| B51 Contract Registry | 无合约注册 | Table 区域: empty illustration + "Register your first smart contract to start tracking on-chain activity" + "+ Register Contract" CTA |
+| B52 Rule Builder | 无 Rules 创建 | Active Rules Table: empty + "Create your first rule to automate rewards" + "+ Create Rule" CTA; 仍显示 Presets 和 Anti-Sybil 区域 |
+| B53 Privilege Manager | 无 Privileges 创建 | Table: empty + "Create your first privilege tier" + CTA; 仍显示 Qualification Modes 和 Integration Status |
+| B22 Widget Active | 所有 widget 被删除 | 回退到 B20 (Empty) 状态 |
+| B25 Page Active | 所有 page 被删除 | 回退到 B23 (Empty) 状态 |

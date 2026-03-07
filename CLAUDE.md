@@ -42,8 +42,15 @@ TaskOn is a Web3 Growth Engine platform. This repo contains design files, strate
 - `docs/taskon_services_en.md` — Product details, pricing models, revenue streams
 - `docs/TaskOn_Knowledge_Base_Init_V1.md` — Full product specifications
 - `docs/taskon_keywords.md` — Target personas, pain points, messaging
-- `docs/website_frontend_requirements.md` — v4.0: 67 page codes, complete button routing, C-End APIs, dev priorities
+- `docs/website_frontend_requirements.md` — v4.2: 90+ page codes, complete button routing, C-End APIs, dev priorities
 - `docs/b2c_operation_mapping.md` — 153 B-end to C-end operation mappings, entity lifecycles
+- `docs/white_label_integration_modes.md` — WL 4 integration modes, dependency chain
+
+### Frontend Requirement Docs (docs/req/) — Dev-facing detailed specs
+- `docs/req/audit_todo.md` — 265-item audit checklist (Community 153 items + WL 112 items), P0/P1/P2
+- `docs/req/req_community.md` — Community product frontend spec (v1.0 done; v2.0 in progress)
+- `docs/req/req_white_label.md` — White Label product frontend spec (v1.0 done; v2.0 pending)
+- `docs/req/req_c_end.md` — C-End (user-facing community) frontend spec (v1.0)
 - `docs/white_label_integration_modes.md` — WL 4 integration modes, dependency chain
 - `design/legacy/` — Old UI screenshots (reference only, known to have major UX problems)
 
