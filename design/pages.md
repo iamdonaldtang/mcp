@@ -95,6 +95,12 @@
 | D18 Segment Detail Panel | `4FPLn` | B54 |
 | D19 Promo Kit Generator | `2qNbJ` | B10/B15 |
 | D20 Publish Readiness Check | `fY99y` | ALL Publish buttons |
+| D21 Task Editor | `fQroB` | B31 |
+
+## After Login (B-End) — Additional Pages
+| Page | Node ID |
+|------|---------|
+| B44 Integration Config Detail | `GlR9p` |
 
 ## Component Library
 - Node ID: `327GX`

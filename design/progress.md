@@ -1,45 +1,75 @@
 # TaskOn Design — Progress Tracker
 
-> Last updated: 2026-03-06
+> Last updated: 2026-03-07
 > Design file: `design/pencil-new.pen` (Pencil MCP tools only)
-> Page IDs: `design/pages.md` | TODO: `design/todo.md` | Archive: `design/progress-archive.md`
+> Page IDs: `design/pages.md` | Archive: `design/progress-archive.md`
 
-## Current Phase: Dark Theme Restyle
+## Status: ALL DESIGN COMPLETE
 
-**Light Theme Design: COMPLETE** — 81 pages, 93 page codes, 19 modals (all archived)
+81 pages · 93 page codes · 19 modals — dark theme applied to all.
 
-**Next: Dark Theme Restyle** — Apply production dark theme from `design/legacy/theme/` to all pages.
+| Category | Count | Details |
+|----------|-------|---------|
+| Marketing (M01-M14) | 14 pages | 8 core + 6 support (incl. 3 Pricing tab states) |
+| B-End (B01-B61) | 62 page codes | Dashboard, Quest, Community, WL, Boost, Analytics, Settings |
+| C-End (C01-C09) | 9 pages | WL Community front-end |
+| Modals (D01-D20) | 20 dialogs | All product modals + D20 Publish Readiness |
+| Skipped | T01-T05, T25 | Follow existing patterns / external link |
 
-## Light Theme Summary (Archived)
+## Current Phase: Design-Req Alignment COMPLETE
 
-| Category | Count |
-|----------|-------|
-| Marketing (M01-M14) | 14 pages incl. 3 Pricing tab states |
-| B-End (B01-B56 + B31a-B31i + B48) | 62 page codes |
-| C-End (C01-C09) | 9 pages |
-| Modals (D01-D19) | 19 dialogs |
-| OB Restructuring | 2 new + 13 redesigned pages |
+Design file verified against req v2.1 docs (2026-03-07). All 81 pages + 20 modals checked across 8 dimensions.
 
-Execution phases P1-P14 + P0-P0j + OB + P3 + P4: see `design/progress-archive.md`
+### Alignment Summary
 
-## Key Design Decisions
+| Batch | Scope | Pages | Gaps Found | Fixes Applied |
+|-------|-------|-------|------------|---------------|
+| 1 | New pages/modals | 2 | N/A (created) | D21 Task Editor + B44 Integration Config |
+| 2 | Community Hub + Wizard | 8 | 2 minor | B35 "+ Add Task" button, B55 Desktop/Mobile toggle |
+| 3 | Community Module Mgmt | 10 | 1 structural | B31a POINT TYPES section added (C-91) |
+| 4 | Community Settings/Ops | 6 | 1 structural | B61 breadcrumb + sidebar (WL→Community) |
+| 5 | Community Modals | 17 | 1 structural | D16 Type field (M-70) + Image upload (M-71) |
+| 6 | WL Hub + Wizard | 12 | 0 | All structurally complete |
+| 7 | WL Sub-pages | 18 | 0 | All structurally complete |
+| 8 | WL Modals | 4+2 shared | 0 | All structurally complete |
+| **Total** | | **81 pages + 20 modals** | **5 fixes** | |
+
+### Design Changes Made
+1. **B31a** (`zCfKQ`): Added POINT TYPES section (2 type cards + "+ Add Type") between Stats Row and Filter tabs
+2. **B61** (`ZL5K5`): Fixed breadcrumb "White Label" → "Community" + sidebar active state correction
+3. **D16** (`6TLjE`): Added Type field (General/Event/Alert chips) + Image upload area after Body field
+4. **D21** (`fQroB`): Created complete 11-field Task Editor Modal (Batch 1)
+5. **B44** (`GlR9p`): Created Integration Config Detail page with Connection/Settings/Status sections (Batch 1)
+
+### Frontend Requirement Docs
+
+| Doc | Path | Status |
+|-----|------|--------|
+| Community Spec | `docs/req/req_community.md` | v2.1 ✅ (~3400 lines, 616 items total) |
+| White Label Spec | `docs/req/req_white_label.md` | v2.1 ✅ (~3430 lines, 616 items total) |
+| C-End Spec | `docs/req/req_c_end.md` | v1.0 ✅ |
+| Audit Checklist | `docs/req/audit_todo.md` | 265 items (v1→v2) |
+| 6-Dimension Audit | `docs/req/todolist.md` | 351 items (v2→v2.1) |
+| Frontend Requirements | `docs/website_frontend_requirements.md` | v4.2 (90+ page codes, routing) |
+| B2C Operation Mapping | `docs/b2c_operation_mapping.md` | 153 operations mapped |
+
+## Key Architecture
 
 | Decision | Result |
 |----------|--------|
-| Products | 4 independent: Quest, Community, White Label, Boost |
-| B-end theme (current/light) | #F8FAFC background, professional SaaS |
-| B-end theme (target/dark) | Dark bg, green accents, dark cards (see `design/legacy/theme/`) |
+| Products | 4 independent: Quest · Community · White Label · Boost |
+| Theme | Dark (#0A0F1A bg, #111B27 cards) |
 | C-end / B-end | Completely independent systems |
-| Pricing | Unified M07: Quest $300/Community $600/WL $1500 per month |
-| Community modules | 4 systems + 2 infrastructure settings |
-| WL deployment | 3 paths: Embed/Domain/SDK |
+| Pricing | Unified M07: Quest $300 / Community $600 / WL $1500 |
+| Community modules | 4 systems (Task Engine · Points · Campaigns · Rewards) + 2 infra settings |
+| WL deployment | 3 paths: Embed / Domain / SDK |
+| Smart Rewards | Contract Registry → Rule Builder → Privilege Manager |
 
-## Reference Docs
+## Reference Files
 
-| Doc | Path |
-|-----|------|
-| Frontend Requirements | `docs/website_frontend_requirements.md` v4.2 |
-| B2C Operation Mapping | `docs/b2c_operation_mapping.md` |
-| Canvas Layout | `design/layout.md` |
-| Page Node IDs | `design/pages.md` |
-| Full History | `design/progress-archive.md` |
+| File | Purpose |
+|------|---------|
+| `design/pages.md` | All page Node IDs |
+| `design/layout.md` | Canvas layout grid |
+| `design/progress-archive.md` | Full execution history (P1-P14, OB, dark theme) |
+| `design/todo.md` | Completed design tasks reference |
