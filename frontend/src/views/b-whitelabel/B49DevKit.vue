@@ -105,8 +105,9 @@ function App() {
 
 export default App`)
 
-const vueCode = computed(() =>
-`<template>
+const vueCode = computed(() => {
+  const pkg = '@taskon/vue'
+  return `<template>
   <TaskOnProvider :project-id="'${projectId.value}'">
     <TaskWidget
       :modules="['tasks', 'leaderboard', 'shop']"
@@ -117,12 +118,13 @@ const vueCode = computed(() =>
 </template>
 
 <script setup>
-import { TaskOnProvider, TaskWidget } from '@taskon/vue'
+import { TaskOnProvider, TaskWidget } from '${pkg}'
 
 function onUserAction(event) {
   console.log(event)
 }
-<\/script>`)
+<\/script>`
+})
 
 const vanillaCode = computed(() =>
 `<script src="https://cdn.taskon.xyz/sdk/${project.value.sdk_version}/taskon.min.js"><\/script>

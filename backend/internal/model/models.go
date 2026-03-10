@@ -33,7 +33,7 @@ type Community struct {
 	Status         string         `gorm:"default:draft" json:"status"` // draft, active, paused, completed
 	BrandColor     string         `gorm:"default:#48BB78" json:"brand_color"`
 	Logo           string         `json:"logo,omitempty"`
-	EnabledModules StringArray    `gorm:"type:text[]" json:"enabled_modules"`
+	EnabledModules StringArray    `gorm:"type:jsonb" json:"enabled_modules"`
 	CreatedAt      time.Time      `json:"created_at"`
 	UpdatedAt      time.Time      `json:"updated_at"`
 	DeletedAt      gorm.DeletedAt `gorm:"index" json:"-"`
@@ -60,7 +60,7 @@ func (a *StringArray) Scan(value interface{}) error {
 
 // Value implements the driver.Valuer interface
 func (a StringArray) Value() (driver.Value, error) {
-	if a == nil {
+	if a == nil || len(a) == 0 {
 		return "[]", nil
 	}
 	b, err := json.Marshal(a)
@@ -168,7 +168,7 @@ type LeaderboardConfig struct {
 	ID          string    `gorm:"primaryKey;type:uuid;default:gen_random_uuid()" json:"id"`
 	CommunityID string   `gorm:"type:uuid;not null;index" json:"community_id"`
 	PointTypeID string    `gorm:"type:uuid;not null" json:"point_type_id"`
-	Periods     StringArray `gorm:"type:text[]" json:"periods"` // weekly, monthly, alltime
+	Periods     StringArray `gorm:"type:jsonb" json:"periods"` // weekly, monthly, alltime
 	IsEnabled   bool      `gorm:"default:true" json:"is_enabled"`
 	CreatedAt   time.Time `json:"created_at"`
 }
@@ -379,7 +379,7 @@ type SDKConfig struct {
 	APIKey         string    `gorm:"not null" json:"api_key"`
 	APISecret      string    `gorm:"not null" json:"-"`
 	WebhookURL     string    `json:"webhook_url,omitempty"`
-	AllowedOrigins StringArray `gorm:"type:text[]" json:"allowed_origins"`
+	AllowedOrigins StringArray `gorm:"type:jsonb" json:"allowed_origins"`
 	SSOType        string    `json:"sso_type,omitempty"` // wallet, oauth
 	OAuthProvider  string    `json:"oauth_provider,omitempty"`
 	OAuthClientID  string    `json:"oauth_client_id,omitempty"`

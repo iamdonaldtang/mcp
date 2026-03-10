@@ -145,6 +145,7 @@ const authRoutes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(),
   routes: [
+    { path: '/', redirect: '/login' },
     ...authRoutes,
     ...bSharedRoutes,
     ...bCommunityRoutes,
